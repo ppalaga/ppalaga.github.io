@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+<meta content="Asciidoctor 1.5.0" name="generator" />
+<meta content="Peter Palaga" name="author" />
+<title>Continuous Integration/Delivery with Maven and srcdeps</title>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+.conum { display: inline-block; color: white !important; background-color: #222222; -webkit-border-radius: 100px; border-radius: 100px; text-align: center; width: 1.2em; height: 1.2em; font-size: 0.9em; font-weight: bold; line-height: 1.2; font-family: Arial, sans-serif; font-style: normal; position: relative; top: -0.1em; }
+.conum * { color: white !important; }
+.conum + b { display: none; }
+.conum:after { content: attr(data-value); }
+.conum:not([data-value]):empty { display: none; }
+.colist table td:first-of-type { padding-right: 0.25em; }
+</style>
+<style>
+/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*pre.CodeRay {background-color:#f7f7f8;}*/
+.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
+.CodeRay .line-numbers strong{font-weight: normal}
+table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
+table.CodeRay td{vertical-align: top}
+table.CodeRay td.line-numbers{text-align:right}
+table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
+table.CodeRay td.code{padding:0 0 0 .5em}
+table.CodeRay td.code>pre{padding:0}
+.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .annotation{color:#007}
+.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-value{color:#700}
+.CodeRay .binary{color:#509}
+.CodeRay .comment{color:#998;font-style:italic}
+.CodeRay .char{color:#04d}
+.CodeRay .char .content{color:#04d}
+.CodeRay .char .delimiter{color:#039}
+.CodeRay .class{color:#458;font-weight:bold}
+.CodeRay .complex{color:#a08}
+.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
+.CodeRay .color{color:#099}
+.CodeRay .class-variable{color:#369}
+.CodeRay .decorator{color:#b0b}
+.CodeRay .definition{color:#099}
+.CodeRay .delimiter{color:#000}
+.CodeRay .doc{color:#970}
+.CodeRay .doctype{color:#34b}
+.CodeRay .doc-string{color:#d42}
+.CodeRay .escape{color:#666}
+.CodeRay .entity{color:#800}
+.CodeRay .error{color:#808}
+.CodeRay .exception{color:inherit}
+.CodeRay .filename{color:#099}
+.CodeRay .function{color:#900;font-weight:bold}
+.CodeRay .global-variable{color:#008080}
+.CodeRay .hex{color:#058}
+.CodeRay .integer,.CodeRay .float{color:#099}
+.CodeRay .include{color:#555}
+.CodeRay .inline{color:#00}
+.CodeRay .inline .inline{background:#ccc}
+.CodeRay .inline .inline .inline{background:#bbb}
+.CodeRay .inline .inline-delimiter{color:#d14}
+.CodeRay .inline-delimiter{color:#d14}
+.CodeRay .important{color:#555;font-weight:bold}
+.CodeRay .interpreted{color:#b2b}
+.CodeRay .instance-variable{color:#008080}
+.CodeRay .label{color:#970}
+.CodeRay .local-variable{color:#963}
+.CodeRay .octal{color:#40e}
+.CodeRay .predefined{color:#369}
+.CodeRay .preprocessor{color:#579}
+.CodeRay .pseudo-class{color:#555}
+.CodeRay .directive{font-weight:bold}
+.CodeRay .type{font-weight:bold}
+.CodeRay .predefined-type{color:inherit}
+.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
+.CodeRay .key{color:#808}
+.CodeRay .key .delimiter{color:#606}
+.CodeRay .key .char{color:#80f}
+.CodeRay .value{color:#088}
+.CodeRay .regexp .delimiter{color:#808}
+.CodeRay .regexp .content{color:#808}
+.CodeRay .regexp .modifier{color:#808}
+.CodeRay .regexp .char{color:#d14}
+.CodeRay .regexp .function{color:#404;font-weight:bold}
+.CodeRay .string{color:#d20}
+.CodeRay .string .string .string{background:#ffd0d0}
+.CodeRay .string .content{color:#d14}
+.CodeRay .string .char{color:#d14}
+.CodeRay .string .delimiter{color:#d14}
+.CodeRay .shell{color:#d14}
+.CodeRay .shell .delimiter{color:#d14}
+.CodeRay .symbol{color:#990073}
+.CodeRay .symbol .content{color:#a60}
+.CodeRay .symbol .delimiter{color:#630}
+.CodeRay .tag{color:#008080}
+.CodeRay .tag-special{color:#d70}
+.CodeRay .variable{color:#036}
+.CodeRay .insert{background:#afa}
+.CodeRay .delete{background:#faa}
+.CodeRay .change{color:#aaf;background:#007}
+.CodeRay .head{color:#f8f;background:#505}
+.CodeRay .insert .insert{color:#080}
+.CodeRay .delete .delete{color:#800}
+.CodeRay .change .change{color:#66f}
+.CodeRay .head .head{color:#f4f}
+</style>
+<link href="deck.js/core/deck.core.css" rel="stylesheet" />
+<link href="deck.js/extensions/scale/deck.scale.css" media="screen" rel="stylesheet" />
+<link href="deck.js/extensions/goto/deck.goto.css" media="screen" rel="stylesheet" />
+<link href="deck.js/extensions/navigation/deck.navigation.css" media="screen" rel="stylesheet" />
+<link href="deck.js/extensions/status/deck.status.css" media="screen" rel="stylesheet" />
+<link href="deck.js/themes/style/swiss.css" media="screen" rel="stylesheet" />
+<link href="deck.js/themes/transition/fade.css" media="screen" rel="stylesheet" />
+<link href="deck.js/core/print.css" media="print" rel="stylesheet" />
+<script src="deck.js/modernizr.custom.js"></script>
+</head>
+<body class="article">
+<div class="deck-container">
+<section class="slide" id="title-slide">
+<h1>Continuous Integration/Delivery with Maven and srcdeps</h1>
+<span id="author">Peter Palaga</span>
+<br />
+<span id="revdate">2016-09-09</span>
+</section>
+<section class="slide" id="_ci_cd_intro">
+<h2>CI/CD Intro</h2>
+<div class="paragraph slide"><p>What is Continous Integration (CI)?</p></div>
+<div class="quoteblock slide">
+<blockquote>
+<div class="paragraph"><p>Practice where each change set proposed against a central version control system is verified by an automated build (including test).</p></div>
+<div class="attribution">
+<cite>Paraphrased Martin Fowler (2006) http://martinfowler.com/articles/continuousIntegration.html</cite>
+</div>
+</blockquote>
+</div>
+<div class="paragraph slide"><p>What is Continuous Delivery (CD)?</p></div>
+<div class="quoteblock slide">
+<blockquote>
+<div class="paragraph"><p>Coding done in such a way that the software can be reliably released to production at any time.
+Small change sets pass automated deployment pipeline in short cycles.</p></div>
+<div class="attribution">
+<cite>Paraphrased Martin Fowler (2013) http://martinfowler.com/bliki/ContinuousDelivery.html</cite>
+</div>
+</blockquote>
+</div>
+<div class="paragraph slide"><p>Why is CI/CD good?</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Value to the customer faster</li>
+<li class="slide">Quality through repeatability and automation</li>
+<li class="slide">Reduce costs and risk</li>
+</ul>
+</div>
+<div class="paragraph slide"><p>Do we do CI/CD?</p></div>
+</section>
+<section class="slide" id="_what_is_the_wildfly_deliverable">
+<h2>What is the WildFly deliverable?</h2>
+<div class="ulist">
+<ul>
+<li class="slide">A ZIP file, an RPM package, docker image&#8230;&#8203;</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_from_change_to_deliverable">
+<h2>From change to deliverable</h2>
+<div class="paragraph"><p>Code &#8594; Build &#8594; Test &#8594; Deliver</p></div>
+</section>
+<section class="slide" id="_the_wildfly_code_base">
+<h2>The WildFly code base</h2>
+<div class="paragraph"><p><strong>Code</strong> &#8594; Build &#8594; Test &#8594; Deliver</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Not a single Git repository</li>
+<li class="slide">Not a flat list of Git repositories</li>
+<li class="slide">Git Repos (a.k.a. components) depend on each other, building a complex dependency hierarchy</li>
+</ul>
+</div>
+<div class="imageblock slide">
+<div class="content">
+<img alt="wf component dependencies" src="images/160909-srcdeps/wf-component-dependencies.svg" />
+</div>
+<div class="title">Figure 1. WildFly Components dependencies, strongly simplified</div>
+</div>
+</section>
+<section class="slide" id="_maven_s_perspective">
+<h2>Maven&#8217;s perspective</h2>
+<div class="paragraph"><p>Artifact A depends on artifact B</p></div>
+<div class="ulist">
+<ul>
+<li class="slide"><p>
+During the build of A&#8230;&#8203;<div class="ulist">
+<ul>
+<li class="slide">B needs be looked up and downloaded from a Maven repository</li>
+</ul>
+</div></p></li>
+<li class="slide"><p>
+How does an artifact get to a Maven repository?<div class="ulist">
+<ul>
+<li class="slide">Somebody has to release it</li>
+</ul>
+</div></p></li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_from_change_to_deliverable_turn_2">
+<h2>From change to deliverable (turn 2)</h2>
+<div class="paragraph"><p>We have seen that in fact we have to do with multiple git repositories, living their own "Code &#8594; Build &#8594; Test &#8594; Release/Deliver" lives</p></div>
+<div class="imageblock slide">
+<div class="content">
+<img alt="wf component dependencies life cycle" src="images/160909-srcdeps/wf-component-dependencies-life-cycle.svg" />
+</div>
+<div class="title">Figure 2. WildFly Components dependencies, strongly simplified</div>
+</div>
+</section>
+<section class="slide" id="_changes_travel_through_the_hierarchy_a_k_a_propagation">
+<h2>Changes' travel through the hierarchy, a.k.a. propagation</h2>
+<div class="paragraph"><p>Component A depends on Component B</p></div>
+<div class="olist arabic">
+<ol class="arabic">
+<li class="slide">
+Merge a change (Fix, Feature, &#8230;&#8203;) in B
+</li>
+<li class="slide">
+Wait till B gets released
+</li>
+<li class="slide">
+Upgrade B in A
+</li>
+<li class="slide">
+Optionally adapt A
+</li>
+<li class="slide">
+Test B inside A
+</li>
+<li class="slide">
+Bug in B uncovered by A&#8217;s integration tests? - Goto 1
+</li>
+<li class="slide">
+Integration in A successful? - wait for release of A
+</li>
+</ol>
+</div>
+<div class="paragraph slide"><p>What is wrong with the above process?</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Infrequent releases of components</li>
+<li class="slide">Releases may collect multiple changes &#8594; regression causes are harder to find</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_how_can_we_propagate_strong_smaller_change_sets_faster_strong_ie_do_cd">
+<h2>How can we propagate <strong>smaller change sets faster</strong> (ie. do CD)?</h2>
+<div class="paragraph"><p>With the stock Maven, there are only two options to shorten the cycles:</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Use SNAPSHOTs</li>
+<li class="slide">Relase often</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_snapshots_are_evil">
+<h2>SNAPSHOTs are evil</h2>
+<div class="paragraph"><p>You never know what you get</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">local/remote SNAPSHOT?</li>
+<li class="slide">latest today != latest tomorrow</li>
+</ul>
+</div>
+<div class="paragraph slide"><p>The build of a component depending on another SNAPSHOT component is <strong>not reproducible</strong></p></div>
+<div class="paragraph slide"><p>Forget SNAPSHOTs anywhere outside a developers&#8217;s desktop</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Remote SNAPSHOTs off</li>
+<li class="slide">Esp. CI may not see any remote SNAPSHOTs</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_release_components_often">
+<h2>Release components often</h2>
+<div class="imageblock" style="float: right">
+<div class="content">
+<img alt="mockito core releases" src="images/160909-srcdeps/mockito-core-releases.png" />
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li class="slide">100% reproducible</li>
+<li class="slide">Releasing may cost developers' time (doable by CI)</li>
+<li class="slide">Many short living dev releases clutter maven repositories</li>
+<li class="slide"><p>
+The component&#8217;s team must want to release<div class="ulist">
+<ul>
+<li class="slide">Governed outside of one&#8217;s own organization?</li>
+</ul>
+</div></p></li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_let_s_forget_the_stock_maven_for_a_moment">
+<h2>Let&#8217;s forget the stock Maven for a moment&#8230;&#8203;</h2>
+<div class="ulist">
+<ul>
+<li class="slide">The build of every git commit is perfectly deterministic</li>
+<li class="slide">Why don&#8217;t we depend on git commits directly?</li>
+<li class="slide">We could build the components on the fly from their sources!</li>
+</ul>
+</div>
+<div class="paragraph slide"><p>Welcome srcdeps!</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">No need for releasing and even having a maven repo (in an extreme case)</li>
+<li class="slide">Nevertheless we can fully get rid of releases done just for the sake of testing and integration</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_demo">
+<h2>Demo</h2>
+<div class="paragraph"><p>This quickstart is available in the <a href="https://github.com/l2x6/srcdeps/tree/master/srcdeps-maven-quickstarts/srcdeps-mvn-git-revision-quickstart">srcdeps source tree</a></p></div>
+<div class="listingblock">
+<div class="title">Checkout the sources</div>
+<div class="content">
+<pre class="CodeRay"><code class="shell language-shell">cd ~/scratch
+git clone https://github.com/l2x6/srcdeps.git
+cd srcdeps/srcdeps-maven-quickstarts/srcdeps-mvn-git-revision-quickstart
+less README.adoc</code></pre>
+</div>
+</div>
+<div class="paragraph"><p><a href="#_miscelaneous_srcdeps_features">Live demo done</a></p></div>
+</section>
+<section class="slide" id="_srdeps_prerequisites">
+<h2>srdeps prerequisites</h2>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code class="shell language-shell">mvn --version
+Apache Maven 3.3.9 <i class="conum" data-value="1"></i><b>(1)</b>
+Maven home: /home/ppalaga/bin/apache-maven-3.3.x
+Java version: 1.8.0_92 <i class="conum" data-value="2"></i><b>(2)</b>
+...</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Has to be Maven 3.3.1 or newer</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Has to be Java 7 or newer</td>
+</tr>
+</table>
+</div>
+</section>
+<section class="slide" id="__code_mvn_extensions_xml_code">
+<h2><code>.mvn/extensions.xml</code></h2>
+<div class="paragraph"><p>Since version 1.0.0, srcdeps is not a Maven plugin but a Maven Core Extension that needs to be declared in <code>.mvn/extensions.xml</code>
+Core Extensions exist since Maven 3.3.1</p></div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code class="xml language-xml"><span class="tag">&lt;extensions&gt;</span>
+  <span class="tag">&lt;extension&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.l2x6.srcdeps<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>srcdeps-maven-local-repository<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0.0<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;/extension&gt;</span>
+<span class="tag">&lt;/extensions&gt;</span></code></pre>
+</div>
+</div>
+</section>
+<section class="slide" id="__code_mvn_srcdeps_yaml_code_the_srcdeps_configuration_file">
+<h2><code>.mvn/srcdeps.yaml</code> - the srcdeps configuration file.</h2>
+<div class="paragraph"><p>A minimal srcdeps.yaml file that constains only options relevant for this quickstart. For full reference,
+see <code>srcdeps.yaml.adoc</code> in the top level folder of srcdeps source tree.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code class="yaml language-yaml"><span class="comment"># `configModelVersion` exists just in case we'll have to change the schema of srcdeps.yaml in the future.</span>
+<span class="comment"># Required, no default, only 1.0 supported at the moment</span>
+<span class="key">configModelVersion</span>: <span class="string"><span class="content">1.0</span></span>
+
+<span class="comment"># `repositories` - a map of SCM repositories.</span>
+<span class="comment"># Required, no default</span>
+<span class="key">repositories</span>:
+
+  <span class="comment"># the `id` of the source repository, typically the `groupId` of its artifacts,</span>
+  <span class="comment"># or any other string unique at this level of the yaml file.</span>
+  <span class="key">org.l2x6.maven.srcdeps.itest</span>:
+
+    <span class="comment"># `selectors` - a way how to map dependency artifacts to source repositories.</span>
+    <span class="comment"># At the moment, the association is given by the exact string match between the `groupId` of the dependency</span>
+    <span class="comment"># artifact and one of the selectors listed here.</span>
+    <span class="comment">#</span>
+    <span class="comment"># At least one selector is required</span>
+    <span class="key">selectors</span>:
+    - <span class="string"><span class="content">org.l2x6.maven.srcdeps.itest</span></span> <span class="comment"># This SCM repository entry will be used for building artifacts</span>
+                                   <span class="comment"># with groupId org.l2x6.maven.srcdeps.itest</span>
+
+    <span class="comment"># `urls` - a list of URLs to checkout the sources of the given dependency. If you list multiple SCM</span>
+    <span class="comment"># repos here then only the first successful checkout will count.</span>
+    <span class="comment">#</span>
+    <span class="comment"># At least one URL is required</span>
+    <span class="key">urls</span>:
+    - <span class="string"><span class="content">git:https://github.com/l2x6/srcdeps-test-artifact.git</span></span></code></pre>
+</div>
+</div>
+</section>
+<section class="slide" id="_how_srcdeps_work">
+<h2>How srcdeps work</h2>
+<div class="paragraph slide"><p><strong><code>srcdeps-maven-local-repository</code></strong></p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Implementation of Maven&#8217;s <code>LocalRepositoryManager</code></li>
+<li class="slide">Delegates all the usual artifact lookup work to the standard <code>LocalRepositoryManager</code> available in Maven class path</li>
+<li class="slide">But watches carefully, if the requested artifact contains <code>-SRC-</code> in its version string</li>
+<li class="slide">For such artifacts, it calls the <code>srcdeps-core</code> library, to build what is necessary and install it to the Maven local repository</li>
+</ul>
+</div>
+<div class="paragraph slide"><p><strong><code>srcdeps-core</code></strong></p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Checkout the sources to <code>~m2/../dependency-sources</code></li>
+<li class="slide">Switch to revision/tag/branch specified after <code>-SRC-</code> in the version string</li>
+<li class="slide">Change the version of the sources to string declared in the main project using
+<code>mvn versions:set -DnewVersion=0.0.1-SRC-revision-66ea95d8</code></li>
+<li class="slide">Issue <code>mvn clean install</code> in the checkout directory</li>
+<li class="slide">This can result in several levels of nested builds</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_miscelaneous_srcdeps_features">
+<h2>Miscelaneous srcdeps features</h2>
+<div class="paragraph"><p>Configurable via <code>.mvn/srcdeps.yaml</code>:</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Verbosity of dependency builds</li>
+<li class="slide">Custom arguments for dependency builds</li>
+<li class="slide"><code>-DskipTests</code> by default</li>
+<li class="slide">IO redirects</li>
+<li class="slide">Should (untested!) work for vitually any kind of a dependency incl. parent, managed imports and even plugins</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_limitations">
+<h2>Limitations</h2>
+<div class="paragraph"><p>Can you think of any?</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Only Maven and git supported ATM (contributions are welcome!)</li>
+<li class="slide">Tools not acquainted with srcdeps (IDEs, static pom.xml analysers, &#8230;&#8203;) will see the <code>-SRC-</code> deps as non-available</li>
+<li class="slide"><p>
+However immutable git commits are, they can still disappear from repos, or even the whole repo can be deleted<div class="ulist">
+<ul>
+<li class="slide">Best practice: use srcdeps only against your own repos or your own mirrors of third party repos</li>
+</ul>
+</div></p></li>
+<li class="slide"><p>
+There is still a few things that may differ among devs: java version, mvn version<div class="ulist">
+<ul>
+<li class="slide">Projects should use mvnw with a fixed mvn version, and something similar with Java.</li>
+</ul>
+</div></p></li>
+<li class="slide"><p>
+The <code>-SRC-</code> artifacts (jars, wars, &#8230;&#8203;) built by you and me will typically not be binary equal<div class="ulist">
+<ul>
+<li class="slide">Typically will make no harm</li>
+<li class="slide">There still may exist cases where it will</li>
+</ul>
+</div></p></li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_srcdeps_project_status">
+<h2>srcdeps project status</h2>
+<div class="ulist">
+<ul>
+<li><code>srcdeps-maven-plugin</code> (an earlier implementation of the idea) used by Hakwular since ~1 year now</li>
+<li>All code and contributions are under Apache License v2</li>
+<li>Documentation: <a class="bare" href="https://github.com/l2x6/srcdeps/tree/master/README.adoc">https://github.com/l2x6/srcdeps/tree/master/README.adoc</a></li>
+<li>Quickstarts: <a class="bare" href="https://github.com/l2x6/srcdeps/tree/master/srcdeps-maven-quickstarts">https://github.com/l2x6/srcdeps/tree/master/srcdeps-maven-quickstarts</a></li>
+<li>Issues and discussions: <a class="bare" href="https://github.com/l2x6/srcdeps/issues">https://github.com/l2x6/srcdeps/issues</a></li>
+<li>Contribution are welcome using GitHub Pull Requests</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_things_to_remember_from_this_talk">
+<h2>Things to remember from this Talk</h2>
+<div class="paragraph"><p>srcdeps&#8230;&#8203;</p></div>
+<div class="ulist">
+<ul>
+<li class="slide">Shortens the integration/delivery cycles in complex dependency hierarchies</li>
+<li class="slide">Saves time of a release engineer</li>
+<li class="slide">Eliminates the need for a Maven repository</li>
+<li class="slide">No action or consent from the dependency project required</li>
+</ul>
+</div>
+</section>
+<section class="slide" id="_">
+<h2>&#160;</h2>
+<div class="paragraph"><p>Thanks!</p></div>
+<div class="paragraph"><p><a class="bare" href="https://twitter.com/ppalaga">https://twitter.com/ppalaga</a></p></div>
+<div class="paragraph"><p><a class="bare" href="https://twitter.com/jpkrohling">https://twitter.com/jpkrohling</a></p></div>
+</section>
+<div aria-role="navigation">
+<a class="deck-prev-link" href="#" title="Previous">&#8592;</a>
+<a class="deck-next-link" href="#" title="Next">&#8594;</a>
+</div>
+<p aria-role="status" class="deck-status">
+<span class="deck-status-current"></span>
+/
+<span class="deck-status-total"></span>
+</p>
+<form action="." class="goto-form" method="get">
+<label for="goto-slide">Go to Slide:</label>
+<input id="goto-slide" list="goto-datalist" name="slidenum" type="text" />
+<datalist id="goto-data-list"></datalist>
+<input type="submit" value="Go" />
+</form>
+</div>
+<script src="deck.js/jquery.min.js"></script>
+<script src="deck.js/core/deck.core.js"></script>
+<script src="deck.js/extensions/scale/deck.scale.js"></script>
+<script src="deck.js/extensions/goto/deck.goto.js"></script>
+<script src="deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="deck.js/extensions/status/deck.status.js"></script>
+<script type="text/javascript">
+  //<![CDATA[
+    (function($, deck, undefined) {
+      $.deck.defaults.keys['previous'] = [8, 33, 37, 39];
+      $.deck.defaults.keys['next'] = [13, 32, 34, 39];
+    
+      $.extend(true, $[deck].defaults, {
+          countNested: false
+      });
+    
+      $.deck('.slide');
+    })(jQuery, 'deck');
+  //]]>
+</script>
+<style type="text/css">
+  /*<![CDATA[*/
+    .slide.canvas-image {
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    display: -moz-box;
+    display: -webkit-box;
+    display: -ms-box;
+    display: box;
+    -moz-box-orient: vertical;
+    -webkit-box-orient: vertical;
+    -ms-box-orient: vertical;
+    box-orient: vertical;
+    -moz-box-align: start;
+    -webkit-box-align: start;
+    -ms-box-align: start;
+    box-align: start;
+    -moz-box-pack: start;
+    -webkit-box-pack: start;
+    -ms-box-pack: start;
+    box-pack: start;}
+    
+    .bottom-left {
+      left: 1%;
+      bottom: 20%; }
+    
+    .top-left {
+      left: 1%;
+      top: 20%; }
+    
+    .bottom-right {
+      right: 1%;
+      bottom: 20%; }
+    
+    .top-right {
+      right: 1%;
+      top: 20%; }
+    
+    .center-up {
+      right: 50%;
+      top: 1%;
+    }
+    
+    .center-down {
+      right: 50%;
+      bottom: 1%;
+    }
+    .canvas-image .canvas-caption p {
+      text-align: center;
+      padding-top: 0;
+      padding: 0;
+      -moz-transform: none;
+      -webkit-transform: none;
+      -o-transform: none;
+      -ms-transform: none;
+      transform: none;
+      display: inline;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+      font-size: 58px;
+      -webkit-box-shadow: 2px 2px 2px #000;
+      -moz-box-shadow: 2px 2px 2px #000;
+      box-shadow: 2px 2px 2px #000;
+      padding: 1rem;
+      color: white; }
+    kbd.keyseq { color: #555555; }
+    kbd:not(.keyseq) {
+      display: inline-block;
+      color: #222222;
+      font-size: 0.7em;
+      line-height: 1.4;
+      background-color: #F7F7F7;
+      border: 1px solid #ccc;
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset;
+      margin: -0.15em 0.15em 0 0.15em;
+      padding: 0.2em 0.6em;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    kbd kbd:first-child { margin-left: 0; }
+    kbd kbd:last-child { margin-right: 0; }
+  /*]]>*/
+</style>
+</body>
+</html>
