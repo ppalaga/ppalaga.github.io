@@ -3,6 +3,7 @@ Peter Palaga
 
 Presentations
 
+ * [srcdeps - source dependencies with Maven and Gradle](presentations/170508-jug-vienna/index.html) Java Vieanna Meetup 2017-05-08
  * [Java EE Microservices with WildFly Swarm](presentations/170316-voxxed-days-vienna/index.html) Voxxed Days Vienna 2017-03-16
  * [Getting Continuous with Maven and srcdeps](presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html) DevConf Brno 2017-01-28
  * [Continuous Integration/Delivery with Maven and srcdeps](160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html) 2016-09-09
