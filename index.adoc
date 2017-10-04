@@ -1,0 +1,12 @@
+= Peter Palaga
+
+Senior sustaining engineer at Red Hat Middleware, currently WildFly Camel, previously JBoss EAP, Hawkular and others
+
+== Presentations
+
+ * link:presentations/170508-jug-vienna/index.html[srcdeps - source dependencies with Maven and Gradle] Java Vieanna Meetup 2017-05-08
+ * link:presentations/170316-voxxed-days-vienna/index.html[Java EE Microservices with WildFly Swarm] Voxxed Days Vienna 2017-03-16
+ * link:presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html[Getting Continuous with Maven and srcdeps] DevConf Brno 2017-01-28
+ * link:160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html[Continuous Integration/Delivery with Maven and srcdeps] 2016-09-09
+ * link:presentations/150929-srcdeps-maven-plugin/150929-srcdeps-maven-plugin.html[srcdeps-maven-plugin - an intro] 2015-09-29
+ * link:presentations/150207-devconf-brno/nested-projects-in-eclipse.html[Presenting large multi-module projects in Eclipse] DevConf Brno 2015
