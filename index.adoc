@@ -1,6 +1,12 @@
 = Peter Palaga
+:showtitle:
+:page-title: Peter Palaga
+:icons: font
 
-Senior sustaining engineer at Red Hat Middleware, currently WildFly Camel, previously JBoss EAP, Hawkular and others
+icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
+
+Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.
+
 
 == Presentations
 

@@ -5,3 +5,9 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 /.project
+
+
+_site
+.sass-cache
+.jekyll-metadata
+/Gemfile.lock
