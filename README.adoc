@@ -1,5 +1,0 @@
-Sources of http://ppalaga.github.io/[Peter Palaga's personal web].
-
-Run locally with
-
-   bundle exec jekyll serve
