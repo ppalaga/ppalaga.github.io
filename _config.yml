@@ -6,7 +6,6 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - Rakefile
-  - presentations/
   - vendor
 asciidoc: {}
 asciidoctor:
@@ -16,3 +15,12 @@ asciidoctor:
     - idseparator=_
     - source-highlighter=coderay
     - icons=font
+
+# GitHub
+username: ppalaga
+repo: ppalaga.github.io
+branch: source
+
+# Jekyll source / destination
+source:               .
+destination:          _site
