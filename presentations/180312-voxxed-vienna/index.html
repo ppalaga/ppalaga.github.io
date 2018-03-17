@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>Blue-green Deployments and Canary Releases on Kubernetes</title><meta content="yes" name="apple-mobile-web-app-capable" /><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" /><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport" /><link href="reveal.js-3.1.0/css/reveal.css" rel="stylesheet" /><link rel="stylesheet" href="reveal.js-3.1.0/css/theme/wildfly-swarm.css" id="theme" /><style>/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*pre.CodeRay {background-color:#f7f7f8;}*/
+.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
+.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
+table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
+table.CodeRay td{vertical-align: top;line-height:1.45}
+table.CodeRay td.line-numbers{text-align:right}
+table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
+table.CodeRay td.code{padding:0 0 0 .5em}
+table.CodeRay td.code>pre{padding:0}
+.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .annotation{color:#a2a2ff}
+.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-value{color:#700}
+.CodeRay .binary{color:#509}
+.CodeRay .comment{color:#ffff59;font-style:italic}
+.CodeRay .char{color:#04d}
+.CodeRay .char .content{color:#04d}
+.CodeRay .char .delimiter{color:#039}
+.CodeRay .class{color:#7d9eff;font-weight:bold}
+.CodeRay .complex{color:#a08}
+.CodeRay .constant,.CodeRay .predefined-constant{color:#00d2d2}
+.CodeRay .color{color:#099}
+.CodeRay .class-variable{color:#369}
+.CodeRay .decorator{color:#b0b}
+.CodeRay .definition{color:#099}
+.CodeRay .delimiter{color:#000}
+.CodeRay .doc{color:#970}
+.CodeRay .doctype{color:#34b}
+.CodeRay .doc-string{color:#d42}
+.CodeRay .escape{color:#666}
+.CodeRay .entity{color:#800}
+.CodeRay .error{color:#ee78e6}
+.CodeRay .exception{color:inherit}
+.CodeRay .filename{color:#099}
+.CodeRay .function{color:#900;font-weight:bold}
+.CodeRay .global-variable{color:#00d2d2}
+.CodeRay .hex{color:#058}
+.CodeRay .integer,.CodeRay .float{color:#099}
+.CodeRay .include{color:#555}
+.CodeRay .inline{color:#000}
+.CodeRay .inline .inline{background:#ccc}
+.CodeRay .inline .inline .inline{background:#bbb}
+.CodeRay .inline .inline-delimiter{color:#11dd3d}
+.CodeRay .inline-delimiter{color:#11dd3d}
+.CodeRay .important{color:#555;font-weight:bold}
+.CodeRay .interpreted{color:#b2b}
+.CodeRay .instance-variable{color:#00d2d2}
+.CodeRay .label{color:#970}
+.CodeRay .local-variable{color:#963}
+.CodeRay .octal{color:#40e}
+.CodeRay .predefined{color:#369}
+.CodeRay .preprocessor{color:#579}
+.CodeRay .pseudo-class{color:#555}
+.CodeRay .directive{font-weight:bold}
+.CodeRay .type{font-weight:bold}
+.CodeRay .predefined-type{color:inherit}
+.CodeRay .reserved,.CodeRay .keyword {color:#ee78e6;font-weight:bold}
+.CodeRay .key{color:#ee78e6}
+.CodeRay .key .delimiter{color:#ee78e6}
+.CodeRay .key .char{color:#80f}
+.CodeRay .value{color:#088}
+.CodeRay .regexp .delimiter{color:#ee78e6}
+.CodeRay .regexp .content{color:#ee78e6}
+.CodeRay .regexp .modifier{color:#ee78e6}
+.CodeRay .regexp .char{color:#11dd3d}
+.CodeRay .regexp .function{color:#404;font-weight:bold}
+.CodeRay .string{color:#d20}
+.CodeRay .string .string .string{background:#ffd0d0}
+.CodeRay .string .content{color:#11dd3d}
+.CodeRay .string .char{color:#11dd3d}
+.CodeRay .string .delimiter{color:#11dd3d}
+.CodeRay .shell{color:#11dd3d}
+.CodeRay .shell .delimiter{color:#11dd3d}
+.CodeRay .symbol{color:#990073}
+.CodeRay .symbol .content{color:#a60}
+.CodeRay .symbol .delimiter{color:#630}
+.CodeRay .tag{color:#00d2d2}
+.CodeRay .tag-special{color:#d70}
+.CodeRay .variable{color:#036}
+.CodeRay .insert{background:#afa}
+.CodeRay .delete{background:#faa}
+.CodeRay .change{color:#aaf;background:#007}
+.CodeRay .head{color:#f8f;background:none}
+.CodeRay .insert .insert{color:#080}
+.CodeRay .delete .delete{color:#800}
+.CodeRay .change .change{color:#66f}
+.CodeRay .head .head{color:#f4f}</style><link href="reveal.js-3.1.0/lib/css/zenburn.css" rel="stylesheet" /><script>document.write( '<link rel="stylesheet" href="reveal.js-3.1.0/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );</script></head><body><div class="reveal"><div class="slides"><section class="title"><h1>Blue-green Deployments and Canary Releases on Kubernetes</h1><div class="paragraph"><p>&#160;</p></div>
+<div class="paragraph"><p>Peter Palaga · Marek Jelen</p></div><p><small></small></p></section>
+<section id=""><h2>&#160;</h2><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead><tr><th class="tableblock halign-left valign-top"><a href="https://twitter.com/ppalaga">Peter</a></th><th class="tableblock halign-left valign-top"><a href="https://twitter.com/marek_jelen">Marek</a></th></tr></thead><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock">"Java guy"
+</p><p class="tableblock">JBoss Fuse, JBoss EAP</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">"Kubernetes &amp; OpenShift guy"
+</p><p class="tableblock">Developer Advocate</p></td></tr></tbody></table></section>
+<section id="agenda"><h2>Agenda</h2><div class="ulist"><ul><li><p>A Spring Boot app</p></li><li><p>Bring it to the cloud</p></li><li><p>Deployment strategies</p></li></ul></div></section>
+<section id="a_spring_boot_app"><h2>A Spring Boot app</h2><div class="paragraph"><p><a href="https://github.com/ppalaga/horse-ride-service" class="bare">https://github.com/ppalaga/horse-ride-service</a></p></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Horse rides scheduling - Diesel engines forbidden soon, think of Uber for horses, Austrian ministry of Internal Affairs,</p></li><li><p>Usual Maven setup</p></li><li><p>Model with a couple of Entities</p></li><li><p>CRUD endpoints provided by Spring Data</p></li><li><p>One hand crafted endpoint for ride scheduling</p></li><li><p>Usual @SpringBootTest</p></li><li><p>So far developed only locally against a manually provisioned PostgreSQL database</p></li><li><p>A static index.html page we&#8217;ll use to demo some things</p></li><li><p>Nothing fancy here, it&#8217;s all just stock Spring Boot code</p></li></ul></div>
+<div class="paragraph"><p>PP:
+* The customer wants us not only to build the app, but also to run it
+* The choice of platform and tools is up to us
+* We want a process not only to build and test our app but also to deploy it in a controlled and predictable way
+* We want to be able to do all those fancy things like Blue-green Deployments, Canary Releases and A/B Testing</p></div>
+<div class="paragraph"><p>MJ:
+* Containers? Yes, because we like how the solve packaging incl. OS, configuration and provisioning
+* Kubernetes standard these days, lets have a look at it
+* Plain Kubernetes?
+* Why OpenShift?
+** &#8230;&#8203;</p></div></aside></section>
+<section><section id="minishift_minikube"><h2>Minishift/Minikube</h2><div class="ulist"><ul><li><p>Single node Kubernetes/OpenShift cluster</p></li><li><p>In a VM (hypervisor required)</p></li><li><p>Download and unzip from <a href="https://github.com/minishift/minishift/releases" class="bare">https://github.com/minishift/minishift/releases</a></p></li><li><p>Add <code>minishift</code> binary to <code>PATH</code></p></li></ul></div></section><section id="first_steps_with_minishift"><h2>First steps with Minishift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"># You may need more or less CPU and memory
+# depending on what you do
+minishift start --memory=8GB --cpus=4 --disk-size=50GB
+
+oc login -u developer -p whatever
+
+# Open the OpenShift web console in browser
+minishift console</code></pre></div></div>
+<aside class="notes"><div class="paragraph"><p>PP:
+* The jungle of Kube objects looks pretty scary
+* I&#8217;d expect to have to handcraft huge templates to construct the pipeline somehow&#8230;&#8203;</p></div>
+<div class="paragraph"><p>MJ:
+* Not necessarily, depends on how much you want your pipeline to get polished
+* Do you like Jenkins?
+PP: Of course
+MJ: Jenkins pipeline
+PP: Groovy based DSL? - of course!
+MJ: So just add a basic Jenkinsfile to your project and let&#8217;s see what happens
+PP: I happen to have a Jenkinsfile there already
+MJ: What&#8217;s in there?
+PP: It is pretty minimal. It just issues the usual Maven build
+MJ: It is skipping tests?
+PP: Er&#8230;&#8203; yes, because I did not know how to provision a database
+PP: BTW, who of you is using Jenkinsfiles?</p></div></aside></section></section>
+<section id="jenkins_pipeline_on_openshift"><h2>Jenkins Pipeline on OpenShift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"># make sure you are in the default project
+$ oc project
+myproject
+$ oc new-app https://github.com/ppalaga/horse-ride-service.git</code></pre></div></div>
+<div class="ulist"><ul><li><p>If the git repo contains a Jenkinsfile</p><div class="ulist"><ul><li><p>Os creates a <code>BuildConfig</code> with a special <code>Pipeline</code> strategy</p></li><li><p>Provisions a Jenkins instance</p></li><li><p>Triggers the first build</p></li></ul></div></li></ul></div>
+<aside class="notes"><div class="paragraph"><p>PP: What? OpenShift provisions a Jenkins instance for me?
+MJ: Yes, that&#8217;s one of those small diffs against plain Kube I mentioned earlier</p></div>
+<div class="paragraph"><p>oc delete project ride</p></div></aside></section>
+<section id="preparations_for_a_real_pipeline"><h2>Preparations for a real pipeline</h2><div class="ulist"><ul><li><p>Git repo inside the cluster</p></li><li><p>Separate projects for CI, stage and production</p></li><li><p>Some permissions for Jenkins</p></li><li><p>Done by <code>provision.sh</code> script:</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git clone https://github.com/ppalaga/horse-ride-service.git
+cd horse-ride-service
+git reset --hard testdb
+oc login -u developer -p whatever
+cd src/main/openshift; ./provision.sh</code></pre></div></div>
+<aside class="notes"><div class="paragraph"><p>MJ: private repo practical if you do not want to pay for private GitHub repos
+* Also practical for us when on a flaky conf. WiFi
+* Also important if your Kube/Os cluster is not accessible from the internet
+PP: Yes, Github hooks would not work&#8230;&#8203;</p></div>
+<div class="ulist"><ul><li><p>The last step calls  oc new-app with the internal git url</p></li></ul></div></aside></section>
+<section><section id="pipeline"><h2>Pipeline</h2></section><section id="build_and_test_springboottest"><h2>Build and test (SpringBootTest)</h2><div class="paragraph"><p>with a database</p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">cd horse-ride-service; git checkout master
+git reset --hard testdb
+git diff HEAD^ HEAD # study what has changed
+# Push to the cluster's internal git repo
+git push</code></pre></div></div>
+<aside class="notes"><div class="paragraph"><p>PP: in baseline, the tests were skipped
+* Here, a database container is provisioned before running the mvn build
+* What is this "openshift" object?
+MJ: OpenShift Client Jenkins plugin
+* It is available in the Os Jenkins image by default
+PP: How about auth?
+MJ: The client acts as user "jenkins"
+PP: What can it do?
+MJ: Most of usual things in the current project
+* but if you want to do something in a project distict from the project where the Jenkinsfile is defined,
+you have to grant some permissions to Jenkins manually
+* That&#8217;s what we have done in provision.sh script
+PP: env vars to pass the database info
+PP: what if I do not want expose the password in the Jenkinsfile?
+MJ: &#8230;&#8203;</p></div></aside></section><section id="build_and_test_the_docker_image"><h2>Build and test the Docker image</h2><aside class="notes"><div class="paragraph"><p>Jenkinsfile:</p></div>
+<div class="ulist"><ul><li><p>A new stage
+PP: What is fabric8:build
+MJ: A mvn plugin for building Docker images
+PP: so I do not have to issue play with the docker command?
+MJ: no, and it would be rather complicated inside the cluster
+PP: Why?
+MJ: Because the cluster does not expose the docker daemon to everyone
+PP: Hm&#8230;&#8203; how are non-maven projects built then?
+MJ: s2i &#8230;&#8203; and actually, the fabric8 plugin runs an s2i build under the hood
+PP: interesting
+PP: How do I tell the plugin what I want it to do?
+MJ: look into pom.xml
+PP: What is &lt;name&gt;%g/%a:test&lt;/name&gt; ?
+MJ: name and tag to push to cluster-internal docker repo
+PP: So there is a docker repo in the cluster?</p></li><li><p>That&#8217;s nice that I do not have to set it up myself
+PP: &lt;assembly&gt; ?
+MJ: That specifies what gets into the image. Just open the assembly.xml
+PP: I like that this is using technologies I actaully know already
+MJ: back to Jenkinsfile</p></li><li><p>Create a new app, but this time not out of a git repo, but out of the image tag we have just pushed using fabric8 plugin
+PP: I see</p></li></ul></div>
+<div class="paragraph"><p>PP: probe?
+MJ: &#8230;&#8203;
+PP: OK, it invokes the the /health endpoint provided by Spring Actuator</p></div></aside></section><section id="stage_approval_production"><h2>Stage &#8594; approval &#8594; Production</h2><aside class="notes"><div class="ulist"><ul><li><p>Two new stages</p></li><li><p>Provision a database</p></li><li><p>Tag</p></li><li><p>Wait for rollout</p></li><li><p>Check the link, Approve</p></li><li><p>The same in prod: tag, rollout, link</p></li></ul></div>
+<div class="paragraph"><p>PP: That&#8217;s straightforward: approve &#8594; production
+* But let&#8217;s say I want to have a safe way back</p></div></aside></section></section>
+<section><section id="blue_green_deployments"><h2>Blue/green deployments</h2><div class="imageblock" style=""><img src="images/blue-green.svg" alt="blue green" /></div><div class="ulist"><ul><li><p>Release in a predictable manner</p></li><li><p>Reduce downtime</p><div class="ulist"><ul><li><p>Easy to switch to roll out a new version</p></li><li><p>Easy to roll back if the new version does not behave properly</p></li></ul></div></li></ul></div><div class="paragraph"><p><a href="https://martinfowler.com/bliki/BlueGreenDeployment.html" class="bare">https://martinfowler.com/bliki/BlueGreenDeployment.html</a></p></div><aside class="notes"><div class="ulist"><ul><li><p>In Kube/Os:</p><div class="ulist"><ul><li><p>One route, two services (and deployments)</p></li><li><p>The route switches based on spec.to.name: blue|green</p></li></ul></div></li></ul></div></aside></section><section id="blue_green_caveats"><h2>Blue/green Caveats</h2><div class="ulist"><ul><li><p>Long running sessions/connections need to be handled gracefully.</p></li><li><p>Database schema conversions</p><div class="ulist"><ul><li><p>Ideally back/forwards compatible - see Edson&#8217;s book <a href="http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp" class="bare">http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp</a></p></li><li><p>Downtime may be needed in some cases</p></li></ul></div></li></ul></div></section></section>
+<section id="canary_releases"><h2>Canary releases</h2><div class="imageblock" style=""><img src="images/canary.svg" alt="canary" /></div>
+<div class="ulist"><ul><li><p>Roll out gradually</p></li><li><p>Observe canary&#8217;s health</p></li><li><p>Rollback if the canary dies</p></li></ul></div>
+<div class="paragraph"><p><a href="https://martinfowler.com/bliki/CanaryRelease.html" class="bare">https://martinfowler.com/bliki/CanaryRelease.html</a></p></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Deployment strategy actually selectable for a DeploymentConfig</p><div class="ulist"><ul><li><p>"Rolling" strategy is the default</p><div class="ulist"><ul><li><p>provides a minimal canary</p></li><li><p>If readiness never succeeds, the new image is not rolled out
+and the deployment actually fails after a few retries.</p></li></ul></div></li></ul></div></li></ul></div>
+<div class="paragraph"><p>Is this enough? - No</p></div>
+<div class="ulist"><ul><li><p>"Recreate" - old code and new code do not run at once, but incurs downtime, supports pre, mid, post hooks to trigger any necessary migration steps</p></li><li><p>"Custom" - provide your own image that is run to perform the migration</p></li></ul></div></aside></section>
+<section id="wrap_up"><h2>Wrap up</h2><div class="ulist"><ul><li class="fragment"><p><code><a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">minikube</a></code>/<code><a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html">minishift</a></code> to start experimenting</p></li><li class="fragment"><p>Jenkins Pipeline a first class citizen on OpenShift</p></li><li class="fragment"><p><code><a href="https://jenkins.io/doc/book/pipeline/">Jenkinsfile</a></code> powerful enough to script your deployment strategy</p></li><li class="fragment"><p>Source of this demo: <a href="https://github.com/ppalaga/horse-ride-service" class="bare">https://github.com/ppalaga/horse-ride-service</a></p></li></ul></div></section></div>
+                      <div class="footer">
+                        <img src="images/voxxed-days-vienna-horiz.png" class="left" />
+                        <a href="https://twitter.com/ppalaga">@ppalaga</a>  ·  <a href="https://twitter.com/marek_jelen">@marek_jelen</a>
+                        <img src="images/Red_Hat_RGB_reverse.svg" class="right" />
+                      </div>
+                      <div class="conf-banner">
+                        <img src="images/voxxed-days-vienna.png" />
+                      </div></div><script src="reveal.js-3.1.0/lib/js/head.min.js"></script><script src="reveal.js-3.1.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+Reveal.initialize({
+  // Display controls in the bottom right corner
+  controls: false,
+  // Display a presentation progress bar
+  progress: true,
+  // Display the page number of the current slide
+  slideNumber: false,
+  // Push each slide change to the browser history
+  history: true,
+  // Enable keyboard shortcuts for navigation
+  keyboard: true,
+  // Enable the slide overview mode
+  overview: true,
+  // Vertical centering of slides
+  center: true,
+  // Enables touch navigation on devices with touch input
+  touch: true,
+  // Loop the presentation
+  loop: false,
+  // Change the presentation direction to be RTL
+  rtl: false,
+  // Turns fragments on and off globally
+  fragments: true,
+  // Flags if the presentation is running in an embedded mode,
+  // i.e. contained within a limited portion of the screen
+  embedded: false,
+  // Number of milliseconds between automatically proceeding to the
+  // next slide, disabled when set to 0, this value can be overwritten
+  // by using a data-autoslide attribute on your slides
+  autoSlide: 0,
+  // Stop auto-sliding after user input
+  autoSlideStoppable: true,
+  // Enable slide navigation via mouse wheel
+  mouseWheel: false,
+  // Hides the address bar on mobile devices
+  hideAddressBar: true,
+  // Opens links in an iframe preview overlay
+  previewLinks: false,
+  // Theme (e.g., beige, black, league, night, serif, simple, sky, solarized, white)
+  // NOTE setting the theme in the config no longer works in reveal.js 3.x
+  //theme: Reveal.getQueryHash().theme || 'wildfly-swarm',
+  // Transition style (e.g., none, fade, slide, convex, concave, zoom)
+  transition: Reveal.getQueryHash().transition || 'linear',
+  // Transition speed (e.g., default, fast, slow)
+  transitionSpeed: 'default',
+  // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
+  backgroundTransition: 'fade',
+  // Number of slides away from the current that are visible
+  viewDistance: 3,
+  // Parallax background image (e.g., "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'")
+  parallaxBackgroundImage: '',
+  // Parallax background size in CSS syntax (e.g., "2100px 900px")
+  parallaxBackgroundSize: '',
+
+  // The "normal" size of the presentation, aspect ratio will be preserved
+  // when the presentation is scaled to fit different resolutions. Can be
+  // specified using percentage units.
+  width: 960,
+  height: 700,
+
+  // Factor of the display size that should remain empty around the content
+  margin: 0.1,
+
+  // Bounds for smallest/largest possible scale to apply to content
+  minScale: 0.2,
+  maxScale: 1.5,
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+      { src: 'reveal.js-3.1.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'reveal.js-3.1.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'reveal.js-3.1.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      
+      { src: 'reveal.js-3.1.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'reveal.js-3.1.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+  ]
+});Reveal.addEventListener('slidechanged', function(event) {
+    if (Reveal.isFirstSlide()) {
+        document.querySelector('.reveal .conf-banner').style.display = 'block';
+        document.querySelector('.reveal .footer').style.display = 'none';
+    } else {
+        document.querySelector('.reveal .conf-banner').style.display = 'none';
+        document.querySelector('.reveal .footer').style.display = 'block';
+    }
+});
+Reveal.addEventListener( 'ready', function( event ) {
+    if (Reveal.isFirstSlide()) {
+        document.querySelector('.reveal .conf-banner').style.display = 'block';
+        document.querySelector('.reveal .footer').style.display = 'none';
+    } else {
+        document.querySelector('.reveal .conf-banner').style.display = 'none';
+        document.querySelector('.reveal .footer').style.display = 'block';
+    }
+});</script></body></html>

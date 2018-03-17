@@ -10,6 +10,7 @@ Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBos
 
 == Presentations
 
+ * link:presentations/180312-voxxed-vienna/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Vienna 2018-03-12
  * link:presentations/171020-geecon-prague/index.html[srcdeps - source dependencies with Maven and Gradle] GeeCon Prague 2017-10-20
  * link:presentations/170508-jug-vienna/index.html[srcdeps - source dependencies with Maven and Gradle] Java Vieanna Meetup 2017-05-08
  * link:presentations/170316-voxxed-days-vienna/index.html[Java EE Microservices with WildFly Swarm] Voxxed Days Vienna 2017-03-16
