@@ -42,8 +42,8 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .inline{color:#000}
 .CodeRay .inline .inline{background:#ccc}
 .CodeRay .inline .inline .inline{background:#bbb}
-.CodeRay .inline .inline-delimiter{color:#11dd3d}
-.CodeRay .inline-delimiter{color:#11dd3d}
+.CodeRay .inline .inline-delimiter{color:#eedd22}
+.CodeRay .inline-delimiter{color:#eedd22}
 .CodeRay .important{color:#555;font-weight:bold}
 .CodeRay .interpreted{color:#b2b}
 .CodeRay .instance-variable{color:#00d2d2}
@@ -64,15 +64,15 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .regexp .delimiter{color:#ee78e6}
 .CodeRay .regexp .content{color:#ee78e6}
 .CodeRay .regexp .modifier{color:#ee78e6}
-.CodeRay .regexp .char{color:#11dd3d}
+.CodeRay .regexp .char{color:#eedd22}
 .CodeRay .regexp .function{color:#404;font-weight:bold}
 .CodeRay .string{color:#d20}
 .CodeRay .string .string .string{background:#ffd0d0}
-.CodeRay .string .content{color:#11dd3d}
-.CodeRay .string .char{color:#11dd3d}
-.CodeRay .string .delimiter{color:#11dd3d}
-.CodeRay .shell{color:#11dd3d}
-.CodeRay .shell .delimiter{color:#11dd3d}
+.CodeRay .string .content{color:#eedd22}
+.CodeRay .string .char{color:#eedd22}
+.CodeRay .string .delimiter{color:#eedd22}
+.CodeRay .shell{color:#eedd22}
+.CodeRay .shell .delimiter{color:#eedd22}
 .CodeRay .symbol{color:#990073}
 .CodeRay .symbol .content{color:#a60}
 .CodeRay .symbol .delimiter{color:#630}
@@ -93,6 +93,7 @@ table.CodeRay td.code>pre{padding:0}
 </p><p class="tableblock">Developer Advocate</p></td></tr></tbody></table></section>
 <section id="agenda"><h2>Agenda</h2><div class="ulist"><ul><li><p>A Spring Boot app</p></li><li><p>Bring it to the cloud</p></li><li><p>Deployment strategies</p></li></ul></div></section>
 <section id="a_spring_boot_app"><h2>A Spring Boot app</h2><div class="paragraph"><p><a href="https://github.com/ppalaga/horse-ride-service" class="bare">https://github.com/ppalaga/horse-ride-service</a></p></div>
+<div class="ulist"><ul><li><p>Model with a few Entities</p></li><li><p>CRUD endpoints provided by Spring Data</p></li><li><p>Usual <code>@SpringBootTest</code></p></li></ul></div>
 <aside class="notes"><div class="ulist"><ul><li><p>Horse rides scheduling - Diesel engines forbidden soon, think of Uber for horses, Austrian ministry of Internal Affairs,</p></li><li><p>Usual Maven setup</p></li><li><p>Model with a couple of Entities</p></li><li><p>CRUD endpoints provided by Spring Data</p></li><li><p>One hand crafted endpoint for ride scheduling</p></li><li><p>Usual @SpringBootTest</p></li><li><p>So far developed only locally against a manually provisioned PostgreSQL database</p></li><li><p>A static index.html page we&#8217;ll use to demo some things</p></li><li><p>Nothing fancy here, it&#8217;s all just stock Spring Boot code</p></li></ul></div>
 <div class="paragraph"><p>PP:
 * The customer wants us not only to build the app, but also to run it
@@ -105,13 +106,13 @@ table.CodeRay td.code>pre{padding:0}
 * Plain Kubernetes?
 * Why OpenShift?
 ** &#8230;&#8203;</p></div></aside></section>
-<section><section id="minishift_minikube"><h2>Minishift/Minikube</h2><div class="ulist"><ul><li><p>Single node Kubernetes/OpenShift cluster</p></li><li><p>In a VM (hypervisor required)</p></li><li><p>Download and unzip from <a href="https://github.com/minishift/minishift/releases" class="bare">https://github.com/minishift/minishift/releases</a></p></li><li><p>Add <code>minishift</code> binary to <code>PATH</code></p></li></ul></div></section><section id="first_steps_with_minishift"><h2>First steps with Minishift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"># You may need more or less CPU and memory
-# depending on what you do
+<section><section id="minishift_minikube"><h2>Minishift/Minikube</h2><div class="ulist"><ul><li><p>Single node Kubernetes/OpenShift cluster</p></li><li><p>In a VM (hypervisor required)</p></li><li><p>Download and unzip from <a href="https://github.com/minishift/minishift/releases" class="bare">https://github.com/minishift/minishift/releases</a></p></li><li><p>Add <code>minishift</code> binary to <code>PATH</code></p></li></ul></div></section><section id="first_steps_with_minishift"><h2>First steps with Minishift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"><strong># You may need more or less CPU and memory</strong>
+<strong># depending on what you do</strong>
 minishift start --memory=8GB --cpus=4 --disk-size=50GB
 
 oc login -u developer -p whatever
 
-# Open the OpenShift web console in browser
+<strong># Open the OpenShift web console in browser</strong>
 minishift console</code></pre></div></div>
 <aside class="notes"><div class="paragraph"><p>PP:
 * The jungle of Kube objects looks pretty scary
@@ -129,10 +130,10 @@ PP: It is pretty minimal. It just issues the usual Maven build
 MJ: It is skipping tests?
 PP: Er&#8230;&#8203; yes, because I did not know how to provision a database
 PP: BTW, who of you is using Jenkinsfiles?</p></div></aside></section></section>
-<section id="jenkins_pipeline_on_openshift"><h2>Jenkins Pipeline on OpenShift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"># make sure you are in the default project
-$ oc project
+<section id="jenkins_pipeline_on_openshift"><h2>Jenkins Pipeline on OpenShift</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell"><strong># make sure you are in the default project</strong>
+<strong>$</strong> oc project
 myproject
-$ oc new-app https://github.com/ppalaga/horse-ride-service.git</code></pre></div></div>
+<strong>$</strong> oc new-app https://github.com/ppalaga/horse-ride-service.git</code></pre></div></div>
 <div class="ulist"><ul><li><p>If the git repo contains a Jenkinsfile</p><div class="ulist"><ul><li><p>Os creates a <code>BuildConfig</code> with a special <code>Pipeline</code> strategy</p></li><li><p>Provisions a Jenkins instance</p></li><li><p>Triggers the first build</p></li></ul></div></li></ul></div>
 <aside class="notes"><div class="paragraph"><p>PP: What? OpenShift provisions a Jenkins instance for me?
 MJ: Yes, that&#8217;s one of those small diffs against plain Kube I mentioned earlier</p></div>
@@ -140,7 +141,7 @@ MJ: Yes, that&#8217;s one of those small diffs against plain Kube I mentioned ea
 <section id="preparations_for_a_real_pipeline"><h2>Preparations for a real pipeline</h2><div class="ulist"><ul><li><p>Git repo inside the cluster</p></li><li><p>Separate projects for CI, stage and production</p></li><li><p>Some permissions for Jenkins</p></li><li><p>Done by <code>provision.sh</code> script:</p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git clone https://github.com/ppalaga/horse-ride-service.git
 cd horse-ride-service
-git reset --hard testdb
+git reset --hard provision.sh
 oc login -u developer -p whatever
 cd src/main/openshift; ./provision.sh</code></pre></div></div>
 <aside class="notes"><div class="paragraph"><p>MJ: private repo practical if you do not want to pay for private GitHub repos
@@ -148,12 +149,17 @@ cd src/main/openshift; ./provision.sh</code></pre></div></div>
 * Also important if your Kube/Os cluster is not accessible from the internet
 PP: Yes, Github hooks would not work&#8230;&#8203;</p></div>
 <div class="ulist"><ul><li><p>The last step calls  oc new-app with the internal git url</p></li></ul></div></aside></section>
-<section><section id="pipeline"><h2>Pipeline</h2></section><section id="build_and_test_springboottest"><h2>Build and test (SpringBootTest)</h2><div class="paragraph"><p>with a database</p></div>
+<section><section id="pipeline"><h2>Pipeline</h2></section><section id="build_and_test"><h2>Build and test</h2><div class="paragraph"><p>Provision a database so that the <code>@SpringBootTest</code> can pass</p></div>
 <div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">cd horse-ride-service; git checkout master
 git reset --hard testdb
-git diff HEAD^ HEAD # study what has changed
-# Push to the cluster's internal git repo
-git push</code></pre></div></div>
+git diff HEAD^ HEAD <strong># study what changed</strong>
+<strong># Alias the cluster's internal git repo</strong>
+URL=http://team:team@gogs-horse-ride-cicd.$(minishift ip).nip.io
+git remote add minishift ${URL}/team/horse-ride-service.git
+<strong># Push to the cluster's internal git repo</strong>
+git push -f minishift master
+<strong># Go to horse-ride-cicd project in OpenShift console</strong>
+<strong># and check that the pipeline started under Builds > Pipelines</strong></code></pre></div></div>
 <aside class="notes"><div class="paragraph"><p>PP: in baseline, the tests were skipped
 * Here, a database container is provisioned before running the mvn build
 * What is this "openshift" object?
@@ -168,7 +174,12 @@ you have to grant some permissions to Jenkins manually
 * That&#8217;s what we have done in provision.sh script
 PP: env vars to pass the database info
 PP: what if I do not want expose the password in the Jenkinsfile?
-MJ: &#8230;&#8203;</p></div></aside></section><section id="build_and_test_the_docker_image"><h2>Build and test the Docker image</h2><aside class="notes"><div class="paragraph"><p>Jenkinsfile:</p></div>
+MJ: &#8230;&#8203;</p></div></aside></section><section id="build_and_test_docker_image"><h2>Build and test Docker image</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard test-image
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Look at horse-ride-cicd > Builds > Pipelines</strong>
+<strong># Open the Jenkins log</strong></code></pre></div></div>
+<aside class="notes"><div class="paragraph"><p>Jenkinsfile:</p></div>
 <div class="ulist"><ul><li><p>A new stage
 PP: What is fabric8:build
 MJ: A mvn plugin for building Docker images
@@ -191,17 +202,37 @@ MJ: back to Jenkinsfile</p></li><li><p>Create a new app, but this time not out o
 PP: I see</p></li></ul></div>
 <div class="paragraph"><p>PP: probe?
 MJ: &#8230;&#8203;
-PP: OK, it invokes the the /health endpoint provided by Spring Actuator</p></div></aside></section><section id="stage_approval_production"><h2>Stage &#8594; approval &#8594; Production</h2><aside class="notes"><div class="ulist"><ul><li><p>Two new stages</p></li><li><p>Provision a database</p></li><li><p>Tag</p></li><li><p>Wait for rollout</p></li><li><p>Check the link, Approve</p></li><li><p>The same in prod: tag, rollout, link</p></li></ul></div>
+PP: OK, it invokes the the /health endpoint provided by Spring Actuator</p></div></aside></section><section id="stage_approval_production"><h2>Stage &#8594; approval &#8594; production</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard stage-prod
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Look at horse-ride-cicd > Builds > Pipelines</strong>
+<strong># Visit the stage and prod sites via links in Jenkins log</strong>
+<strong># Approve the promotion from stage to production</strong></code></pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Two new stages</p></li><li><p>Provision a database</p></li><li><p>Tag</p></li><li><p>Wait for rollout</p></li><li><p>Check the link, Approve</p></li><li><p>The same in prod: tag, rollout, link</p></li></ul></div>
 <div class="paragraph"><p>PP: That&#8217;s straightforward: approve &#8594; production
 * But let&#8217;s say I want to have a safe way back</p></div></aside></section></section>
-<section><section id="blue_green_deployments"><h2>Blue/green deployments</h2><div class="imageblock" style=""><img src="images/blue-green.svg" alt="blue green" /></div><div class="ulist"><ul><li><p>Release in a predictable manner</p></li><li><p>Reduce downtime</p><div class="ulist"><ul><li><p>Easy to switch to roll out a new version</p></li><li><p>Easy to roll back if the new version does not behave properly</p></li></ul></div></li></ul></div><div class="paragraph"><p><a href="https://martinfowler.com/bliki/BlueGreenDeployment.html" class="bare">https://martinfowler.com/bliki/BlueGreenDeployment.html</a></p></div><aside class="notes"><div class="ulist"><ul><li><p>In Kube/Os:</p><div class="ulist"><ul><li><p>One route, two services (and deployments)</p></li><li><p>The route switches based on spec.to.name: blue|green</p></li></ul></div></li></ul></div></aside></section><section id="blue_green_caveats"><h2>Blue/green Caveats</h2><div class="ulist"><ul><li><p>Long running sessions/connections need to be handled gracefully.</p></li><li><p>Database schema conversions</p><div class="ulist"><ul><li><p>Ideally back/forwards compatible - see Edson&#8217;s book <a href="http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp" class="bare">http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp</a></p></li><li><p>Downtime may be needed in some cases</p></li></ul></div></li></ul></div></section></section>
-<section id="canary_releases"><h2>Canary releases</h2><div class="imageblock" style=""><img src="images/canary.svg" alt="canary" /></div>
-<div class="ulist"><ul><li><p>Roll out gradually</p></li><li><p>Observe canary&#8217;s health</p></li><li><p>Rollback if the canary dies</p></li></ul></div>
-<div class="paragraph"><p><a href="https://martinfowler.com/bliki/CanaryRelease.html" class="bare">https://martinfowler.com/bliki/CanaryRelease.html</a></p></div>
-<aside class="notes"><div class="ulist"><ul><li><p>Deployment strategy actually selectable for a DeploymentConfig</p><div class="ulist"><ul><li><p>"Rolling" strategy is the default</p><div class="ulist"><ul><li><p>provides a minimal canary</p></li><li><p>If readiness never succeeds, the new image is not rolled out
+<section><section id="blue_green_deployments"><h2>Blue/green deployments</h2><div class="imageblock" style=""><img src="images/blue-green.svg" alt="blue green" /></div><div class="ulist"><ul><li><p>Release in a predictable manner</p></li><li><p>Reduce downtime</p><div class="ulist"><ul><li><p>Easy to switch to roll out a new version</p></li><li><p>Easy to roll back if the new version does not behave properly</p></li></ul></div></li></ul></div><div class="paragraph"><p><a href="https://martinfowler.com/bliki/BlueGreenDeployment.html" class="bare">https://martinfowler.com/bliki/BlueGreenDeployment.html</a></p></div><aside class="notes"><div class="ulist"><ul><li><p>In Kube/Os:</p><div class="ulist"><ul><li><p>One route, two services (and deployments)</p></li><li><p>The route switches based on spec.to.name: blue|green</p></li></ul></div></li></ul></div></aside></section><section id="blue_green_demo_1_2"><h2>Blue/green demo (1/2)</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard blue-green
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Look at horse-ride-cicd > Builds > Pipelines</strong>
+<strong># The UI of new deployment should be blue</strong></code></pre></div></div></section><section id="blue_green_demo_2_2"><h2>Blue/green demo (2/2)</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard blue-green-green-bg
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Look at horse-ride-cicd > Builds > Pipelines</strong>
+*# The UI of new deployment should be green</code></pre></div></div></section><section id="blue_green_caveats"><h2>Blue/green Caveats</h2><div class="ulist"><ul><li><p>Long running sessions/connections need to be handled gracefully.</p></li><li><p>Database schema conversions</p><div class="ulist"><ul><li><p>Ideally back/forwards compatible - see Edson&#8217;s book <a href="http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp" class="bare">http://www.oreilly.com/programming/free/migrating-to-microservice-databases.csp</a></p></li><li><p>Downtime may be needed in some cases</p></li></ul></div></li></ul></div></section></section>
+<section><section id="canary_releases"><h2>Canary releases</h2><div class="imageblock" style=""><img src="images/canary.svg" alt="canary" /></div><div class="ulist"><ul><li><p>Roll out gradually</p></li><li><p>Observe canary&#8217;s health</p></li><li><p>Rollback if the canary dies</p></li></ul></div><div class="paragraph"><p><a href="https://martinfowler.com/bliki/CanaryRelease.html" class="bare">https://martinfowler.com/bliki/CanaryRelease.html</a></p></div><aside class="notes"><div class="ulist"><ul><li><p>Deployment strategy actually selectable for a DeploymentConfig</p><div class="ulist"><ul><li><p>"Rolling" strategy is the default</p><div class="ulist"><ul><li><p>provides a minimal canary</p></li><li><p>If readiness never succeeds, the new image is not rolled out
 and the deployment actually fails after a few retries.</p></li></ul></div></li></ul></div></li></ul></div>
 <div class="paragraph"><p>Is this enough? - No</p></div>
-<div class="ulist"><ul><li><p>"Recreate" - old code and new code do not run at once, but incurs downtime, supports pre, mid, post hooks to trigger any necessary migration steps</p></li><li><p>"Custom" - provide your own image that is run to perform the migration</p></li></ul></div></aside></section>
+<div class="ulist"><ul><li><p>"Recreate" - old code and new code do not run at once, but incurs downtime, supports pre, mid, post hooks to trigger any necessary migration steps</p></li><li><p>"Custom" - provide your own image that is run to perform the migration</p></li></ul></div></aside></section><section id="canary_demo_1_2"><h2>Canary demo (1/2)</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard canary
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Observe the iterative checking of canary's health in Jenkins log</strong>
+<strong># This canary survives and its UI background is yellow</strong></code></pre></div></div></section><section id="canary_demo_2_2"><h2>Canary demo (2/2)</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">git reset --hard canary-dead
+git diff HEAD^ HEAD <strong># study what changed</strong>
+git push -f minishift master
+<strong># Observe the iterative checking of canary's health in Jenkins log</strong>
+<strong># This canary dies and its gray UI won't be served after</strong>
+<strong># the rollback</strong></code></pre></div></div></section></section>
 <section id="wrap_up"><h2>Wrap up</h2><div class="ulist"><ul><li class="fragment"><p><code><a href="https://kubernetes.io/docs/tasks/tools/install-minikube/">minikube</a></code>/<code><a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html">minishift</a></code> to start experimenting</p></li><li class="fragment"><p>Jenkins Pipeline a first class citizen on OpenShift</p></li><li class="fragment"><p><code><a href="https://jenkins.io/doc/book/pipeline/">Jenkinsfile</a></code> powerful enough to script your deployment strategy</p></li><li class="fragment"><p>Source of this demo: <a href="https://github.com/ppalaga/horse-ride-service" class="bare">https://github.com/ppalaga/horse-ride-service</a></p></li></ul></div></section></div>
                       <div class="footer">
                         <img src="images/voxxed-days-vienna-horiz.png" class="left" />
