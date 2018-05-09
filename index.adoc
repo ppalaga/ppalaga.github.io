@@ -10,6 +10,7 @@ Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBos
 
 == Presentations
 
+ * link:presentations/180509-geecon-krakow/index.html[srcdeps: Stop letting dependencies dictate your life!] GeeCon Krakow 2018-05-09
  * link:presentations/180322-voxxed-bucharest/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Bucharest 2018-03-22
  * link:presentations/180312-voxxed-vienna/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Vienna 2018-03-12
  * link:presentations/171020-geecon-prague/index.html[srcdeps - source dependencies with Maven and Gradle] GeeCon Prague 2017-10-20
