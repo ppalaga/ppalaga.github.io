@@ -5,10 +5,10 @@
 
 icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
 
-Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.
+Senior software engineer at Red Hat Middleware working on WildFly Camel and Fuse on EAP
 
 
-== Presentations
+== Talks
 
  * link:presentations/180509-geecon-krakow/index.html[srcdeps: Stop letting dependencies dictate your life!] GeeCon Krakow 2018-05-09
  * link:presentations/180322-voxxed-bucharest/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Bucharest 2018-03-22
