@@ -1,4 +1,4 @@
-= Peter Palaga
+= Peter Palaga's talks
 :showtitle:
 :page-title: Peter Palaga's talks
 :icons: font

@@ -1,0 +1,105 @@
+= `srcdeps`, do not touch my poms!
+:showtitle:
+:page-navtitle: srcdeps, do not touch my poms!
+:page-excerpt: Excerpt goes here.
+:page-root: ../../../
+
+image::/images/2018/srcdeps-logo-with-text.svg[srcdeps,height=60,alt=srcdeps,link="https://github.com/srcdeps/srcdeps"]
+
+== Traditional dependencies
+
+Software projects often depend on artifacts produced by other projects. Those artifacts typically contain compiled code
+and are usually available in remote repositories (Maven Central, jcenter, ...) on the internet. Build tools, such as
+Maven and Gradle are responsible for finding them, downloading them and adding them to the build class path of the
+dependent project.
+
+
+== Source dependencies
+
+Sometimes, we find ourselves in a situation when some required binary dependency is not available in any remote
+artifact repository. But we still may have access to its sources. Building manually is often sufficient, but in case we
+need this regularly, a tool to automate the process becomes a necessity.
+
+Such a tool would have to:
+
+* Check out the sources (e.g. from a git repo)
+* Build the artifacts locally
+* Put them wherever the dependent project expects them (in case of Maven, this would be in the Local Maven Repository)
+
+`https://github.com/srcdeps/srcdeps[srcdeps]` is a set of tools which provide this functionality for Maven and Gradle.
+
+
+== The original "pom destructive mode"
+
+`srcdeps` before version 3.3.0 used to work in "pom destructive mode": to be able to build some dependency from
+sources, it was necessary to edit `pom.xml` of the dependent project, e.g.
+
+[source,xml,subs=+quotes]
+----
+<dependency>
+  <groupId>org.my-group</groupId>
+  <artifactId>my-artifact</artifactId>
+  <version>1.2.3-SRC-revision-*deadbeef*</version>
+</dependency><!--             ⬑ a git commit ID, branch or tag  -->
+----
+
+I heart voices not liking this, esp. if `srcdeps` was considered for integration testing. Therefore I added the new
+"pom non-desctructive mode".
+
+== The new "pom non-desctructive mode"
+
+In this mode, the dependency in the dependent project can stay as it is, say
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.my-group</groupId>
+  <artifactId>my-artifact</artifactId>
+  <version>1.2.3-SNAPSHOT</version>
+</dependency>
+----
+
+To tell `srcdeps` that this particular dependency is a source dependency, the configuration needs to be done in
+`https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml[srcdeps.yaml]`:
+
+[source,yaml]
+----
+configModelVersion: 2.3                # srcdeps.yaml file
+repositories:
+  org.my-group:
+    includes:
+    - org.my-group
+    urls:
+    - git:https://github.com/someorg/my-project.git
+
+    buildVersionPattern: .*-SNAPSHOT   # any version matching this
+    buildRef: branch-master            # will be rebuilt using
+                                       # master branch
+----
+
+Here, the `buildVersionPattern` and `buildRef` contain the same pieces of information that we originally stored
+in the version strings of `pom.xml` files.
+
+`srcdeps` is able to rebuild any dependency version from any tag, commitID or branch name configured in
+`srcdeps.yaml`. It does not need to be a SNAPSHOT version as in the example above.
+
+
+== What if other builds mess with my Local Maven Repository?
+
+What if I rebuild `org.my-group:my-artifact:1.2.3-SNAPSHOT` at any random commit and install it to my Local
+Maven Repository? The above dependent project would then see an artifact it was not supposed to be built against, right?
+
+That's a valid concern and `srcdeps-maven` (since 3.3.1) has a build-in mechanism to avoid such situations.
+When `srcdeps` sees an artifact in the Local Maven Repository, that is supposed to be built from sources, it compares
+its sha1 hash against a hash it has stored itself when building it. In case of a mismatch, it simply rebuilds the
+artifact from sources and remembers the new hash.
+
+
+== What if I do not want `srcdeps` to replace my local SNAPSHOT?
+
+You can run the build with `-Dsrcdeps.skip=true`. That turns the whole `srcdeps` processing off.
+There is currently no way to turn `srcdeps` off per source repository. Feel free to file an
+https://github.com/srcdeps/srcdeps-core/issues[issue] if you need it.
+
+Any feedback is welcome via GitHub https://github.com/srcdeps/srcdeps-core/issues[issues] or via
+https://twitter.com/ppalaga[@ppalaga] on Twitter.
