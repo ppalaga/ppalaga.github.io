@@ -1,0 +1,28 @@
+= Peter Palaga
+:showtitle:
+:page-title: Peter Palaga's talks
+:icons: font
+
+icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
+
+== 2018
+
+ * link:presentations/180509-geecon-krakow/index.html[srcdeps: Stop letting dependencies dictate your life!] GeeCon Krakow 2018-05-09
+ * link:presentations/180322-voxxed-bucharest/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Bucharest 2018-03-22
+ * link:presentations/180312-voxxed-vienna/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Vienna 2018-03-12
+
+== 2017
+
+ * link:presentations/171020-geecon-prague/index.html[srcdeps - source dependencies with Maven and Gradle] GeeCon Prague 2017-10-20
+ * link:presentations/170508-jug-vienna/index.html[srcdeps - source dependencies with Maven and Gradle] Java Vieanna Meetup 2017-05-08
+ * link:presentations/170316-voxxed-days-vienna/index.html[Java EE Microservices with WildFly Swarm] Voxxed Days Vienna 2017-03-16
+ * link:presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html[Getting Continuous with Maven and srcdeps] DevConf Brno 2017-01-28
+
+== 2016
+
+ * link:160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html[Continuous Integration/Delivery with Maven and srcdeps] 2016-09-09
+
+== 2015
+
+ * link:presentations/150929-srcdeps-maven-plugin/150929-srcdeps-maven-plugin.html[srcdeps-maven-plugin - an intro] 2015-09-29
+ * link:presentations/150207-devconf-brno/nested-projects-in-eclipse.html[Presenting large multi-module projects in Eclipse] DevConf Brno 2015
