@@ -2214,6 +2214,10 @@ meta.foundation-mq-topbar {
     list-style: none;
 }
 
+.top-bar li {
+    float:left;
+}
+
 .top-bar .row {
     max-width: none;
 }

@@ -1,0 +1,249 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><code>srcdeps</code>, do not touch my poms!</title>
+    <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body>
+
+
+<!-- Nav Bar -->
+
+<nav class="top-bar" data-topbar>
+    <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name">
+            <h1>
+                <a href="/index.html">Home</a>
+            </h1>
+        </li>
+        <li class="name">
+            <h1>
+                <a href="/talks.html">Talks</a>
+            </h1>
+        </li>
+        <!-- <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li> -->
+    </ul>
+</nav>
+<!-- End Nav -->
+
+
+<!-- Main Page Content and Sidebar -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div class="large-9 columns" role="content">
+
+        <h1><code>srcdeps</code>, do not touch my poms!</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://github.com/srcdeps/srcdeps"><img src="/images/2018/srcdeps-logo-with-text.svg" alt="srcdeps" height="60"></a>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="traditional_dependencies">Traditional dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Software projects often depend on artifacts produced by other projects. Those artifacts typically contain compiled code
+and are usually available in remote repositories (Maven Central, jcenter, &#8230;&#8203;) on the internet. Build tools, such as
+Maven and Gradle are responsible for finding them, downloading them and adding them to the build class path of the
+dependent project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="source_dependencies">Source dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sometimes, we find ourselves in a situation when some required binary dependency is not available in any remote
+artifact repository. But we still may have access to its sources. Building manually is often sufficient, but in case we
+need this regularly, a tool to automate the process becomes a necessity.</p>
+</div>
+<div class="paragraph">
+<p>Such a tool would have to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check out the sources (e.g. from a git repo)</p>
+</li>
+<li>
+<p>Build the artifacts locally</p>
+</li>
+<li>
+<p>Put them wherever the dependent project expects them (in case of Maven, this would be in the Local Maven Repository)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code><a href="https://github.com/srcdeps/srcdeps">srcdeps</a></code> is a set of tools which provide this functionality for Maven and Gradle.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_original_pom_destructive_mode">The original "pom destructive mode"</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>srcdeps</code> before version 3.3.0 used to work in "pom destructive mode": to be able to build some dependency from
+sources, it was necessary to edit <code>pom.xml</code> of the dependent project, e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.my-group<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>my-artifact<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>1.2.3-SRC-revision-<strong>deadbeef</strong><span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span><span class="comment">&lt;!--             ⬑ a git commit ID, branch or tag  --&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I heart voices not liking this, esp. if <code>srcdeps</code> was considered for integration testing. Therefore I added the new
+"pom non-desctructive mode".</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_new_pom_non_desctructive_mode">The new "pom non-desctructive mode"</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this mode, the dependency in the dependent project can stay as it is, say</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.my-group<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>my-artifact<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>1.2.3-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To tell <code>srcdeps</code> that this particular dependency is a source dependency, the configuration needs to be done in
+<code><a href="https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml">srcdeps.yaml</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">configModelVersion</span>: <span class="string"><span class="content">2.3</span></span>                <span class="comment"># srcdeps.yaml file</span>
+<span class="key">repositories</span>:
+  <span class="key">org.my-group</span>:
+    <span class="key">includes</span>:
+    - <span class="string"><span class="content">org.my-group</span></span>
+    <span class="key">urls</span>:
+    - <span class="string"><span class="content">git:https://github.com/someorg/my-project.git</span></span>
+
+    <span class="key">buildVersionPattern</span>: <span class="string"><span class="content">.*-SNAPSHOT</span></span>   <span class="comment"># any version matching this</span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">branch-master</span></span>            <span class="comment"># will be rebuilt using</span>
+                                       <span class="comment"># master branch</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, the <code>buildVersionPattern</code> and <code>buildRef</code> contain the same pieces of information that we originally stored
+in the version strings of <code>pom.xml</code> files.</p>
+</div>
+<div class="paragraph">
+<p><code>srcdeps</code> is able to rebuild any dependency version from any tag, commitID or branch name configured in
+<code>srcdeps.yaml</code>. It does not need to be a SNAPSHOT version as in the example above.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what_if_other_builds_mess_with_my_local_maven_repository">What if other builds mess with my Local Maven Repository?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>What if I rebuild <code>org.my-group:my-artifact:1.2.3-SNAPSHOT</code> at any random commit and install it to my Local
+Maven Repository? The above dependent project would then see an artifact it was not supposed to be built against, right?</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s a valid concern and <code>srcdeps-maven</code> (since 3.3.1) has a build-in mechanism to avoid such situations.
+When <code>srcdeps</code> sees an artifact in the Local Maven Repository, that is supposed to be built from sources, it compares
+its sha1 hash against a hash it has stored itself when building it. In case of a mismatch, it simply rebuilds the
+artifact from sources and remembers the new hash.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what_if_i_do_not_want_code_srcdeps_code_to_replace_my_local_snapshot">What if I do not want <code>srcdeps</code> to replace my local SNAPSHOT?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can run the build with <code>-Dsrcdeps.skip=true</code>. That turns the whole <code>srcdeps</code> processing off.
+There is currently no way to turn <code>srcdeps</code> off per source repository. Feel free to file an
+<a href="https://github.com/srcdeps/srcdeps-core/issues">issue</a> if you need it.</p>
+</div>
+<div class="paragraph">
+<p>Any feedback is welcome via GitHub <a href="https://github.com/srcdeps/srcdeps-core/issues">issues</a> or via
+<a href="https://twitter.com/ppalaga">@ppalaga</a> on Twitter.</p>
+</div>
+</div>
+</div>
+
+    </div>
+
+    <!-- End Main Content -->
+
+    <!-- Sidebar
+
+    <aside class="large-3 columns">
+
+        <h4>Posts</h4>
+        <ul id="posts" class="posts nav">
+            
+            <li><a href="./2018/06/05/srcdeps-do-not-touch-my-poms.html">srcdeps, do not touch my poms!</a></li>
+            
+        </ul>
+
+        <div class="panel">
+            <h5>Featured</h5>
+
+            <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball irure bacon
+                nulla pork belly cupidatat meatloaf cow.</p>
+        </div>
+
+    </aside>
+
+    -->
+    <!-- End Sidebar -->
+</div>
+
+<!-- End Main Content and Sidebar -->
+
+
+<!-- Footer
+
+<footer class="row">
+    <div class="large-12 columns">
+        <hr>
+        <div class="row">
+            <div class="large-12 columns">
+                <p>Footer</p>
+            </div>
+        </div>
+    </div>
+</footer>
+-->
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>
