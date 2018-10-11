@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>srcdeps</title><meta content="yes" name="apple-mobile-web-app-capable" /><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" /><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport" /><link href="reveal.js-3.5.0/css/reveal.css" rel="stylesheet" /><link rel="stylesheet" href="reveal.js-3.5.0/css/theme/wildfly-swarm.css" id="theme" /><style>/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
+/*pre.CodeRay {background-color:#f7f7f8;}*/
+.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
+.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
+.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
+table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
+table.CodeRay td{vertical-align: top;line-height:1.45}
+table.CodeRay td.line-numbers{text-align:right}
+table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
+table.CodeRay td.code{padding:0 0 0 .5em}
+table.CodeRay td.code>pre{padding:0}
+.CodeRay .debug{color:#fff !important;background:#000080 !important}
+.CodeRay .annotation{color:#a2a2ff}
+.CodeRay .attribute-name{color:#000080}
+.CodeRay .attribute-value{color:#700}
+.CodeRay .binary{color:#509}
+.CodeRay .comment{color:#ffff59;font-style:italic}
+.CodeRay .char{color:#04d}
+.CodeRay .char .content{color:#04d}
+.CodeRay .char .delimiter{color:#039}
+.CodeRay .class{color:#7d9eff;font-weight:bold}
+.CodeRay .complex{color:#a08}
+.CodeRay .constant,.CodeRay .predefined-constant{color:#00d2d2}
+.CodeRay .color{color:#099}
+.CodeRay .class-variable{color:#369}
+.CodeRay .decorator{color:#b0b}
+.CodeRay .definition{color:#099}
+.CodeRay .delimiter{color:#000}
+.CodeRay .doc{color:#970}
+.CodeRay .doctype{color:#34b}
+.CodeRay .doc-string{color:#d42}
+.CodeRay .escape{color:#666}
+.CodeRay .entity{color:#800}
+.CodeRay .error{color:#ee78e6}
+.CodeRay .exception{color:inherit}
+.CodeRay .filename{color:#099}
+.CodeRay .function{color:#900;font-weight:bold}
+.CodeRay .global-variable{color:#00d2d2}
+.CodeRay .hex{color:#058}
+.CodeRay .integer,.CodeRay .float{color:#099}
+.CodeRay .include{color:#555}
+.CodeRay .inline{color:#000}
+.CodeRay .inline .inline{background:#ccc}
+.CodeRay .inline .inline .inline{background:#bbb}
+.CodeRay .inline .inline-delimiter{color:#11dd3d}
+.CodeRay .inline-delimiter{color:#11dd3d}
+.CodeRay .important{color:#555;font-weight:bold}
+.CodeRay .interpreted{color:#b2b}
+.CodeRay .instance-variable{color:#00d2d2}
+.CodeRay .label{color:#970}
+.CodeRay .local-variable{color:#963}
+.CodeRay .octal{color:#40e}
+.CodeRay .predefined{color:#369}
+.CodeRay .preprocessor{color:#579}
+.CodeRay .pseudo-class{color:#555}
+.CodeRay .directive{font-weight:bold}
+.CodeRay .type{font-weight:bold}
+.CodeRay .predefined-type{color:inherit}
+.CodeRay .reserved,.CodeRay .keyword {color:#ee78e6;font-weight:bold}
+.CodeRay .key{color:#ee78e6}
+.CodeRay .key .delimiter{color:#ee78e6}
+.CodeRay .key .char{color:#80f}
+.CodeRay .value{color:#088}
+.CodeRay .regexp .delimiter{color:#ee78e6}
+.CodeRay .regexp .content{color:#ee78e6}
+.CodeRay .regexp .modifier{color:#ee78e6}
+.CodeRay .regexp .char{color:#11dd3d}
+.CodeRay .regexp .function{color:#404;font-weight:bold}
+.CodeRay .string{color:#d20}
+.CodeRay .string .string .string{background:#ffd0d0}
+.CodeRay .string .content{color:#11dd3d}
+.CodeRay .string .char{color:#11dd3d}
+.CodeRay .string .delimiter{color:#11dd3d}
+.CodeRay .shell{color:#11dd3d}
+.CodeRay .shell .delimiter{color:#11dd3d}
+.CodeRay .symbol{color:#990073}
+.CodeRay .symbol .content{color:#a60}
+.CodeRay .symbol .delimiter{color:#630}
+.CodeRay .tag{color:#00d2d2}
+.CodeRay .tag-special{color:#d70}
+.CodeRay .variable{color:#036}
+.CodeRay .insert{background:#afa}
+.CodeRay .delete{background:#faa}
+.CodeRay .change{color:#aaf;background:#007}
+.CodeRay .head{color:#f8f;background:none}
+.CodeRay .insert .insert{color:#080}
+.CodeRay .delete .delete{color:#800}
+.CodeRay .change .change{color:#66f}
+.CodeRay .head .head{color:#f4f}</style><link href="reveal.js-3.5.0/lib/css/zenburn.css" rel="stylesheet" /><script>var link = document.createElement( 'link' );
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = window.location.search.match( /print-pdf/gi ) ? "reveal.js-3.5.0/css/print/pdf.css" : "reveal.js-3.5.0/css/print/paper.css";
+document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="reveal.js-3.5.0/lib/js/html5shiv.js"></script><![endif]--></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><img id="conf-logo-first" src="images/JCON-duesseldorf-2018.png" />
+                      <h1><span class="image"><img src="images/srcdeps-logo-white-on-transparent-500x500.png" alt="srcdeps logo" width="130" height="130" /></span> <code>srcdeps</code></h1><div class="preamble"><div class="paragraph"><p><span class="big">&#160;&#160;Don&#8217;t let dependencies</span><br />
+<span class="big">&#160;&#160;dictate your life!</span></p></div>
+<div class="paragraph"><p>&#160;</p></div>
+<div class="paragraph"><p>Peter Palaga</p></div>
+<div class="paragraph"><p><a href="https://twitter.com/ppalaga">@ppalaga</a></p></div></div></section>
+<section id="peter_palaga"><h2>Peter Palaga</h2><div class="ulist"><ul><li><p>Senior software engineer at Red Hat Middleware</p><div class="ulist"><ul><li><p>WildFly Camel/Red Hat Fuse, WildFly/JBoss EAP and others</p></li></ul></div></li><li><p>Author of <code><a href="https://github.com/srcdeps/srcdeps">srcdeps</a></code></p></li><li><p>Views in this presentation are my own</p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>&#8230;&#8203; and there is my twitter handle at the bottom ;)</p></li></ul></div></aside></section>
+<section id="agenda"><h2>Agenda</h2><div class="ulist"><ul><li><p>Source dependencies:</p><div class="ulist"><ul><li><p>What is it</p></li><li><p>What is it good for</p></li></ul></div></li><li><p>Implementations:</p><div class="ulist"><ul><li><p><code><a href="https://github.com/srcdeps/srcdeps">srcdeps</a></code> for Maven</p></li><li><p>Gradle 4.10+ source dependencies</p></li></ul></div></li><li><p>Demo</p></li><li><p>Limitations, related technologies</p></li></ul></div>
+<aside class="notes"></aside></section>
+<section><section id="what_are_source_dependencies"><h2>What are source dependencies?</h2></section><section id="the_usual_dependencies"><h2>The "usual" dependencies</h2><div class="ulist"><ul><li><p>Software projects often depend on <strong>artifacts</strong> produced by other projects</p></li><li><p>Those artifacts</p><div class="ulist"><ul><li><p>typically contain compiled code</p></li><li><p>usually available in repositories (Maven Central, jcenter, &#8230;&#8203;) on the internet</p></li></ul></div></li><li><p>Build tools (Maven, Gradle, &#8230;&#8203;) responsible for finding and downloading the dependencies</p></li></ul></div></section><section id="source_dependencies"><h2>Source dependencies</h2><div class="ulist"><ul><li><p>Build of a git commit deterministic enough</p><div class="paragraph"><p>&#8658; Source code of a dependency enough to use it in a dependent project</p></div></li><li><p>The build tool has to:</p><div class="ulist"><ul><li><p>Check out the sources (e.g. from a git repo)</p></li><li><p>Build the artifacts required by the dependent project</p></li></ul></div></li></ul></div>
+<div class="paragraph"><p>NB: Dependency artifacts do not need to be available in an artifact repository</p></div></section></section>
+<section><section id="the_idea_is_not_new"><h2>The idea is not new</h2><div class="paragraph"><p>Some languages (or their build tools) have it for some time already</p></div></section><section id="ruby"><h2>Ruby</h2><div class="paragraph"><p><code>Gemfile</code> of a Ruby project</p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="ruby language-ruby"><span class="comment"># A binary dependency pulled from rubygems.org</span>
+gem <span class="string"><span class="delimiter">'</span><span class="content">rack</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">2.0.1</span><span class="delimiter">'</span></span>
+
+<span class="comment"># A source dependency built by Blunder</span>
+<span class="comment"># from a git commit</span>
+gem <span class="string"><span class="delimiter">'</span><span class="content">rack</span><span class="delimiter">'</span></span>,
+    <span class="symbol">:git</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">https://github.com/rack/rack.git</span><span class="delimiter">'</span></span>,
+    <span class="symbol">:ref</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">0bd839d</span><span class="delimiter">'</span></span></code></pre></div></div></section><section id="scala"><h2>Scala</h2><div class="paragraph"><p><code>build.sbt</code></p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="comment">// A binary dependency</span>
+libraryDependencies +=
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">com.typesafe.play</span><span class="delimiter">&quot;</span></span> %% <span class="string"><span class="delimiter">&quot;</span><span class="content">play-slick</span><span class="delimiter">&quot;</span></span> % <span class="string"><span class="delimiter">&quot;</span><span class="content">2.0.2</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment">// A source dependency</span>
+myProject
+  .dependsOn(
+    ProjectRef(
+      uri(<span class="string"><span class="delimiter">&quot;</span><span class="content">git://github.com/freekh/play-slick.git#v1.2.3</span><span class="delimiter">&quot;</span></span>)
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">play-slick</span><span class="delimiter">&quot;</span></span>
+    )
+  )</code></pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Anybody knows any other language/build tool allowing this?</p></li></ul></div></aside></section></section>
+<section><section id="what_is_this_good_for"><h2>What is this good for?</h2><div class="paragraph"><p>Generally:</p></div><div class="ulist"><ul><li><p>No release of the dependency in a remote artifact repository such as Maven Central</p></li><li><p>Sources of the dependency available</p></li></ul></div></section><section id="testing_and_integration"><h2>Testing and Integration</h2><div class="ulist"><ul><li><p>Test each commit of the dependency inside the dependent project</p></li><li><p>Find issues early</p></li><li><p>Speedup the delivery of the dependent project</p></li></ul></div></section><section id="fixing_third_party_code_12"><h2>Fixing third-party code (1/2)</h2><div class="paragraph"><p>Dependency project dead or not releasing fast enough</p></div>
+<div class="ulist"><ul><li><p>Fork and use as a source dependency</p></li><li><p>No consent from the dependency project needed</p></li></ul></div></section><section id="fixing_third_party_code_22"><h2>Fixing third-party code (2/2)</h2><div class="paragraph"><p>Dependency project doing nasty things</p></div>
+<div class="ulist"><ul><li><p>Fork and accept only some of their changes (e.g. security fixes)</p></li><li><p>Throw away all that can harm your stability</p></li><li><p>Again, no consent from the dependency project needed</p></li></ul></div></section></section>
+<section><section id="implementations"><h2>Implementations</h2><div class="paragraph"><p>of source dependencies for Java</p></div></section><section id=""><h2>&#160;</h2><table id="sd-impls" class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead><tr><th class="tableblock halign-left valign-top"><code>srcdeps</code></th><th class="tableblock halign-left valign-top"><a href="https://blog.gradle.org/introducing-source-dependencies">Gradle</a></th></tr><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="https://github.com/srcdeps/srcdeps-maven">srcdeps-maven</a></code><br /></p><p class="tableblock">&#160;&#160;• Since 2015/10<br />
+&#160;&#160;• Robust and stable</p><p class="tableblock"><code><a href="https://github.com/srcdeps/srcdeps-gradle-plugin">srcdeps-gradle-plugin</a></code></p><p class="tableblock">&#160;&#160;• PoC 2017/10</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">&#160;&#160;• Build-in support<br />
+&#160;&#160;• Since Gradle 4.10 2010/08</p></td></tr></table>
+<aside class="notes"></aside></section></section>
+<section><section id="srcdeps"><h2><code>srcdeps</code></h2></section><section id="how_srcdeps_works_13"><h2>How <code>srcdeps</code> works (1/3)</h2><div class="paragraph"><p>Configuration to map dependency artifacts to source repository URLs and specific revisions</p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="yaml language-yaml"><span class="key">configModelVersion</span>: <span class="string"><span class="content">2.3</span></span>  <span class="comment"># srcdeps.yaml file</span>
+<span class="key">repositories</span>:
+  <span class="key">org.mygroup</span>:    <span class="comment"># a repository ID</span>
+    <span class="key">includes</span>:
+    - <span class="string"><span class="content">org.mygroup</span></span> <span class="comment"># a groupId[:artifactId[:version]] pattern</span>
+                  <span class="comment"># may contain * wildcards</span>
+    <span class="key">urls</span>:
+    - <span class="string"><span class="content">git:https://github.com/ppalaga/junit4.git</span></span>
+
+    <span class="comment"># The git ref to build</span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">revision-abcd1234</span></span>
+
+    <span class="comment"># trigger source build only for versions matching this pattern</span>
+    <span class="key">buildVersionPattern</span>: <span class="string"><span class="content">.*-SNAPSHOT</span></span></code></pre></div></div></section><section id="how_srcdeps_works_23"><h2>How <code>srcdeps</code> works (2/3)</h2><div class="paragraph text-left"><p>Mechanism to trigger the build of the dependency:</p></div>
+<div class="ulist"><ul><li><p><code>srcdeps-maven</code>: custom implementation of the Local Maven Repository</p></li><li><p><code>srcdeps-gradle-plugin</code>: <code>srcdeps</code> plugin scans the dependencies during <code>afterEvaluate</code> phase</p></li></ul></div></section><section id="how_srcdeps_work_33"><h2>How <code>srcdeps</code> work (3/3)</h2><div class="paragraph text-left"><p>For every lookup in the Local Maven Repository:</p></div>
+<div class="ulist"><ul><li class="fragment"><p>Find a git URL for it in <code>srcdeps.yaml</code>, if found then</p></li><li class="fragment"><p>Checkout the source to <code>~/.m2/srcdeps</code> directory</p></li><li class="fragment"><p>Change the versions in the <code>pom.xml</code>/<code>build.gradle</code> files to whatever version string was requested</p></li><li class="fragment"><p>Build the dependency and install the resulting artifacts locally</p></li><li class="fragment"><p>The primary build then takes the artifacts from the Maven Local Repository</p></li></ul></div></section></section>
+<section><section id="demo_srcdeps_with_maven"><h2>Demo: <code>srcdeps</code> with Maven</h2><div class="paragraph"><p><a href="index.html#/_code_srcdeps_code_for_gradle">Skip things shown live</a></p></div></section><section id="lets_have_a_simple_project"><h2>Let&#8217;s have a simple project</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Demo</span> {
+  <span class="directive">public</span> <span class="predefined-type">String</span> sayHello() {
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello World!</span><span class="delimiter">&quot;</span></span>;
+  }
+}
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoTest</span> {
+  <span class="annotation">@Test</span>
+  <span class="directive">public</span> <span class="type">void</span> sayHelloTest() {
+    Assert.assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello World!</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Demo().sayHello());
+  }
+}</code></pre></div></div></section><section id="we_need_a_new_assertion"><h2>We need a new assertion</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Demo</span> {
+  <span class="directive">public</span> <span class="predefined-type">String</span> sayHello() {
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello World!</span><span class="delimiter">&quot;</span></span>;
+  }
+}
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DemoTest</span> {
+  <span class="annotation">@Test</span>
+  <span class="directive">public</span> <span class="type">void</span> sayHelloTest() {
+    Assert.<strong class="keyword">assertHelloJcon</strong>(<span class="keyword">new</span> Demo().sayHello());
+    <span class="comment">//      ⬑ not available in the stock jUnit :(</span>
+  }
+}</code></pre></div></div></section><section id="clone_junit"><h2>Clone JUnit</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Assert</span> {
+
+  <span class="comment">// Add the new method to org.junit.Assert</span>
+  <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> assertHelloJcon(<span class="predefined-type">String</span> actual) {
+    assertEquals(
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">Not the right conference!!!</span><span class="delimiter">&quot;</span></span>,
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello JCON!</span><span class="delimiter">&quot;</span></span>, actual
+    );
+  }
+...</code></pre></div></div>
+<div class="paragraph"><p>... and commit and push to your fork</p></div></section><section id="intialize_srcdeps_configuration_in_the_dependent_project"><h2>Intialize <code>srcdeps</code> configuration in the dependent project</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">mvn org.srcdeps.mvn:srcdeps-maven-plugin:3.3.2:init</code></pre></div></div>
+<div class="paragraph"><p>That generates <code>.mvn/extensions.xml</code> and <code>.mvn/srcdeps.yaml</code> files for you</p></div></section><section id="mvnextensions_xml"><h2><code>.mvn/extensions.xml</code></h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="xml language-xml"><span class="tag">&lt;extensions&gt;</span>
+  <span class="tag">&lt;extension&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.srcdeps.mvn<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>srcdeps-maven-local-repository<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;/extension&gt;</span>
+<span class="tag">&lt;/extensions&gt;</span></code></pre></div></div>
+<div class="ulist"><ul><li><p>Maven Core Extensions since Maven 3.3.1</p></li><li><p>Allows for replacing substantial parts of Maven by our own custom implementations</p></li><li><p>Much more powerful than the plugin API</p><div class="ulist"><ul><li><p>Parent, BoM imports are looked up earlier than any plugin code can be invoked</p></li></ul></div></li></ul></div></section><section id="srcdeps_yaml"><h2><code>srcdeps.yaml</code></h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="yaml language-yaml"><span class="key">configModelVersion</span>: <span class="string"><span class="content">2.3</span></span>
+<span class="key">repositories</span>:
+  <span class="key">junit</span>:
+    <span class="key">includes</span>:
+    - <span class="string"><span class="content">junit</span></span> <span class="comment"># a groupId[:artifactId[:version]] pattern</span>
+            <span class="comment"># may contain * wildcards</span>
+    <span class="key">urls</span>:
+    - <span class="string"><span class="content">git:https://github.com/ppalaga/junit4.git</span></span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">revision-26d7205c48b7c28b278de403a0473cd9e4bee90b</span></span>
+    <span class="key">buildVersionPattern</span>: <span class="string"><span class="content">.*-srcdeps</span></span></code></pre></div></div>
+<div class="ulist"><ul><li><p>Defines which artifacts should be built from which git repos and which particular revisions</p></li><li><p>Plus a few other options</p></li></ul></div></section><section id="upgrade_junit_in_the_dependent_project"><h2>Upgrade <code>junit</code> in the dependent project</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="xml language-xml">...
+<span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>junit<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>junit<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+  <span class="tag">&lt;version&gt;</span>4.13-srcdeps<span class="tag">&lt;/version&gt;</span><span class="comment">&lt;!-- -srcdeps suffix to match --&gt;</span>
+                                 <span class="comment">&lt;!--  buildVersionPattern     --&gt;</span>
+                                 <span class="comment">&lt;!--  in srcdeps.yaml         --&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span>
+...</code></pre></div></div></section><section id="build_the_dependent_project"><h2>Build the dependent project</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">cd srcdeps-demo
+mvn clean test
+...
+Failed tests:
+  sayHelloTest(org.srcdeps.DemoTest): Not the right conference!
+    expected:&lt;Hello [JCON]!&gt; but was:&lt;Hello [World]!&gt;
+...</code></pre></div></div>
+<div class="paragraph"><p>Fix <code>Demo.sayHello()</code> to return <code>"Hello JCON!"</code></p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="shell language-shell">cd srcdeps-demo
+mvn clean test
+...
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+...
+BUILD SUCCESS</code></pre></div></div>
+<div class="paragraph"><p>Q.E.D.</p></div></section><section id="interesting_locations"><h2>Interesting locations</h2><div class="ulist"><ul><li><p>The source dependency was built under <code>${local.maven.repo.dir}/../srcdeps/${groupId}</code>, typically <code>~/.m2/srcdeps/${groupId}</code></p></li><li><p>The source dependency was installed in the local Maven repo, typically `~/.m2/repository</p></li></ul></div></section></section>
+<section><section id="srcdeps_features"><h2><code>srcdeps</code> features</h2><div class="ulist"><ul><li><p>Dependencies can refer to not only commits, but also branches and tags:</p><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="yaml language-yaml"><span class="comment"># srcdeps.yaml file</span>
+<span class="key">configModelVersion</span>: <span class="string"><span class="content">2.3</span></span>
+<span class="key">repositories</span>:
+  <span class="key">org.mygroup</span>:
+    <span class="error">...</span>
+    <span class="comment"># to build from git commit 26d7205c48b7c28b278de403a0473cd9e4bee90b</span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">revision-26d7205c48b7c28b278de403a0473cd9e4bee90b</span></span>
+    <span class="comment"># or from git branch called 1.x</span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">branch-1.x</span></span>
+    <span class="comment"># or from git tag called v1.2.3</span>
+    <span class="key">buildRef</span>: <span class="string"><span class="content">tag-v1.2.3</span></span></code></pre></div></div>
+<div class="paragraph"><p>&#160;</p></div></li><li><p>In Maven, source dependencies work for vitually any kind of a dependency incl. parent, managed imports and even plugins</p></li></ul></div></section><section id="srcdeps_yaml_config_options"><h2><code>srcdeps.yaml</code> config. options</h2><div class="ulist"><ul><li class="fragment"><p><code>verbosity</code> of dependency builds</p></li><li class="fragment"><p>Custom arguments for dependency builds, e.g. <code>-Dcheckstyle.skip</code></p></li><li class="fragment"><p><code>-DskipTests</code> by default</p></li><li class="fragment"><p><code>buildTimeout</code></p></li><li class="fragment"><p>By default <code>failWith: {goals: release:prepare}</code> to prevent releases with source dependencies</p></li><li class="fragment"><p>Complete reference: <a href="https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml" class="bare">https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml</a></p></li></ul></div></section></section>
+<section><section id="gradle_4_10_source_dependencies"><h2>Gradle 4.10+ source dependencies</h2><div class="imageblock" style=""><img src="images/gradle-source-dependencies.png" alt="gradle source dependencies" /></div><div class="paragraph"><p><a href="https://blog.gradle.org/introducing-source-dependencies" class="bare">https://blog.gradle.org/introducing-source-dependencies</a></p></div></section><section id="gradle_source_dependencies_demo"><h2>Gradle source dependencies demo</h2></section><section id="hello_gradle_project"><h2><code>hello-gradle</code> project</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Hello</span>  {
+    <span class="directive">public</span> <span class="predefined-type">String</span> greet()  {
+        <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from a Gradle dependency!</span><span class="delimiter">&quot;</span></span>;
+    }
+}</code></pre></div></div></section><section id="a_project_dependent_on_hello_gradle"><h2>A project dependent on <code>hello-gradle</code></h2><div class="paragraph"><p>Lives in a separate git repository</p></div>
+<div class="listingblock"><div class="content"><pre class="CodeRay"><code class="java language-java"><span class="directive">public</span> <span class="type">class</span> <span class="class">HelloTest</span> {
+    <span class="annotation">@Test</span>
+    <span class="directive">public</span> <span class="type">void</span> greet() {
+        Assert.assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from a Gradle dependency!</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> Hello().greet());
+    }
+}</code></pre></div></div></section><section id="use_hello_gradle_as_a_source_dependency"><h2>Use <code>hello-gradle</code> as a source dependency</h2><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="groovy language-groovy"><span class="comment">// settings.gradle</span>
+sourceControl {
+    gitRepository(<span class="string"><span class="delimiter">&quot;</span><span class="content">https://github.com/ppalaga/181011-hello-gradle.git</span><span class="delimiter">&quot;</span></span>) {
+        producesModule(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.srcdeps.hello:hello-gradle</span><span class="delimiter">&quot;</span></span>)
+    }
+}
+
+<span class="comment">// build.gradle</span>
+dependencies {
+    implementation(<span class="string"><span class="delimiter">'</span><span class="content">org.srcdeps.hello:hello-gradle</span><span class="delimiter">'</span></span>) {
+        version {
+            branch = <span class="string"><span class="delimiter">'</span><span class="content">master</span><span class="delimiter">'</span></span>
+        }
+    }
+}</code></pre></div></div></section><section id="gradle_source_dependencies_features_and_limitations"><h2>Gradle source dependencies features and limitations</h2><div class="ulist"><ul><li class="fragment"><p>Supports building from tags and branches</p></li><li class="fragment"><p>Commit IDs unsupported ATM, <a href="https://github.com/gradle/gradle-native/issues/883">issue reported</a></p></li><li class="fragment"><p>Gradle only ATM, although API available to write a plugin for depending on Maven/Ant/&#8230;&#8203; projects too</p></li><li class="fragment"><p>No way to customize the dependency build</p><div class="ulist"><ul><li><p>If the jar task depends on running a testsuite, there is no way to avoid it</p></li></ul></div></li><li class="fragment"><p>Gradle composite builds under the hood</p></li></ul></div></section><section id="gradle_composite_build_cb"><h2>Gradle composite build (CB)</h2><div class="ulist"><ul><li><p>Combine multiple interdependent builds</p></li><li><p>Speedup thanks to incremental builds</p></li></ul></div></section></section>
+<section><section id="limitations_and_related_technologies"><h2>Limitations and related technologies</h2></section><section id="general_limitations_of_source_dependencies"><h2>General limitations of source dependencies</h2><div class="paragraph"><p>Can you think of any?</p></div>
+<div class="ulist"><ul><li class="fragment"><p>Tools unaware of source dependencies (IDEs, static pom.xml analysers, &#8230;&#8203;) will see them as non-available</p></li><li class="fragment"><p>Only git supported ATM</p></li><li class="fragment"><p>Imperfect interoperability Maven ⇄  Gradle</p></li><li class="fragment"><p>Git commits, tags and branches may disappear from repos; whole repos can be deleted</p><div class="ulist"><ul><li><p>Use your own forks/mirrors instead of third party repos</p></li></ul></div></li></ul></div></section><section id="limitations_build_reproducibility"><h2>Limitations: build reproducibility</h2><div class="paragraph"><p>The jars and wars built at two occasions will not be the same</p></div>
+<div class="ulist"><ul><li class="fragment"><p>Problem of all Java build tools</p></li><li class="fragment"><p>Java and build tool versions</p><div class="ulist"><ul><li><p><code>mvnw</code> and <code>enforcer</code> to mitigate</p></li></ul></div></li><li class="fragment"><p>Environment and time dependent inputs</p></li><li class="fragment"><p>ZIP spec requires the entries to be timestamped</p></li></ul></div></section><section id="release_to_a_public_maven_repo"><h2>Release to a public Maven repo?</h2><div class="imageblock" style=""><img src="images/release-with-srcdeps.svg" alt="release with srcdeps" /></div></section><section id="release_to_a_public_maven_repo_2"><h2>Release to a public Maven repo?</h2><div class="imageblock" style=""><img src="images/release-with-srcdeps-2.svg" alt="release with srcdeps 2" /></div></section><section id="go_to_production_with_srcdeps"><h2>Go to production with <code>srcdeps</code>?</h2><div class="paragraph"><p>&#160;</p></div>
+<div class="paragraph"><p><span class="big">Why not?</span></p></div>
+<div class="paragraph"><p>&#160;</p></div>
+<div class="paragraph"><p>As long as your ZIP, Docker image, etc. contains all binary deps</p></div>
+<aside class="notes"></aside></section></section>
+<section><section id="source_dependencies_vs_maven_snapshots"><h2>Source dependencies vs. Maven SNAPSHOTs?</h2></section><section id="snapshots_built_locally"><h2>SNAPSHOTs built locally</h2><div class="ulist"><ul><li><p>What you build is what you get</p></li><li><p>Handy on a developer machine</p></li><li><p>Hard to share:</p><div class="ulist"><ul><li><p>CI machines</p></li><li><p>Teammates</p></li></ul></div></li></ul></div></section><section id="remote_snapshots_are_evil"><h2>Remote SNAPSHOTs are evil</h2><div class="ulist"><ul><li class="fragment"><p>You never know what you get</p><div class="ulist"><ul><li><p>local/remote SNAPSHOT?</p></li><li><p>latest today != latest tomorrow</p><div class="paragraph"><p>&#160;</p></div></li></ul></div></li><li class="fragment"><p>The build of a component depending on another SNAPSHOT component</p><div class="ulist"><ul><li><p><strong>Not reproducible</strong> over time</p></li><li><p>Reverts won&#8217;t bring the previous working state</p><div class="paragraph"><p>&#160;</p></div></li></ul></div></li><li class="fragment"><p>Remote SNAPSHOTs should be always off</p></li></ul></div></section></section>
+<section><section id="source_dependencies_vs_jitpack_io"><h2>Source dependencies vs. <code>jitpack.io</code></h2><div class="paragraph"><p><code>jitpack.io</code>: a remote maven repo that builds from sources on demand</p></div><div class="listingblock"><div class="content"><pre class="CodeRay"><code class="xml language-xml"><span class="tag">&lt;repositories&gt;</span>
+  <span class="tag">&lt;repository&gt;</span>
+     <span class="tag">&lt;id&gt;</span>jitpack.io<span class="tag">&lt;/id&gt;</span>
+     <span class="tag">&lt;url&gt;</span>https://jitpack.io<span class="tag">&lt;/url&gt;</span>
+  <span class="tag">&lt;/repository&gt;</span>
+<span class="tag">&lt;/repositories&gt;</span></code></pre></div></div></section><section id="jitpack_io_limitations"><h2><code>jitpack.io</code> limitations</h2><div class="ulist"><ul><li><p><code>G:A:V</code> to source repository maping rigid: <code>com.github.User:Repo:Version</code></p></li><li><p>Special DNS entry needed for a custom <code>groupId</code><br />
+&#160;&#160; ⬑ Controlled by the owner</p></li><li><p>Dependent project may not choose to build from a fork</p></li></ul></div></section><section id="jitpack_io_advantages"><h2><code>jitpack.io</code> advantages</h2><div class="ulist"><ul><li><p>Caching artifacts &#8594; only the first hit delayed by building</p></li><li><p>If they cache forever, they can guarantee bitwise reproducibility</p></li></ul></div></section></section>
+<section id="source_dependencies_wrap_up"><h2>Source dependencies wrap up</h2><div class="ulist"><ul><li class="fragment"><p>Allow depending on unreleased artifacts</p></li><li class="fragment"><p>Appropriate build tool required</p><div class="ulist"><ul><li><p><code>srcdeps</code> for Maven</p></li><li><p>Gradle 4.10+</p></li></ul></div></li><li class="fragment"><p>Additional flexibility</p><div class="paragraph"><p>&#160;&#160;&#160; <strong>Dependencies may not dictate your life anymore!</strong></p></div></li></ul></div></section>
+<section id="srcdeps_project_info"><h2><code>srcdeps</code> project info</h2><div class="ulist"><ul><li><p>All code and contributions are under Apache License v2</p></li><li><p>Documentation: <a href="https://github.com/srcdeps/srcdeps/blob/master/README.adoc" class="bare">https://github.com/srcdeps/srcdeps/blob/master/README.adoc</a></p></li><li><p>Quickstarts: <a href="https://github.com/srcdeps/srcdeps-maven/tree/master/srcdeps-maven-quickstarts" class="bare">https://github.com/srcdeps/srcdeps-maven/tree/master/srcdeps-maven-quickstarts</a></p></li><li><p>Issues and discussions: <a href="https://github.com/srcdeps/srcdeps-maven/issues" class="bare">https://github.com/srcdeps/srcdeps-maven/issues</a></p></li><li><p><a href="https://twitter.com/ppalaga" class="bare">https://twitter.com/ppalaga</a></p></li></ul></div>
+<div class="paragraph"><p>Contributions welcome!</p></div></section>
+<section id=""><h2>&#160;</h2><div class="paragraph"><p>Thanks!</p></div></section></div>
+                      <div class="footer">
+                        <div class="left">
+                          <img src="images/srcdeps-logo-with-text-white-orange.svg" />
+                        </div>
+                                <a href="https://twitter.com/ppalaga">@ppalaga</a>
+                        <div class="right">
+                          <img id="conf-logo" src="images/JCON-duesseldorf-2018.png" />
+                        </div>
+                      </div></div><script src="reveal.js-3.5.0/lib/js/head.min.js"></script><script src="reveal.js-3.5.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+Reveal.initialize({
+  // Display controls in the bottom right corner
+  controls: false,
+  // Display a presentation progress bar
+  progress: true,
+  // Set a per-slide timing for speaker notes, null means none
+  defaultTiming: null,
+  // Display the page number of the current slide
+  slideNumber: false,
+  // Push each slide change to the browser history
+  history: true,
+  // Enable keyboard shortcuts for navigation
+  keyboard: true,
+  // Enable the slide overview mode
+  overview: true,
+  // Vertical centering of slides
+  center: true,
+  // Enables touch navigation on devices with touch input
+  touch: true,
+  // Loop the presentation
+  loop: false,
+  // Change the presentation direction to be RTL
+  rtl: false,
+  // Randomizes the order of slides each time the presentation loads
+  shuffle: false,
+  // Turns fragments on and off globally
+  fragments: true,
+  // Flags if the presentation is running in an embedded mode,
+  // i.e. contained within a limited portion of the screen
+  embedded: false,
+  // Flags if we should show a help overlay when the questionmark
+  // key is pressed
+  help: true,
+  // Flags if speaker notes should be visible to all viewers
+  showNotes: false,
+  // Global override for autolaying embedded media (video/audio/iframe)
+  // - null: Media will only autoplay if data-autoplay is present
+  // - true: All media will autoplay, regardless of individual setting
+  // - false: No media will autoplay, regardless of individual setting
+  autoPlayMedia: null,
+  // Number of milliseconds between automatically proceeding to the
+  // next slide, disabled when set to 0, this value can be overwritten
+  // by using a data-autoslide attribute on your slides
+  autoSlide: 0,
+  // Stop auto-sliding after user input
+  autoSlideStoppable: true,
+  // Enable slide navigation via mouse wheel
+  mouseWheel: false,
+  // Hides the address bar on mobile devices
+  hideAddressBar: true,
+  // Opens links in an iframe preview overlay
+  previewLinks: false,
+  // Theme (e.g., beige, black, league, night, serif, simple, sky, solarized, white)
+  // NOTE setting the theme in the config no longer works in reveal.js 3.x
+  //theme: Reveal.getQueryHash().theme || 'wildfly-swarm',
+  // Transition style (e.g., none, fade, slide, convex, concave, zoom)
+  transition: Reveal.getQueryHash().transition || 'linear',
+  // Transition speed (e.g., default, fast, slow)
+  transitionSpeed: 'default',
+  // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
+  backgroundTransition: 'fade',
+  // Number of slides away from the current that are visible
+  viewDistance: 3,
+  // Parallax background image (e.g., "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'")
+  parallaxBackgroundImage: '',
+  // Parallax background size in CSS syntax (e.g., "2100px 900px")
+  parallaxBackgroundSize: '',
+
+  // The "normal" size of the presentation, aspect ratio will be preserved
+  // when the presentation is scaled to fit different resolutions. Can be
+  // specified using percentage units.
+  width: 960,
+  height: 700,
+
+  // Factor of the display size that should remain empty around the content
+  margin: 0.1,
+
+  // Bounds for smallest/largest possible scale to apply to content
+  minScale: 0.2,
+  maxScale: 1.5,
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+      { src: 'reveal.js-3.5.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'reveal.js-3.5.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'reveal.js-3.5.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      
+      { src: 'reveal.js-3.5.0/plugin/zoom-js/zoom.js', async: true },
+      { src: 'reveal.js-3.5.0/plugin/notes/notes.js', async: true }
+  ]
+});Reveal.addEventListener('slidechanged', function(event) {
+    if (Reveal.isFirstSlide()) {
+        document.querySelector('.reveal .footer').attributes['class'].value = 'footer first-slide';
+    } else {
+        document.querySelector('.reveal .footer').attributes['class'].value = 'footer';
+    }
+});
+Reveal.addEventListener( 'ready', function( event ) {
+    if (Reveal.isFirstSlide()) {
+        document.querySelector('.reveal .footer').attributes['class'].value = 'footer first-slide';
+    } else {
+        document.querySelector('.reveal .footer').attributes['class'].value = 'footer';
+    }
+});</script></body></html>
