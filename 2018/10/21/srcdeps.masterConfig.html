@@ -56,7 +56,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Before <code>srcdeps-maven</code> 3.4.0 and <code>srcdeps.yaml</code> <code>configModelVersion</code> 2.4, building of dependencies from source "on the
+<p>Before <code>srcdeps-maven</code> 3.4.0 and <code>srcdeps.yaml</code> model version 2.4, building of dependencies from source "on the
 fly" worked only for direct dependencies. If <code>my-project</code> depended on <code>dependency-1</code>, I could declare <code>dependency-1</code>
 as a source dependency in <code>srcdeps.yaml</code> of <code>my-project</code>. But if I also wanted a specific unreleased commit of
 <code>dependency-2</code>, which <code>dependency-1</code> depends on (and needs to be built and run against), I had no other option than
@@ -90,14 +90,10 @@ upgrades) the <code>.mvn/extensions.xml</code> file as necessary.</p>
 <div class="sect1">
 <h2 id="limitations">Limitations</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
+<div class="paragraph">
 <p><code>srcdeps.masterConfig</code> is not supported by our experimental Gradle builder. You can still have direct Gradle
 dependencies but builds those will not forward the master <code>srcdeps.yaml</code> to the eventual builds of their own
 dependencies.</p>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>Any feedback is welcome via GitHub <a href="https://github.com/srcdeps/srcdeps-core/issues">issues</a> or via
