@@ -1,0 +1,40 @@
+= `srcdeps.masterConfig` - build direct and transitive dependencies with a single `srcdeps.yaml` file
+:showtitle:
+:page-navtitle: srcdeps.masterConfig - build all dependencies with single `srcdeps.yaml`
+:page-root: ../../../
+
+image::/images/2018/srcdeps-logo-with-text.svg[srcdeps,height=60,alt=srcdeps,link="https://github.com/srcdeps/srcdeps"]
+
+
+Before `srcdeps-maven` 3.4.0 and `srcdeps.yaml` model version 2.4, building of dependencies from source "on the
+fly" worked only for direct dependencies. If `my-project` depended on `dependency-1`, I could declare `dependency-1`
+as a source dependency in `srcdeps.yaml` of `my-project`. But if I also wanted a specific unreleased commit of
+`dependency-2`, which `dependency-1` depends on (and needs to be built and run against), I had no other option than
+fork `dependency-1` and add `srcdeps.yaml` with `dependency-2` there.
+
+The new `srcdeps.masterConfig` feature allows you to avoid the intermediary `srcdeps.yaml` files. Now you can declare
+`dependency-2` in the `srcdeps.yaml` file of `my-project` and you do not need to fork `dependency-1`.
+
+
+== How it works
+
+`srcdeps.yaml` configuration model version 2.4 introduces a new boolean attribute `forwardAsMasterConfig`. If it
+is `true`, the URI of the current `srcdeps.yaml` file will be forwarded as a system property `srcdeps.masterConfig` to
+every dependency builder. The dependency builder picks `srcdeps.yaml` from the URI, uses it during its own build and
+forwards it to every dependency build it triggers itself.
+
+With `forwardAsMasterConfig: true` the dependency also does not need to have `srcdeps-maven-local-repository` declared
+in its `.mvn/extensions.xml`. After checking out the sources of the dependency, `srcdeps-maven` auto-creates (or
+upgrades) the `.mvn/extensions.xml` file as necessary.
+
+`forwardAsMasterConfig` attribute is optional and the default value is `false`.
+
+
+== Limitations
+
+`srcdeps.masterConfig` is not supported by our experimental Gradle builder. You can still have direct Gradle
+dependencies but builds those will not forward the master `srcdeps.yaml` to the eventual builds of their own
+dependencies.
+
+Any feedback is welcome via GitHub https://github.com/srcdeps/srcdeps-core/issues[issues] or via
+https://twitter.com/ppalaga[@ppalaga] on Twitter.
