@@ -7,6 +7,7 @@ icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} i
 
 == 2018
 
+* link:presentations/181127-jvm-con-cologne/index.html[Blue-green Deployments and Canary Releases on Kubernetes] JVM Con Cologne 2018-11-27
 * link:presentations/181011-jcon-duesseldorf/index.html[srcdeps: Don't let dependencies dictate your life!] JCON Düsseldorf 2018-10-11
 * link:presentations/180622-voxxed-days-luxembourg/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Luxembourg 2018-06-22
 * link:presentations/180509-geecon-krakow/index.html[srcdeps: Stop letting dependencies dictate your life!] GeeCon Krakow 2018-05-09
