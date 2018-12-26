@@ -23,7 +23,7 @@ icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} i
 
 == 2016
 
- * link:160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html[Continuous Integration/Delivery with Maven and srcdeps] 2016-09-09
+ * link:presentations/160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html[Continuous Integration/Delivery with Maven and srcdeps] 2016-09-09
 
 == 2015
 
