@@ -5,6 +5,10 @@
 
 icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
 
+== 2019
+
+* link:presentations/190125-devconf-brno/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] DevConf Brno 2019-01-25
+
 == 2018
 
 * link:presentations/181127-jvm-con-cologne/index.html[Blue-green Deployments and Canary Releases on Kubernetes] JVM Con Cologne 2018-11-27
