@@ -1,0 +1,281 @@
+/**
+ * Black theme for reveal.js.
+ *
+ * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+// Include theme-specific fonts
+@import url(quarkus-resources/font/open-sans/font.css);
+@import url(quarkus-resources/font/roboto-mono/font.css);
+
+
+// Override theme settings (see ../template/settings.scss)
+$backgroundColor: #111;
+
+$mainColor: #fff;
+$mainFont: 'Open Sans', Arial, sans-serif;
+
+$linkColor: #0ff;
+$linkColorHover: lighten( $linkColor, 20% );
+
+$headingFont: 'Open Sans', Arial, sans-serif;
+$headingTextShadow: none;
+$headingColor: #0ff;
+$headingFontWeight: 300;
+$headingLetterSpacing: 0.2em;
+$headingTextTransform: uppercase;
+$heading1Size: 2.5em;
+$heading2Size: 1.5em;
+$heading3Size: 1.2em;
+$heading4Size: 1.0em;
+
+
+@mixin bodyBackground() {
+  background-image: url(quarkus-resources/img/bg-home.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
+
+.reveal code {
+  color: #f57900;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.reveal pre code  {
+  color: #dcdcdc;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 22px;
+  line-height: 1.4em;
+  border: 1px solid #0ff;
+  padding: 0.5em;
+  background: #282a36;
+}
+
+.reveal ul li {
+  list-style-type: none;
+  position: relative;    /* It is required for setting position to absolute in the next rule. */
+}
+
+.reveal ul li::before {
+  color: #fff;
+  content: '\2022';
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal ul li li::before {
+  color: #fff;
+  content: '\25AA';
+  font-size: 0.9em;
+  left: -0.6em;
+  position: absolute;
+  top: 0.12em;
+}
+
+.reveal section img {
+  margin: 0px;
+  background: none;
+  border: none;
+  box-shadow: none
+}
+
+
+div .footer {
+  border-top: 1px solid #dcdcdc;
+  bottom: 5px;
+  display: none;
+  font-size: 0.85em;
+  height: 50px;
+  line-height: 1.6em;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+div .footer img.left {
+  float: left;
+  height: 40px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+div .footer div.left {
+  float: left;
+  height: 40px;
+  margin-right: 6px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+div .footer a.left {
+  display: block;
+  float: left;
+  font-weight: 300;
+  font-size: 25px;
+  height: 40px;
+  letter-spacing: 0.2em;
+  margin-right: 6px;
+  margin-left: 15px;
+  text-transform: uppercase;
+  z-index: 1000;
+}
+
+div .footer img.right {
+  float: right;
+  height: 40px;
+  margin-top: 8px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+div .conf-banner {
+  background-color: #6c5d53;
+  float: left;
+  height: 100%;
+  width: 120px;
+}
+
+div .conf-banner img {
+  z-index: 1000;
+}
+
+table.plaintable td {
+  border-bottom: none;
+  padding: 0px 0px 0px 0px;
+  vertical-align: top;
+}
+
+.reveal ul.check li::before {
+  color: #0ff;
+  content: '\2713';
+  font-size: 1.1em;
+  left: -0.9em;
+  position: absolute;
+}
+
+.reveal li ul.check li::before {
+  color: #0ff;
+  content: '\2713';
+  font-size: 1.1em;
+  left: -0.9em;
+  position: absolute;
+  top: 0em;
+}
+
+#container-first td {
+  padding-top: 1.2em;
+  padding-left: 0.35em
+}
+#container-first td:first-of-type {
+  padding-left: 0em
+}
+#container-first td:nth-child(3) {
+  padding-left: 1.2em
+}
+
+#libs-frameworks a {
+  color: #fff;
+}
+
+#rss {
+    border-collapse: collapse;
+}
+#rss img {
+  height: 4em;
+}
+#rss tr:first-child td {
+  font-size: 25px;
+  white-space: nowrap;
+  padding: 0px;
+  text-shadow: none;
+}
+#rss td {
+  border-top: 40px solid #0000;
+  border-left: 30px solid #0000;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  font-size: 50px;
+  padding: 25px;
+  vertical-align: middle;
+  text-shadow: 2px 2px 5px #000;
+}
+#rss td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
+
+
+#jvm-graalvm {
+    border-collapse: collapse;
+}
+#jvm-graalvm tr:first-child td {
+  white-space: nowrap;
+  text-align: center;
+  color: #0ff;
+  letter-spacing: 0.2em;
+  font-weight: 300;
+  font-size: 50px;
+}
+#jvm-graalvm td {
+  border-top: 20px solid #0000;
+  border-left: 20px solid #0000;
+}
+#jvm-graalvm td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
+
+#wiring {
+  margin-top: 50px;
+  border-collapse: collapse;
+}
+#wiring td {
+  border-top: 20px solid #0000;
+  border-left: 50px solid #0000;
+  text-align: center;
+  vertical-align: middle;
+}
+#wiring td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
+
+
+@media print  {
+  body {
+    color: #000;
+    background: #fff;
+  }
+  .reveal {
+    color: #000;
+  }
+  .backgrounds {
+    background-color: #fff;
+  }
+  .reveal a,
+  .reveal h1,
+  .reveal h2,
+  .reveal h3,
+  .reveal h4,
+  .reveal h5,
+  .reveal h6 {
+    color: #03c;
+  }
+}
