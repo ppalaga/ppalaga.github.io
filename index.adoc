@@ -14,6 +14,7 @@ Senior software engineer at Red Hat Middleware working on WildFly Camel and Fuse
 
 == Talks
 
+* link:presentations/190322-camel-k-vd-bucharest/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] Voxxed Days Bucharest 2019-03-22
 * link:presentations/190321-quarkus-vd-bucharest/index.html[Quarkus - Supersonic Subatomic Java] Voxxed Days Bucharest 2019-03-21
 * link:presentations/190125-devconf-brno/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] DevConf Brno 2019-01-25
 * link:presentations/181127-jvm-con-cologne/index.html[Blue-green Deployments and Canary Releases on Kubernetes] JVM Con Cologne 2018-11-27

@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Judson';
+    src: url('judson.eot');
+    src: url('judson.eot?#iefix') format('embedded-opentype'),
+         url('judson.woff') format('woff'),
+         url('judson.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Judson';
+    src: url('judson-italic.eot');
+    src: url('judson-italic.eot?#iefix') format('embedded-opentype'),
+         url('judson-italic.woff') format('woff'),
+         url('judson-italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Judson';
+    src: url('judson-bold.eot');
+    src: url('judson-bold.eot?#iefix') format('embedded-opentype'),
+         url('judson-bold.woff') format('woff'),
+         url('judson-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
