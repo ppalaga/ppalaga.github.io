@@ -1,4 +1,13 @@
-# reveal.js [![Build Status](https://travis-ci.org/hakimel/reveal.js.svg?branch=master)](https://travis-ci.org/hakimel/reveal.js) <a href="https://slides.com?ref=github"><img src="https://s3.amazonaws.com/static.slid.es/images/slides-github-banner-320x40.png?1" alt="Slides" width="160" height="20"></a>
+# <a href="https://quarkus.io">Quarkus</a> theme for reveal.js 3.7.0
+
+PRs and issues related to the Quarkus theme should be sent to https://github.com/ppalaga/reveal.js-quarkus
+
+### Typical workflow:
+
+Run `npm start` and add your slides to `index.html`.
+
+
+## reveal.js
 
 A framework for easily creating beautiful presentations using HTML. [Check out the live demo](http://revealjs.com/).
 

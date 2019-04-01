@@ -27,7 +27,7 @@
         <div class="reveal">
             <div id="belt"></div>
             <div id="footer">
-                <a href="https://quarkus.io/" class="left" target="_blank">quarkus.io</a> <a href="https://twitter.com/ppalaga">@ppalaga</a> <img src="css/theme/quarkus-assets/img/red-hat-white.svg" class="right">
+                <a href="https://quarkus.io/" class="left" target="_blank">quarkus.io</a> <a href="https://twitter.com/ppalaga">@ppalaga</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="css/theme/quarkus-assets/img/red-hat-white.svg" class="right">
             </div>
             <div class="slides">
                 <section>
@@ -108,9 +108,7 @@ INFO  [io.quarkus] (main) Installed features: [cdi, resteasy]
                         <h2>Toolkit</h2>
                         and
                         <h2>Framework</h2>
-                        for writing Java<sup class="fragment" data-fragment-index="1">1</sup> applications
-
-                        <br><br><br><small class="fragment" data-fragment-index="1"><sup>1)</sup> and Kotlin</small>
+                        for writing Java and Kotlin applications
                     </section>
                     <section id="graalvm-targets-1">
                         <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets.svg">
@@ -267,8 +265,10 @@ public Publisher&lt;String> stream() {
                         <ul class="check">
                             <li class="fragment">Easy to start with</li>
                             <li class="fragment">Live reload, a.k.a. dev mode</li>
-                            <li class="fragment">Maven or Gradle</li>
                             <li class="fragment">Java or Kotlin</li>
+                            <li class="fragment">Maven or Gradle</li>
+                            <li class="fragment">Runners for JUnit 4 and 5</li>
+                            <li class="fragment">Isolation from GraalVM CLI/API</li>
                         </ul>
                     </section>
                     <section id="container-1st">
@@ -276,7 +276,7 @@ public Publisher&lt;String> stream() {
                         <table id="container-first" class="plaintable">
                             <tr class="fragment">
                                 <td><a>💾</a></td>
-                                <td>Small size on disk</td>
+                                <td>Small&nbsp;size&nbsp;on&nbsp;disk</td>
                                 <td><a>✓</a></td>
                                 <td>Small&nbsp;container&nbsp;images</td>
                             </tr>
@@ -287,11 +287,8 @@ public Publisher&lt;String> stream() {
                                 <td>Instant scale up</td>
                             </tr>
                             <tr class="fragment">
-                                 <td><a>🔬</a></td>
-                                <td>Low&nbsp;RSS<sup>1</sup>&nbsp;memory
-                                    <br><br>
-                                    <small><sup>1)</sup> Resident Set Size</small>
-                                </td>
+                                <td><a>🔬</a></td>
+                                <td>Low&nbsp;memory&nbsp;footprint</td>
                                 <td><a>✓</a></td>
                                 <td>More containers with the same RAM</td>
                             </tr>
@@ -302,10 +299,12 @@ public Publisher&lt;String> stream() {
                     <section id="measuring-mem">
                         <h2>Measuring memory</h2>
                         <br><br>
-                        <a href="https://en.wikipedia.org/wiki/Resident_set_size">RSS</a> = all RAM consumed by the process
+                        <a href="https://en.wikipedia.org/wiki/Resident_set_size">RSS</a><sup>1</sup> = all RAM consumed by the process
                         <pre style=""><code class="hljs shell">$ ps -o pid,rss,command -p $(pgrep quarkus)
   PID   RSS COMMAND
 11229 12628 ./target/quarkus-hello</code></pre>
+                        <p>&nbsp;</p>
+                        <small><sup>1)</sup> Resident Set Size</small>
                     </section>
                     <section id="rss">
                         <h2>Memory (RSS)</h2>
