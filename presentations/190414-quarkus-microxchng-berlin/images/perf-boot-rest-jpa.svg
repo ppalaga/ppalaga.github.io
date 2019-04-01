@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="3336.0002"
+   height="386"
+   viewBox="0 0 33359.999 3860.0006"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg30"
+   sodipodi:docname="perf-boot-rest-jpa.svg"
+   inkscape:version="0.92.4 (unknown)">
+  <metadata
+     id="metadata36">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs34" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1830"
+     inkscape:window-height="1051"
+     id="namedview32"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.4946565"
+     inkscape:cx="871.44058"
+     inkscape:cy="-35.131284"
+     inkscape:window-x="82"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg30"
+     inkscape:pagecheckerboard="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid867"
+       originx="5.7220451e-06"
+       originy="-0.00019687804" />
+  </sodipodi:namedview>
+  <rect
+     style="fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke:#00ffff;stroke-width:20;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect865"
+     width="184.04689"
+     height="1280"
+     x="10.000006"
+     y="10"
+     rx="0"
+     ry="0" />
+  <rect
+     ry="0"
+     rx="0"
+     y="1290.0001"
+     x="10.000006"
+     height="1280"
+     width="8750"
+     id="rect4573"
+     style="opacity:1;fill:#008080;fill-opacity:1;fill-rule:evenodd;stroke:#00ffff;stroke-width:19.99999809;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     style="opacity:1;fill:#004040;fill-opacity:1;fill-rule:evenodd;stroke:#00ffff;stroke-width:19.99999809;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect4575"
+     width="33340.004"
+     height="1280"
+     x="9.999999"
+     y="2570.0002"
+     rx="0"
+     ry="0" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:826.66668701px;line-height:1.25;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:10"
+     x="488.16357"
+     y="932.26874"
+     id="text4579"><tspan
+       sodipodi:role="line"
+       id="tspan4602"
+       x="488.16357"
+       y="932.26874">Quarkus + GraalVM  <tspan
+   style="font-weight:normal"
+   id="tspan821">0.055 sec</tspan></tspan></text>
+  <text
+     id="text4606"
+     y="2205.6638"
+     x="9099.7686"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:826.66668701px;line-height:1.25;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:10"
+     xml:space="preserve"><tspan
+       id="tspan4604"
+       sodipodi:role="line"
+       x="9099.7686"
+       y="2205.6638">Quarkus + OpenJDK  <tspan
+   style="font-weight:normal"
+   id="tspan823">2.5 sec</tspan></tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:826.66668701px;line-height:1.25;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:10"
+     x="18839.77"
+     y="3505.6638"
+     id="text4610"><tspan
+       y="3505.6638"
+       x="18839.77"
+       sodipodi:role="line"
+       id="tspan4608">Traditional Cloud-Native Stack  <tspan
+   style="font-weight:normal"
+   id="tspan825">9.5 sec</tspan></tspan></text>
+</svg>

@@ -7,6 +7,7 @@ icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} i
 
 == 2019
 
+* link:presentations/190414-quarkus-microxchng-berlin/index.html[Quarkus - Supersonic Subatomic Java] microXchg Berlin 2019-04-01
 * link:presentations/190322-camel-k-vd-bucharest/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] Voxxed Days Bucharest 2019-03-22
 * link:presentations/190321-quarkus-vd-bucharest/index.html[Quarkus - Supersonic Subatomic Java] Voxxed Days Bucharest 2019-03-21
 * link:presentations/190125-devconf-brno/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] DevConf Brno 2019-01-25
