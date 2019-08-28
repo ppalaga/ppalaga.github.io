@@ -1,0 +1,437 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Camel Quarkus Hackaton</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/quarkus.css">
+        <link rel="shortcut icon" type="image/png" href="css/theme/quarkus-assets/img/favicon.ico" >
+
+        <!-- Theme used for syntax highlighting of code -->
+        <!-- Nothing to include because the highlight.js theme is included in the quarkus reveal.js theme above -->
+        <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <!-- <div class="conf-banner">
+                <img src="images/" alt="" style="position: absolute;bottom: 0;">
+            </div> -->
+            <div id="footer">
+                <img src="images/camel.svg" class="left"><a href="https://twitter.com/ppalaga">@ppalaga</a><img src="images/quarkus-with-text-small.svg" class="right">
+            </div>
+            <div class="slides">
+                <section>
+                    <!-- data-state="belt no-footer" -->
+                    <section id="cover"  data-background-image="images/fuse-team-soccer.jpg" data-background-position="top">
+                        <div style="background-color: #00000066; padding-top: 20px; padding-bottom: 20px">
+                        <img data-src="images/camel-quarkus-with-text-horiz.svg" alt="Apache Camel extensions for Quarkus" class="plain" style="width: 12.0em">
+                        <h1>Hackaton</h1>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>Peter Palaga</p>
+                    </section>
+                    <section id="goal">
+                        <h2>Goal</h2>
+                        Port Camel components to Quarkus
+                    </section>
+                    <section id="agenda">
+                        <h2>Agenda</h2>
+                        <ul>
+                            <li>What is Quarkus</li>
+                            <li>Why Quarkus?</li>
+                            <li>How it works</li>
+                            <li>Grab a component to port!</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section id="what-is-quarkus">
+                        <h2>What is Quarkus?</h2>
+                    </section>
+                    <section id="toolkit-framework">
+                        <h2>Toolkit</h2>
+                        and
+                        <h2>Framework</h2>
+                        for writing Java and Kotlin applications
+                    </section>
+                    <section id="graalvm-targets-1">
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets.svg">
+                    </section>
+                </section>
+                <section>
+                    <section id="why-quarkus">
+                        <h2>Why Quarkus?</h2>
+                    </section>
+                    <section id="container-1st">
+                        <h2>Container First</h2>
+                        <table id="container-first" class="plaintable">
+                            <tr class="fragment">
+                                <td><a>💾</a></td>
+                                <td>Small&nbsp;size&nbsp;on&nbsp;disk</td>
+                                <td><a>✓</a></td>
+                                <td>Small&nbsp;container&nbsp;images</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td><a>🚀</a></td>
+                                <td>Fast boot time</td>
+                                <td><a>✓</a></td>
+                                <td>Instant scale up</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td><a>🔬</a></td>
+                                <td>Low&nbsp;memory&nbsp;footprint</td>
+                                <td><a>✓</a></td>
+                                <td>More containers with the same RAM</td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="easy-to-start-with">
+                        <h1>Easy to start with</h1>
+                    </section>
+                    <section id="standards">
+                        Based on
+                        <h2>Existing standards</h2>
+                        <table class="plaintable" style="font-size: 34px; margin-top: 80px">
+                            <tr>
+                                <td class="fragment" data-fragment-index="1" rowspan="2" style="padding-right: 50px">
+                                    <ul class="check">
+                                        <li>Servlet</li>
+                                        <li>JAX-RS</li>
+                                        <li>JPA, JDBC</li>
+                                        <li>CDI</li>
+                                        <li>Bean&nbsp;Validation</li>
+                                        <li>Transactions</li>
+                                        <li>Logging</li>
+                                    </ul>
+                                </td>
+                                <td class="fragment" data-fragment-index="2" colspan="2">
+                                    <img alt="MicroProfile" src="images/microprofile-logo.png" style="width: 400px">
+                                </td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="2">
+                                <td style="padding-right: 20px">
+                                    <ul class="check">
+                                        <li>Fault&nbsp;Tolerance</li>
+                                        <li>Health</li>
+                                        <li>JWT</li><!--  JSON Web Tokens(JWT) for role based access control(RBAC) of microservice endpoints -->
+                                        <li>Metrics</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul class="check">
+                                        <li>OpenAPI</li>
+                                        <li>OpenTracing</li>
+                                        <li>Reactive&nbsp;Messaging</li>
+                                        <li>Rest Client</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="devjoy">
+                        <h2>Developer joy</h2>
+                        <ul class="check">
+                            <li class="fragment">Live reload, a.k.a. dev mode</li>
+                            <li class="fragment">Java or Kotlin</li>
+                            <li class="fragment">Maven or Gradle</li>
+                            <li class="fragment">Runners for JUnit 4 and 5</li>
+                            <li class="fragment">Isolation from GraalVM CLI/API</li>
+                        </ul>
+                    </section>
+                </section>
+                <section id="how-it-works">
+                    <section data-state="belt">
+                        <h1>How it works</h1>
+                    </section>
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets.svg">
+                    </section>
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-quarkus.svg">
+                    </section>
+                    <section id="traditional-app-server">
+                        <h2>Traditional app server</h2>
+                        <ul>
+                            <li>100s of classes to transform a WAR into a running application</li>
+                                <ul>
+                                    <li>CP scanners, XML parsers, annotation lookups, management model, ...</li>
+                                </ul>
+                            <li>Time and memory overhead</li>
+                            <li>Needed only during the boot/deployment</li>
+                        </ul>
+                    </section>
+                    <section id="build-time-boot">
+                        Quarkus:
+                        <h2>Build time boot</h2>
+                        <p>Do as much deployment work as possible<br>at build time</p>
+                        <ul>
+                            <li>Configuration parsing</li>
+                            <li>Annotation lookup and evaluation</li>
+                            <li>...</li>
+                            <!-- E.g. for CDI all injection points and types to be injected are identified at build time -->
+                        </ul>
+                        <p>Output: recorded "wiring" bytecode to bootstrap the application at runtime</p>
+                    </section>
+                    <section>
+                        <h2 style="text-transform: none">Wiring code invocation</h2>
+                        <p>Decided by extensions</p>
+
+                        <table id="wiring" class="plaintable">
+                            <tr>
+                                <td style="width:10em"><code>static</code>&nbsp;initializer</td>
+                                <td rowspan="2">OR</td>
+                                <td style="width:10em"><code>main()</code></td>
+                            </tr>
+                            <tr>
+                                <td><small>preferred</small></td>
+                                <td><small>access to files,<br>sockets, etc.</small></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <!-- <section>
+                        <h2 style="text-transform: none">Build oriented container</h2>
+                        <img src="images/quarkus-arch.png">
+                        <aside class="notes">
+                            <ul>
+                                <li>Much like an application server</li>
+                                <li>As much as possible happens at build time</li>
+                                <li>The build time container calls extensions to process the various aspects of the app</li>
+                            </ul>
+                        </aside>
+                    </section> -->
+                    <section>
+                        <h2>Quarkus extensions</h2>
+                        <ul>
+                            <li>Units of Quarkus distribution</li>
+                            <li>Configure, boot and integrate a technology into a Quarkus application</li>
+                            <li>Esp. eliminate constructs disliked by GraalVM:
+                                <ul>
+                                    <li>Register classes for reflection, Class substitutions, ...</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                </section>
+                <section id="graalvm">
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-quarkus.svg">
+                    </section>
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-graalvm.svg">
+                    </section>
+                    <section>
+                        <img alt="GraalVM" src="images/graal-vm.svg">
+                        <p>Two distinct things:</p>
+                        <ol>
+                            <li class="fragment">Graal compiler (AoT or JIT)</li>
+                            <li class="fragment">GraalVM - the polyglot VM</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <img alt="" src="images/graal-vm-arch.svg">
+                    </section>
+                    <section>
+                        <sup>In this presentation:</sup>
+                        <h2 style="text-transform: none">GraalVM</h2>
+                        =
+                        <h2 style="text-transform: none">Graal compiler</h2>
+                        +
+                        <h2 style="text-transform: none">SubstrateVM</h2>
+                    </section>
+                    <section>
+                        <h3 style="text-transform: none">AoT<sup>1</sup> compilation with GraalVM</h3>
+                        <p><small><sup>1)</sup> Ahead-of-time (1/2)</small></p>
+                        <img alt="" src="images/graalvm-aot.svg">
+                    </section>
+                    <section>
+                        <h3 style="text-transform: none">AoT compilation with GraalVM</h3>
+                        <p><small>(2/2)</small> </p>
+                        <ul>
+                            <li class="fragment">Static analysis</li>
+                            <li class="fragment">Closed world assumption</li>
+                            <li class="fragment">Dead code elimination:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;classes, fields, methods, branches</li>
+                        </ul>
+                    </section>
+                </section>
+                <section id="graalvm-limitations">
+                    <section>
+                        <img alt="GraalVM" src="images/graal-vm.svg">
+                        <h1>Limitations</h1>
+                    </section>
+                    <section>
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img class="fragment" alt="GraalVM" src="images/unsupported.svg" style="height: 4em; float: left; position: absolute; margin-top: 60px">
+                        <h2>Dynaminc Classloading</h2>
+                        <p class="fragment"><br><br>Deloying jars, wars, etc. at runtime impossible</p>
+                    </section>
+                    <section id="native-interfaces-1">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img class="fragment" alt="GraalVM" src="images/unsupported.svg" style="height: 4em; float: left; position: absolute; margin-top: 60px">
+                        <h2>JVMTI, JMX</h2>
+                        + other native VM interfaces
+                        <p class="fragment"><br><br>No agents</p>
+                        <p class="fragment">JRebel, Byteman, profilers, tracers, ...</p>
+                    </section>
+                    <section id="native-interfaces-2">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/unsupported.svg" style="height: 4em; float: left; position: absolute; margin-top: 60px">
+                        <h2>JVMTI, JMX</h2>
+                        + other native VM interfaces<br><br>
+                        <ul>
+                            <li class="fragment">No Java debugger
+                            <li class="fragment">Native debugger (GDB) still works</li>
+                            <li class="fragment">DWARF debug symbols
+                                <ul>
+                                    <li class="fragment">Inserted only by GraalVM enterprise</li>
+                                    <li class="fragment">Allows stepping through your java code</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section id="finalize-invoke-dynamic">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/unsupported.svg" style="height: 4em; float: left; position: absolute; margin-top: 60px">
+                        <h2>Miscellaneous</h2>
+                        <br><br>
+                        <p class="fragment">Security Manager</p>
+                        <p class="fragment"><code>finalize()</code> (deprecated anyway)</p>
+                        <p class="fragment"><code>InvokeDynamic</code> and <code>MethodHandles</code></p>
+                    </section>
+                    <section id="reflection">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/limited.svg" style="height: 4em; float: left; position: absolute; margin-top: -30px">
+                        <h2>Reflection</h2>
+                        <br><br>
+                        <p>Requires registration via <code>native-image</code> CLI/API</p>
+                        <p><code>@RegisterForReflection</code> in Qarkus</p>
+                    </section>
+                    <section id="more-limited">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/limited.svg" style="height: 4em; float: left; position: absolute; margin-top: -30px">
+                        <h2>More</h2>
+                        <br><br>
+                        <p>Require registration via <code>native-image</code> CLI/API</p>
+                        <ul>
+                            <li>Dynamic proxies</li>
+                            <li>Resources</li>
+                            <li>JNI, Unsafe Memory Access, ...</li>
+                        </ul>
+                    </section>
+                    <section id="static-init-1">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img class="fragment" alt="GraalVM" src="images/love-hate.svg" style="height: 4.5em; float: left; position: absolute; margin-top: -30px">
+                        <h2>Static init</h2>
+                        <p><small>1/2</small></p>
+                        <p class="fragment">Build time OpenJDK instance:</p>
+                        <ul>
+                            <li class="fragment">Resolve classes, run all static initilizers</li>
+                            <li class="fragment">Take a snapshot of the produced heap</li>
+                            <li class="fragment">Store it in the executable</li>
+                        </ul>
+                        <!-- * Initial classloading: serial and complex algo A.class refs B.class refs A.class....
+                          * Graph dependency resolution, static initializers run as a part of it
+                          * one of the biggest costs in starting traditional Java apps
+                          * If you look at WildFly start, this is where the most of the time is spent -->
+                    </section>
+                    <section id="static-init-2">
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/love-hate.svg" style="height: 4.5em; float: left; position: absolute; margin-top: -30px;">
+                        <h2>Static init</h2>
+                        <p><small>2/2</small></p>
+                        <p>Downsides:</p>
+                        <p>no file handles, sockets, threads</p>
+                    </section>
+                    <!-- <section>
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/info.svg" style="height: 4em; float: left; position: absolute; margin-top: -30px">
+                        <h2 style="letter-spacing: 0px"><code>synchronized</code>, <code>wait()</code>, <code>notify()</code></h2>
+                        <p>Implemented using java.util.concurrent.lock</p>
+                        <p>instead of having lock field on every object</p>
+                    </section> -->
+                    <!-- <section data-background-image="images/graal-explicit.jpg">
+                        <aside class="notes">
+                            <p>Using Graal VM:</p>
+                            <ul>
+                                <li>generare a json file with 300 entries for all reflectable members</li>
+                                <li>pass 20 CLI args</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section data-background-image="images/graal-quarkus.jpg"></section> -->
+                </section>
+                <section id="graalvm-limitations">
+                    <section>
+                        <h2>Grab a Camel component</h2>
+                        <br>
+                        → <a href="https://docs.google.com/spreadsheets/d/1EekyV-oR0W3rxNGghzvATVVy6HPC3Z3ZKBQm-JP_hi0/edit?usp=sharing">Camel Quarkus hackaton spreadsheet</a><br>
+                        (in the F2F shared drive)
+                        <br>
+                        <br>
+                        and follow the <a href="https://camel.apache.org/camel-quarkus/latest/contributor-guide.html">https://camel.apache.org/camel-quarkus/latest/contributor-guide.html</a>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                progress: true,
+                history: true,
+                controls: false,
+                margin: 0.01,
+                transition: 'fade', // none/fade/slide/convex/concave/zoom
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                ]
+            });
+            Reveal.configure({
+                keyboard: {
+                    // Make stock laser pointers work
+                    39: 'next', // Right Arrow
+                    37: 'prev',  // Left Arrow
+                    // ... and map the navigation methods to numpad numbers so that there is a proper way to navigate properly
+                    98: 'down', // numpad 2
+                    100: 'left', // numpad 4
+                    102: 'right', // numpad 6
+                    104: 'up' // numpad 8
+                }
+              });
+            function adjustFooterAndConfBannerVisibility(event) {
+                if (Reveal.isFirstSlide()) {
+                    //document.querySelector('.reveal .conf-banner').style.display = 'block';
+                    document.querySelector('.reveal .footer').style.display = 'none';
+                } else {
+                    //document.querySelector('.reveal .conf-banner').style.display = 'none';
+                    document.querySelector('.reveal .footer').style.display = 'block';
+                }
+            }
+            Reveal.addEventListener('slidechanged', adjustFooterAndConfBannerVisibility);
+            Reveal.addEventListener('ready', adjustFooterAndConfBannerVisibility);
+        </script>
+    </body>
+</html>
