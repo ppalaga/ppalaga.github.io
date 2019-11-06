@@ -6,6 +6,7 @@
 icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
 
 == 2019
+* link:presentations/191106-w-jax-quarkus/index.html[Quarkus from Inside] W-JAX Munich 2019-11-06
 * link:presentations/191017-baselone-camel/index.html[Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative] BaselOne 2019-10-17
 * link:presentations/191017-baselone-quarkus/index.html[Quarkus - Supersonic Subatomic Java] BaselOne 2019-10-17
 * link:presentations/190925-jcon-duesseldorf/index.html[Quarkus - Supersonic Subatomic Java] JCOn Düsseldorf 2019-09-25
