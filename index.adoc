@@ -14,6 +14,7 @@ Senior software engineer at Red Hat Middleware working on WildFly Camel and Fuse
 
 == Talks
 
+* link:presentations/200107-writing-quarkus-extensions/index.html[Will my lib or framework work on Quarkus (and GraalVM)?] JUG Basel 2020
 * link:presentations/191106-w-jax-quarkus/index.html[Quarkus from Inside] W-JAX Munich 2019-11-06
 * link:presentations/191017-baselone-camel/index.html[Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative] BaselOne 2019-10-17
 * link:presentations/191017-baselone-quarkus/index.html[Quarkus - Supersonic Subatomic Java] BaselOne 2019-10-17

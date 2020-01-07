@@ -1,0 +1,106 @@
+// copied from https://github.com/quarkusio/quarkusio.github.io/blob/develop/_sass/quarkus.scss
+
+.hljs {
+  display: inline;
+  overflow: inherit;
+  overflow-x: inherit;
+  overflow-y: hidden;
+  background: inherit;
+  padding: 0;
+}
+
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-section,
+.hljs-link {
+  color: $white;
+}
+
+.hljs-keyword {
+  color: $purple;
+}
+
+.hljs,
+.hljs-subst {
+  color: $gray-0;
+}
+
+.hljs-title {
+  color: $yellow;
+}
+
+.hljs-string {
+  color: $teal;
+}
+
+.hljs-meta,
+.hljs-name,
+.hljs-type,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: $orange;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: $accent-green;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+    font-weight: bold;
+}
+
+.hljs-literal,
+.hljs-number {
+  color: $yellow;
+}
+
+.hljs-emphasis {
+  // font-style: italic;
+}
+
+.reveal .slides section code.hljs mark.fragment,
+.reveal .slides section code.hljs mark.fragment .hljs-meta {
+  background-color: inherit;
+  opacity: 100;
+  visibility: inherit;
+  color: inherit;
+}
+
+.reveal .slides section code.hljs mark.fragment.visible,
+.reveal .slides section code.hljs mark.fragment.visible .hljs-meta {
+  background-color: $yellow;
+  opacity: 100;
+  visibility: inherit;
+  color: #000;
+}
+
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out,
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out .hljs-meta  {
+  background-color: inherit;
+  opacity: 100;
+  visibility: inherit;
+  color: inherit;
+}
+
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out.current-fragment,
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out.current-fragment .hljs-meta {
+  background-color: $yellow;
+  opacity: 100;
+  visibility: inherit;
+  color: #000;
+}

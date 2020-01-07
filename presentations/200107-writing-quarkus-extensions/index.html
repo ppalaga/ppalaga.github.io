@@ -1,0 +1,959 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Will my lib or framework work on Quarkus or GraalVM?</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/quarkus.css">
+        <link rel="shortcut icon" type="image/png" href="css/theme/quarkus-assets/img/favicon.ico" >
+
+        <!-- Theme used for syntax highlighting of code -->
+        <!-- Nothing to include because the highlight.js theme is included in the quarkus reveal.js theme above -->
+        <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <div id="belt"></div>
+            <div id="footer">
+                <a href="https://quarkus.io/" target="_blank"><img src="css/theme/quarkus-assets/img/quarkus-logo-with-text.svg" class="left"></a> <a href="https://twitter.com/ppalaga">@ppalaga</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="css/theme/quarkus-assets/img/red-hat-white.svg" class="right">
+            </div>
+            <div class="slides">
+                <section>
+                    <section data-state="belt no-footer">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p style="font-size: 32px">Will my lib or framework work on</p>
+                        <img src="css/theme/quarkus-assets/img/quarkus-logo-with-text.svg" style="width: 8em">
+                        <p style="font-size: 32px">(and GraalVM) ?</p>
+                        <p>&nbsp;</p>
+                        <p>Peter Palaga</p>
+                        <p class="light-font"><a href="https://twitter.com/ppalaga">@ppalaga</a></p>
+                    </section>
+                    <section id="about-me">
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="1" src="images/red-hat-integration-logo-reverse.svg" style="height: 2em">
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="1" src="images/camel.svg" style="height: 2em; margin-left: 2em; margin-right: 2em">
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="2" src="images/camel-quarkus-with-text-vertical.svg" style="height: 3em; margin-bottom: -0.5em">
+                        <h2 style="margin: 1em">Peter Palaga</h2>
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="3" src="images/eap-wildfly-logo.svg" style="height: 2.5em;  margin-bottom: -0.5em">
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="4" src="images/srcdeps-logo-with-text-white-orange.svg" style="height: 1em; margin-left: 3em; margin-right: 2.5em">
+                        <img class="fragment fade-in-then-semi-out" data-fragment-index="4" src="images/ec4j-logo-with-name.svg" style="height: 1em">
+                    </section>
+                    <section id="agenda">
+                        <h2>Agenda</h2>
+                        <ul class="check">
+                            <li>Quarkus intro</li>
+                            <li>AoT<sup>1</sup> compilation: goodies and gotchas</li>
+                            <li>How to write Quarkus extensions</li>
+                            <p><br><small><sup>1)</sup> Ahead of (run-)time</small></p>
+                        </ul>
+                    </section>
+                </section>
+                <section id="what-is-quarkus">
+                    <section data-state="belt">
+                        <h2>What is Quarkus</h2>
+                    </section>
+                    <section id="toolkit-framework">
+                        <h2>Toolkit</h2>
+                        and
+                        <h2>Framework</h2>
+                        for writing Java, Kotlin and Scala applications
+                    </section>
+                    <section id="graalvm-targets-1">
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets.svg">
+                    </section>
+                    <section id="standards">
+                        <h2>Embracing existing standards</h2>
+                        <table class="plaintable" style="font-size: 34px; margin-top: 80px">
+                            <tr>
+                                <td class="fragment" data-fragment-index="1" style="vertical-align: middle">
+                                    Java EE
+                                </td>
+                                <td class="fragment" data-fragment-index="2" colspan="2" style="padding-left: 2em">
+                                    <img alt="MicroProfile" src="images/microprofile-logo.png" style="width: 300px">
+                                </td>
+                                <td class="fragment" data-fragment-index="3" style="padding-left: 2em">
+                                    Spring
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="1">
+                                    <ul class="check" style="font-size: 0.7em">
+                                        <li>Servlet</li>
+                                        <li>JAX-RS</li>
+                                        <li>JPA, JDBC</li>
+                                        <li>CDI</li>
+                                        <li>Bean&nbsp;Validation</li>
+                                        <li>Transactions</li>
+                                    </ul>
+                                </td>
+                                <td class="fragment" data-fragment-index="2" style="padding-left: 2em">
+                                    <ul class="check" style="font-size: 0.7em">
+                                        <li>Fault&nbsp;Tolerance</li>
+                                        <li>Health</li>
+                                        <li>JWT</li><!--  JSON Web Tokens(JWT) for role based access control(RBAC) of microservice endpoints -->
+                                        <li>Metrics</li>
+                                    </ul>
+                                </td>
+                                <td class="fragment" data-fragment-index="2" style="padding-left: 0.7em">
+                                    <ul class="check" style="font-size: 0.7em">
+                                        <li>OpenAPI</li>
+                                        <li>OpenTracing</li>
+                                        <li>Reactive&nbsp;Messaging</li>
+                                        <li>Rest Client</li>
+                                    </ul>
+                                </td>
+                                <td class="fragment" data-fragment-index="3" style="padding-left: 2em">
+                                    <ul class="check" style="font-size: 0.7em" style="padding-left: 2em">
+                                        <li>Spring DI<sup>1</sup></li>
+                                        <li>Spring Web<sup>1</sup></li>
+                                        <li>Spring Data<sup>1</sup></li>
+                                        <li>Spring Security<sup>1</sup></li>
+                                    </ul>
+                                    <br>
+                                    <small><sup>1)</sup>&nbsp;via&nbsp;compatibility&nbsp;layers</small>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="libs-and-frameworks">
+                        <small>Well established</small>
+                        <h2>Libs and frameworks</h2>
+                        <table id="libs-frameworks" class="plaintable" style="font-size: 16px; text-transform: uppercase;">
+                            <tr>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://vertx.io/" target="_blank">
+                                        <img src="images/logoset_eclipse_vertx.png">
+                                        <span>Eclipse Vert.x</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://netty.io" target="_blank">
+                                        <img src="images/logoset_netty.png">
+                                        <span>Netty</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://camel.apache.org"
+                                        target="_blank"> <img src="images/logoset_apache_camel.png">
+                                        <span>Apache Camel</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://infinispan.org" target="_blank">
+                                        <img src="images/logoset_infinispan.png">
+                                        <span>Infinispan</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://github.com/ben-manes/caffeine" target="_blank">
+                                        <img src="images/logoset_caffeine.png">
+                                        <span>Caffeine</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://www.keycloak.org/" target="_blank">
+                                        <img src="images/logoset_keycloak.png">
+                                        <span>Keycloak</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://kubernetes.io/" target="_blank">
+                                        <img src="images/logoset_kubernetes.png">
+                                        <span>Kubernetes</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://aws.amazon.com/lambda/" target="_blank">
+                                        <img src="images/logoset_aws-lambda.png">
+                                        <span>AWS Lambda</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://azure.microsoft.com/en-us/services/functions" target="_blank">
+                                        <img src="images/logoset_azure-functions.png">
+                                        <span>Azure Functions</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://tika.apache.org/" target="_blank">
+                                        <img src="images/logoset_apache-tika.png">
+                                        <span>Apache Tika</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://www.elastic.co/products/elasticsearch" target="_blank">
+                                        <img src="images/logoset_elasticsearch.png">
+                                        <span>ElasticSearch</span>
+                                    </a>
+                                </td>
+                                <td style="vertical-align: top; text-align: center; width: 120px; padding: 20px 20px 20px 20px">
+                                    <a href="https://github.com/kiegroup/kogito-tooling#kogito" target="_blank">
+                                        <img src="images/logoset_kogito.png">
+                                        <span>Kogito</span><!-- For bussiness automation -->
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="databases">
+                        <h2>Databases</h2>
+                        <br>
+                        <table id="dbs" class="plaintable">
+                            <tr>
+                                <td style="">
+                                    <ul class="check">
+                                        <li>MySQL, MariaDB</li>
+                                        <li>PostgreSQL</li>
+                                        <li>MS SQL Server</li>
+                                        <li>H2</li>
+                                    </ul>
+                                </td>
+                                <td style="padding-left: 4em">
+                                    <ul class="check">
+                                        <li>FlyWay</li>
+                                        <li>Amazon DynamoDB‎</li>
+                                        <li>MongoDB</li>
+                                        <li>Neo4j</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="devjoy">
+                        <h2>Developer joy</h2>
+                        <ul class="check">
+                            <li class="fragment">Easy to start with:<br>
+                                <code>mvn quarkus:create</code> or <a href="https://code.quarkus.io/">code.quarkus.io</a></li>
+                            <li class="fragment">Live reload:<br>
+                                <code>mvn compile quarkus:dev</code></li>
+                            <li class="fragment">Runners for JUnit 5</li>
+                            <li class="fragment">Isolation from GraalVM CLI</li>
+                            <li class="fragment">Maven or Gradle</li>
+                            <li class="fragment">Java, Kotlin or Scala</li>
+                        </ul>
+                    </section>
+                    <section id="container-1st">
+                        <h2>Container First</h2>
+                        <table id="container-first" class="plaintable">
+                            <tr>
+                                <td><a>💾</a></td>
+                                <td>Small&nbsp;size&nbsp;on&nbsp;disk</td>
+                                <td><a>✓</a></td>
+                                <td>Small&nbsp;container&nbsp;images</td>
+                            </tr>
+                            <tr>
+                                <td><a>🚀</a></td>
+                                <td>Fast boot time</td>
+                                <td><a>✓</a></td>
+                                <td>Instant scale up</td>
+                            </tr>
+                            <tr>
+                                <td><a>🔬</a></td>
+                                <td>Low&nbsp;memory&nbsp;footprint</td>
+                                <td><a>✓</a></td>
+                                <td>More containers with the same RAM</td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <section id="aot-compilation">
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets.svg">
+                    </section>
+                    <section id="graalvm-targets-2">
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-quarkus-focus.svg">
+                    </section>
+                    <section id="graalvm-targets-2">
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-quarkus-focus-graalvm-start.svg">
+                    </section>
+                    <section id="graalvm-limitations">
+                        <h2>AoT<sup>1</sup> compilation</h2>
+                        <p>&nbsp;</p>
+                        <h4>its goodies and gotchas</h4>
+                        <p><br></p>
+                        <p><small><sup>1)</sup> Ahead of (run-)time</small></p>
+                    </section>
+                    <section>
+                        <h3 style="text-transform: none">AoT compilation with GraalVM</h3>
+                        <p><small>&nbsp;</small></p>
+<img class="fragment" data-fragment-index="11" alt="the good parts" src="images/aot-good-parts.svg" style="height: 3.5em; float: left; position: absolute; margin-top: 130px; z-index: 20">
+<pre style="width: 100%"><code class="hljs shell" data-noescape data-trim>$ native-image -jar my-app.jar
+<span class="fragment" data-fragment-index="1">$ ls -lh</span>
+<span class="fragment" data-fragment-index="2">-rw<mark class="fragment" data-fragment-index="3">x</mark>rw<mark class="fragment" data-fragment-index="3">x</mark>r-<mark class="fragment" data-fragment-index="3">x</mark>. 1 ppalaga ppalaga <mark class="fragment" data-fragment-index="4">19M</mark> Mar 20 14:39 my-app
+<span class="fragment" data-fragment-index="5">$ ./my-app</span>
+<span class="fragment" data-fragment-index="6">...
+my-app started in <mark class="fragment" data-fragment-index="7">&lt;20 ms</mark></span>
+<span class="fragment" data-fragment-index="8">$ ps -o rss,command -p $(pgrep my-app)</span>
+<span class="fragment" data-fragment-index="9">  PID   RSS COMMAND
+11229 <mark class="fragment" data-fragment-index="10">12628</mark> ./my-app</span>
+<span class="fragment" data-fragment-index="10">#      ⮤ the process memory in kilobytes</span></code></pre>
+                    </section>
+                    <section id="aot-limitations">
+                        <h4>The</h4>
+                        <h1>gotchas</h1>
+                        <h4>of the AoT compilation</h4>
+                        <small>An incomplete list</small>
+                    </section>
+                    <section>
+                        <h4>The</h4>
+                        <h2>closed world</h3>
+                        <h4>assumption</h4>
+                        <p>&nbsp;</p>
+                        <p>All runtime code has to be known at build time</p>
+                        <p>&nbsp;</p>
+                        <ul>
+                            <li class="fragment">More effective static analysis</li>
+                            <li class="fragment">Dead code elimination:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;classes, fields, methods, branches</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <img class="fragment" alt="unsupported" src="images/unsupported.svg" style="height: 4em; float: left; position: absolute;">
+                        <h3>Dynaminc Classloading</h3>
+                        <small>in a native executable</small>
+                        <p class="fragment"><br><br>Deloying jars, wars, etc. at runtime impossible</p>
+                    </section>
+                    <section id="reflection">
+                        <img class="fragment" alt="registration required" src="images/registration-required.svg" style="height: 300px; float: left; position: absolute;">
+                        <p>Reflection</p>
+                        <p>Dynamic proxies</p>
+                        <p>Classpath resources</p>
+                        <p>JNI, Unsafe Memory Access</p>
+                        <p>...</p>
+                    </section>
+                    <section id="static-init-1">
+                        <img class="fragment" alt="Typically invoked only at compile time" src="images/aot-initilizars-may-run-at-build-time.svg" style="height: 200px; float: left; position: absolute;">
+                        <h3>Class initializers</h3>
+                        <p><small>1/2</small></p>
+                        <p class="fragment">At build time:</p>
+                        <ul>
+                            <li class="fragment">Resolve classes, run "safe" static initilizers</li>
+                            <li class="fragment">Take a snapshot of the produced heap</li>
+                            <li class="fragment">Store it in the executable</li>
+                        </ul>
+                        <!-- * Initial classloading: serial and complex algo A.class refs B.class refs A.class....
+                          * Graph dependency resolution, static initializers run as a part of it
+                          * one of the biggest costs in starting traditional Java apps
+                          * If you look at WildFly start, this is where the most of the time is spent -->
+                    </section>
+                    <section id="static-init-2">
+                        <img alt="Typically invoked only at compile time" src="images/aot-initilizars-may-run-at-build-time.svg" style="height: 200px; float: left; position: absolute;">
+                        <h3>Class initializers</h3>
+                        <p><small>2/2</small></p>
+                        <p>Downsides:</p>
+                        <p>no file handles, sockets, threads</p>
+                    </section>
+                    <!-- <section>
+                        <img alt="GraalVM" src="images/graal-vm.svg" style="height: 1em">
+                        <img alt="GraalVM" src="images/info.svg" style="height: 4em; float: left; position: absolute; margin-top: -30px">
+                        <h2 style="letter-spacing: 0px"><code>synchronized</code>, <code>wait()</code>, <code>notify()</code></h2>
+                        <p>Implemented using java.util.concurrent.lock</p>
+                        <p>instead of having lock field on every object</p>
+                    </section> -->
+                    <section>
+                        <h3>Complex CLI</h3>
+                        <pre><code class="hljs shell" style="overflow: hidden; font-size: 14px">$ native-image -jar my-app.jar \
+    -H:InitialCollectionPolicy=com.oracle.svm.core.genscavenge.CollectionPolicy$BySpaceAndTime \
+    -J-Djava.util.concurrent.ForkJoinPool.common.parallelism=1 \
+    -H:FallbackThreshold=0 \
+    -H:ReflectionConfigurationFiles=file-with-tens-of-entries.json
+    -H:+ReportExceptionStackTraces \
+    -H:+PrintAnalysisCallTree \
+    -H:-AddAllCharsets \
+    -H:EnableURLProtocols=http \
+    -H:-JNI \
+    -H:-UseServiceLoaderFeature \
+    -H:+StackTrace \
+    --no-server \
+    --initialize-at-build-time=my-build-time-init-list.json \
+    -J-Djava.util.logging.manager=org.jboss.logmanager.LogManager \
+    -J-Dio.netty.leakDetection.level=DISABLED \
+    -J-Dvertx.logger-delegate-factory-class-name=io.quarkus.vertx.core.runtime.VertxLogDelegateFactory \
+    -J-Dsun.nio.ch.maxUpdateArraySize=100 \
+    -J-Dio.netty.allocator.maxOrder=1 \
+    -J-Dvertx.disableDnsResolver=true</code></pre>
+                    </section>
+                </section>
+                <section id="how-quarkus-works">
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-graalvm.svg">
+                    </section>
+                    <section>
+                        <img style="width: 100%; margin-bottom: 20px" alt="" src="images/jvm-graalvm-targets-quarkus.svg">
+                    </section>
+                    <section data-state="belt">
+                        <h2>How Quarkus works</h2>
+                    </section>
+                    <section id="traditional-app-server">
+                        <h2>Booting a framework</h2>
+                        <table id="traditional-app-server" class="plaintable" style="width: 1300px; margin-left: -130px">
+                            <tr>
+                                <td style="width: 12em"><ul>
+                                    <li>Many classes run only during the boot</li>
+                                    <li>Later unused</li>
+                                    <li>Still occupy memory</li>
+                                </ul></td>
+                                <td style="padding-left: 1em; font-size: 34px"><ul>
+                                    <li class="fragment">Parse config files: XML, YAML, JSON, ...</li>
+                                    <li class="fragment">Classpath scanning, esp. for annotations</li>
+                                    <li class="fragment">Build framework metamodel objects</li>
+                                    <li class="fragment">Prepare reflection and build proxies</li>
+                                    <li class="fragment">Open sockets, start threads</li>
+                                </ul></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="build-time-boot">
+                        Quarkus:
+                        <h2>Build time boot</h2>
+                        <p>As much work as possible done at build time</p>
+                        <p>Output: recorded bootstrap bytecode</p>
+                    </section>
+                    <section>
+                        <h2 style="text-transform: none">Build oriented container</h2>
+                        <img src="images/quarkus-arch.svg">
+                        <aside class="notes">
+                            <ul>
+                                <li>Much like an application server</li>
+                                <li>As much as possible happens at build time</li>
+                                <li>The build time container calls extensions to process the various aspects of the app</li>
+                            </ul>
+                        </aside>
+                    </section>
+                </section>
+                <section id="extensions">
+                    <section>
+                        <h2>Quarkus extensions</h2>
+                        <br>
+                        <ul>
+                            <li class="fragment">Units of Quarkus distribution (your Maven deps)</li>
+                            <li class="fragment">Configure, boot and integrate a lib/framework into a Quarkus application</li>
+                            <li class="fragment">Make the code lighter to run on a JVM</li>
+                            <li class="fragment">Make the code fit for the GraalVM</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Quarkus Extensions ecosystem</h2>
+                        <br>
+                        <ul>
+                            <li class="fragment">Contribute to
+                                <ul>
+                                    <li><a href="https://github.com/quarkusio/quarkus">github.com/quarkusio/quarkus</a> or</li>
+                                    <li><a href="https://github.com/apache/camel-quarkus">github.com/apache/camel-quarkus</a></li>
+                                </ul>
+                            </li>
+                            <li class="fragment">Or start your own project</li>
+                            <li class="fragment">Follow the <a href="https://quarkus.io/guides/writing-extensions">guide</a> for extension authors</li>
+                        </ul>
+                    </section>
+<!--                    <section>
+                        <h2 style="text-transform: none">Wiring code invocation</h2>
+                        <p>Decided by extensions</p>
+
+                        <table id="wiring" class="plaintable">
+                            <tr>
+                                <td style="width:10em"><code>static</code>&nbsp;initializer</td>
+                                <td rowspan="2">OR</td>
+                                <td style="width:10em"><code>main()</code></td>
+                            </tr>
+                            <tr>
+                                <td><small>preferred</small></td>
+                                <td><small>access to files,<br>sockets, etc.</small></td>
+                            </tr>
+                        </table>
+                    </section>-->
+                </section>
+                <section id="how-to-write-quarkus-extensions">
+                    <section id="anatomy-of-a-quarkus-extension">
+                        <h4>How to write</h4>
+                        <h2>Quarkus Extensions</h2>
+                    </section>
+                    <section id="deployment-runtime-modules">
+                        <h4>Two Maven modules</h4>
+                        <img class="fragment fade-in-then-out" data-fragment-index="2" alt="depends on" src="images/depends-on.svg" style="height: 2em; float: left; position: absolute; margin-top: -5px; margin-left: -7em">
+                        <table class="plaintable" style="margin-top: 70px">
+                            <tr style="font-size: 28px;">
+                                <td style="border: 1px solid #74aff0; padding: 10px"><div style="font-size: 20px; margin: 0px">Build time module</div>
+                                    <code>my-ext-deployment</code>
+                                    <pre class="fragment" data-fragment-index="3" style="width: 100%; margin: 0px; margin-top: 10px"><code class="hljs java" style="border: none" data-noescape data-trim>&nbsp;
+class MyExtProcessor {
+  <mark class="fragment" data-fragment-index="5">@BuildStep</mark>
+  ... buildStep1(...) {...}
+
+  <mark class="fragment" data-fragment-index="5">@BuildStep</mark>
+  ... buildStep2(...) {...}
+
+  ...
+}</code></pre></td>
+                                <td style="padding-left: 50px"></td>
+                                <td style="border: 1px solid #74aff0; padding: 10px"><div style="font-size: 20px; margin: 0px">Runtime module</div>
+                                    <code>my-ext</code>
+                                    <pre class="fragment" data-fragment-index="4" style="width: 100%; margin: 0px; margin-top: 10px"><code class="hljs java" style="border: none" data-noescape data-trim>@Recorder
+class MyExtRecorder {
+
+  ... runtimeTask1(...) {...}
+
+
+  ... runtimeTask2(...) {...}
+
+  ...
+}</code></pre></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="build-step-return">
+                        <pre style="width: 100%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class MyExtProcessor {
+
+  <span class="fragment">/* BuildSteps typically produce BuildItems */</span>
+  @BuildStep
+  <span class="fragment">NameBuildItem</span> nameStep() {
+    <span class="fragment">return new NameBuildItem("Joe");</span>
+  }
+<span class="fragment">
+  <span class="fragment">/* BuildItems carry some payload */</span>
+  final class NameBuildItem extends SimpleBuildItem {
+    <span class="fragment">final String name; /* The payload */</span>
+    ...
+  }</span>
+}</code></pre>
+                    </section>
+                    <section id="build-step-args">
+                        <pre style="width: 100%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class MyExtProcessor {
+
+  <span class="fragment">/* BuildSteps may consume BuildItems */</span>
+  @BuildStep
+  HelloBuildItem helloStep(<span class="fragment">NameBuildItem nameItem</span>) {
+    return new HelloBuildItem("Hello "<span class="fragment"> + nameItem.getName()</span>);
+  }
+
+<span class="fragment">  @BuildStep
+  NameBuildItem nameStep() {
+    return new NameBuildItem("Joe");
+  }</span>
+<span class="fragment">  /* helloStep depending on the nameStep
+   * determines the execution order */</span>
+}</code></pre>
+                    </section>
+                    <section id="build-step-producers">
+                        <pre style="width: 100%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class MyExtProcessor {
+
+  @BuildStep
+  void helloStep(
+        NameBuildItem nameItem,          /* BuildSteps may consume*/
+        GreetingBuildItem greetingItem,  /* multiple BuildItems */
+        <span class="fragment">/* Results can also be published via BuildProducers */</span>
+        <span class="fragment">BuildProducer&lt;HelloBuildItem> helloProducer,
+        BuildProducer&lt;FooBuildItem> fooProducer</span>) {
+
+<span class="fragment">    /* BuildSteps may produce multiple BuildItems */</span>
+   <span class="fragment"> helloProducer.produce(
+        new HelloBuildItem(
+            greetingItem.getGreeting() + " " + nameItem.getName());</span>
+
+    <span class="fragment">fooProducer.produce(new FooBuildItem());</span>
+  }
+}</code></pre>
+                    </section>
+                    <section id="show-me-something-useful" data-state="no-footer" data-background-image="images/extensions-show-me-something-useful.jpg"></section>
+                    <section id="how-about-annotation-lookups" data-state="no-footer" data-background-image="images/extensions-annotation-lookups.jpg"></section>
+                    <section id="jandex">
+                        <h2>Jandex</h2>
+                        <p class="fragment">A Java annotation indexer <br>and offline reflection library.</p>
+                        <p class="fragment"><br>Used by <code>@BuildSteps</code> <br>to inspect the application code</p>
+                        <small><br><a href="https://github.com/wildfly/jandex">https://github.com/wildfly/jandex</a></small>
+                    </section>
+                    <section id="jandex-example">
+                        <h3>A common <code>@BuildStep</code>:<br>&nbsp</h3>
+                        <ol>
+                            <li class="fragment">Find classes having some annotation<br>&nbsp</li>
+                            <li class="fragment">Register them for reflection</li>
+                        </ol>
+                    </section>
+                    <section id="jandex-in-action">
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class JacksonProcessor {
+  @BuildStep
+  void registerDeserializers(
+        <span class="fragment" data-fragment-index="1">CombinedIndexBuildItem combinedIndex,</span> <span class="fragment" data-fragment-index="2">/* Pass the Jandex */</span>
+        <span class="fragment" data-fragment-index="10">BuildProducer&lt;ReflectiveHierarchyBuildItem> reflProducer</span>) {
+
+    <span class="fragment" data-fragment-index="5">DotName JSON_DESERIALIZE =
+        DotName.createSimple(JsonDeserialize.class.getName());</span>
+    <span class="fragment" data-fragment-index="3">for (AnnotationInstance annot    <span class="fragment" data-fragment-index="4">/* Query for the annotations */</span>
+        : combinedIndex.getIndex().getAnnotations(JSON_DESERIALIZE)) {</span>
+      <span class="fragment" data-fragment-index="6">/* Do some filtering */</span>
+      <span class="fragment" data-fragment-index="7">AnnotationTarget annotTarget = annot.target();
+      if (CLASS.equals(annotTarget.kind())) {
+        DotName dotName = annotTarget.asClass().name();
+        Type jandexType = Type.create(dotName, Type.Kind.CLASS);</span>
+        <span class="fragment" data-fragment-index="8">/* ... and finally register the type for reflextion */</span>
+        <span class="fragment" data-fragment-index="9">reflProducer.produce(new ReflectiveHierarchyBuildItem(jandexType));</span>
+<span class="fragment" data-fragment-index="7">}</span><span class="fragment" data-fragment-index="3">}</span>}}</code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/quarkusio/quarkus/blob/b79608bbd93dd4970f5a8480b2c6ceb4db8a024c/extensions/jackson/deployment/src/main/java/io/quarkus/jackson/deployment/JacksonProcessor.java#L79">Jackson Extension</a></small>
+                    </section>
+                    <section id="more-jandex">
+                        <h3>More Jandex usecases</h3>
+                        <ul>
+                            <li class="fragment">Find classes/fields/methods having some annotation</li>
+                             <li class="fragment">Find classes implementing an interface</li>
+                            <li class="fragment">Find subclasses of a class</li>
+                            <li class="fragment">List fields, methods and constructors of a class</li>
+                        </ul>
+                    </section>
+                    <section id="deployment-runtime-modules-runtime">
+                        <table class="plaintable">
+                            <tr style="font-size: 28px;">
+                                <td style="border: 1px solid #74aff0; padding: 10px"><div style="font-size: 20px; margin: 0px">Build time module</div>
+                                    <code>my-ext-deployment</code>
+                                    <pre style="width: 100%; margin: 0px; margin-top: 10px"><code class="hljs java" style="border: none" data-noescape data-trim>&nbsp;
+class MyExtProcessor {
+  <mark class="fragment" data-fragment-index="1">@BuildStep</mark >
+  ... buildStep1(...) {...}
+
+  <mark class="fragment" data-fragment-index="1">@BuildStep</mark>
+  ... buildStep2(...) {...}
+
+  ...
+}</code></pre></td>
+                                <td style="padding-left: 50px"></td>
+                                <td style="border: 1px solid #74aff0; padding: 10px"><div style="font-size: 20px; margin: 0px">Runtime module</div>
+                                    <code>my-ext</code>
+                                    <pre style="width: 100%; margin: 0px; margin-top: 10px"><code class="hljs java" style="border: none" data-noescape data-trim><mark class="fragment" data-fragment-index="2">@Recorder</mark>
+class MyExtRecorder {
+
+  ... runtimeTask1(...) {...}
+
+
+  ... runtimeTask2(...) {...}
+
+  ...
+}</code></pre></td>
+                            </tr>
+                        </table>
+                        <img class="fragment" data-fragment-index="3" alt="chunks of application bootstrap code" src="images/chunks-of-application-bootstrap.svg" style="height: 300px; float: left; position: absolute; margin-top: -200px; margin-left: -180px; z-index: 20">
+                        <aside class="notes">
+                            <ul>
+                                <li>The deployment code runs at build time</li>
+                                <li>BuildSteps should not initialize or instantiate runtime classes</li>
+                                <li><code>@Recorders</code> are there for that</li>
+                                <li><code>@Recorder</code> methods: Chunks of application bootstrap code</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section id="recorders-in-action">
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class CamelProcessor {
+  <span class="fragment" data-fragment-index="11"><mark class="fragment" data-fragment-index="12">@Record(ExecutionTime.STATIC_INIT)</mark></span>  <span class="fragment" data-fragment-index="2">/*    @Recorders can be injected  */</span>
+  @BuildStep                          <span class="fragment" data-fragment-index="2">/* ⮦ as BuildStep method params  */</span>
+  CamelContextBuildItem context(<span class="fragment" data-fragment-index="1">CamelRecorder recorder</span>) {
+    <span class="fragment" data-fragment-index="8">RuntimeValue&lt;CamelContext> context = </span><span class="fragment" data-fragment-index="3">recorder.createContext();</span>
+    <span class="fragment" data-fragment-index="9">return new CamelContextBuildItem(context);</span>  <span class="fragment" data-fragment-index="4">/* ⮤ @BuildStep methods */</span>
+  }<span class="fragment" data-fragment-index="10">/* ⮤ The RuntimeValue can be dispatched */</span>   <span class="fragment" data-fragment-index="4">/*   can invoke        */</span>
+}  <span class="fragment" data-fragment-index="10">/*  to other @BuildSteps via a BuildItem */</span>   <span class="fragment" data-fragment-index="4">/*   @Recorder methods */</span>
+
+@Recorder
+public class CamelRecorder {
+  <span class="fragment" data-fragment-index="5">public RuntimeValue&lt;CamelContext> createContext() {</span>
+           <span class="fragment" data-fragment-index="6">/* ⮤ A handle to pass values between recorders */</span>
+    <span class="fragment" data-fragment-index="7">FastCamelContext context = new FastCamelContext();
+    return new RuntimeValue&lt;>(context);</span>
+<span class="fragment" data-fragment-index="5">}</span>}
+
+</code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/apache/camel-quarkus/blob/2fcf055490528ce4638f52d3a2f36faf14a78aad/extensions/core/deployment/src/main/java/org/apache/camel/quarkus/core/deployment/BuildProcessor.java#L265">Apache Camel Quarkus</a></small>
+                    </section>
+                    <section>
+                        <h3>Extensions may depend on each other</h3>
+                        <p class="fragment">E.g. <code>mp-metrics</code> extension <br>depends on<br><code>camel-quarkus-core</code></p>
+                        <p class="fragment">so it can consume the <code>CamelContextBuildItem</code> and adjust the <code>CamelContext</code> as needed</p>
+                    </section>
+                    <section id="recorders-in-action-mp-metrics">
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class MpMetricsProcessor {
+  <span class="fragment" data-fragment-index="11"><mark class="fragment" data-fragment-index="12">@Record(ExecutionTime.STATIC_INIT)</mark></span>
+  @BuildStep
+  public void configureCamelContext(
+        <span class="fragment" data-fragment-index="1">MpMetricsRecorder recorder,</span>
+        <span class="fragment" data-fragment-index="3">CamelContextBuildItem ctxItem</span>) {
+    <span class="fragment" data-fragment-index="4">recorder.configureCamelContext(ctxItem.getCamelContext());</span>
+}}
+
+<span class="fragment" data-fragment-index="2">@Recorder
+public class MpMetricsRecorder {
+  <span class="fragment" data-fragment-index="5">public void configureCamelContext(RuntimeValue&lt;CamelContext> ctxVal) {</span>
+               <span class="fragment" data-fragment-index="6">/* Unwrap the RuntimeValue ⮧ */</span>
+    <span class="fragment" data-fragment-index="7">CamelContext camelContext = ctxVal.getValue();</span>
+    <span class="fragment" data-fragment-index="8">/* ... and configure it as needed */</span>
+    <span class="fragment" data-fragment-index="9">ManagementStrategy strategy = camelContext.getManagementStrategy();
+    strategy.addEventNotifier(new MpMetricsCamelContextEventNotifier());</span>
+<span class="fragment" data-fragment-index="5">}</span>}</span></code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/apache/camel-quarkus/blob/2fcf055490528ce4638f52d3a2f36faf14a78aad/extensions/microprofile-metrics/deployment/src/main/java/org/apache/camel/quarkus/component/microprofile/metrics/deployment/MicroProfileMetricsProcessor.java#L51">Apache Camel Quarkus</a></small>
+                    </section>
+                    <section>
+                        <p>Resulting application bootstrap code:</p>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class GeneratedMain { /* bytecode in reality, pseudocode here */
+  <span class="fragment" data-fragment-index="1">static {</span> <span class="fragment" data-fragment-index="2">/* Chunks recorded with @Record(ExecutionTime.STATIC_INIT) */</span>
+    <span class="fragment" data-fragment-index="5">CamelRecorder camelRecorder = new CamelRecorder();
+    RuntimeValue&lt;CamelContext> val1 = camelRecorder.createContext();</span>
+    <span class="fragment" data-fragment-index="7">/* The order of the calls is given by
+     * the dependencies between the @BuildSteps */</span>
+    <span class="fragment" data-fragment-index="6">MpMetricsRecorder mpMetricsRecorder = new MpMetricsRecorder();
+    mpMetricsRecorder.configureCamelContext(val1);</span>
+  <span class="fragment" data-fragment-index="1">}</span>
+
+  <span class="fragment" data-fragment-index="3">public static main(String[] args) {</span>
+    <span class="fragment" data-fragment-index="4">/* Chunks recorded with @Record(ExecutionTime.RUNTIME_INIT) */</span>
+    <span class="fragment" data-fragment-index="8">new VertxRecorder().openSocket();</span> <span class="fragment" data-fragment-index="9">/* can't do this in static init */</span>
+<span class="fragment" data-fragment-index="3">}</span>}</code></pre>
+                    </section>
+                    <section id="common-build-items">
+                        <h2>Mostly used <code>BuildItems</code></h2>
+                        <ul class="check" style="font-size: 28px">
+                            <li class="fragment fade-in-then-semi-out"><code>ReflectiveClassBuildItem</code>, <code>ReflectiveHierarchyBuildItem</code>
+                                <br>&nbsp;&nbsp;&nbsp;register classes for reflection in the native mode</li>
+                            <li class="fragment fade-in-then-semi-out"><code>AdditionalBeanBuildItem</code>, <code>BeanDefiningAnnotationBuildItem</code>
+                                <br>&nbsp;&nbsp;&nbsp;bean classes the CDI container should analyze</li>
+                            <li class="fragment fade-in-then-semi-out"><code>ExtensionSslNativeSupportBuildItem</code>
+                                <br>&nbsp;&nbsp;&nbsp;turn on SSL in the native mode</li>
+                            <li class="fragment fade-in-then-semi-out"><code>CombinedIndexBuildItem</code>, <code>ApplicationIndexBuildItem</code>
+                                <br>&nbsp;&nbsp;&nbsp;offline reflection and annotation index (Jandex)</li>
+                            <li class="fragment fade-in-then-semi-out"><code>NativeImageResourceBuildItem</code>
+                                <br>&nbsp;&nbsp;&nbsp;src/main/resources and resources from JARs not included by default in the native image</li>
+                        </ul>
+                    </section>
+                    <section id="config">
+                        <h2>Extension configuration</h2>
+                        <ul >
+                            <li class="fragment fade-in-then-semi-out">Extensions may expose their configuration through annotated POJOs</li>
+                            <li class="fragment fade-in-then-semi-out">These may come in three flavors:
+                                <ul>
+                                    <li><code>BUILD_TIME</code></li>
+                                    <li><code>BUILD_AND_RUN_TIME_FIXED</code></li>
+                                    <li><code>RUN_TIME</code></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section id="config-example">
+                        <h2>Config POJO</h2>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>@ConfigRoot(name = "camel", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
+public class CamelConfig {
+
+    @ConfigItem
+    public MainConfig main;
+
+    @ConfigGroup
+    public static class MainConfig {
+        @ConfigItem(defaultValue = "true")
+        public boolean enabled;
+        <span class="fragment">/* This option can be set in application.properties via
+         *
+         *   camel.main.enabled = true
+         *
+         */</span>
+    }
+}
+                        </code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/apache/camel-quarkus/blob/da352f07a7ea8413141900720f1f6367c992d3d7/extensions/core/runtime/src/main/java/org/apache/camel/quarkus/core/CamelConfig.java#L27">Apache Camel Quarkus</a></small>
+                    </section>
+                    <section id="config-in-build-steps">
+                        <h3>Config in <code>@BuildSteps</code></h3>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class CamelProcessor {
+  @BuildStep
+  ... discoverRoutesBuilderClassNames(CamelConfig config, ...) {
+    if (config.main.enabled) {
+        /* Do something */
+    }
+  }
+}
+                        </code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/apache/camel-quarkus/blob/2fcf055490528ce4638f52d3a2f36faf14a78aad/extensions/core/deployment/src/main/java/org/apache/camel/quarkus/core/deployment/BuildProcessor.java#L330">Apache Camel Quarkus</a></small>
+                    </section>
+                    <section id="config-in-recorders">
+                        <h3>Config in <code>@Recorders</code></h3>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>@Recorder
+public class MyRecorder {
+  void record(MyRuntimeConfig config) {
+
+    if (config.my.option) {
+      /* Do something */
+    }
+
+    <span class="fragment">/* Same effect using
+     * org.eclipse.microprofile.config.ConfigProvider */
+    if (ConfigProvider.getConfig()
+        .getValue("my-root.my.option", String.class)) {
+      /* Do something */
+    }</span>
+}}</code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/apache/camel-quarkus/blob/2fcf055490528ce4638f52d3a2f36faf14a78aad/extensions/core/deployment/src/main/java/org/apache/camel/quarkus/core/deployment/BuildProcessor.java#L330">Apache Camel Quarkus</a></small>
+                    </section>
+                    <section id="substitutions">
+                        <h2>Substitutions</h2>
+                        <ul>
+                            <li class="fragment">Provided by GraalVM</li>
+                            <li class="fragment">For replacing classes in the native image</li>
+                        </ul>
+                    </section>
+                    <section id="substitutions-usecases">
+                        <h3>Substitutions usecases</h3>
+                        <ul>
+                            <li class="fragment">Last resort for fixing third party code
+                                <ul class="fragment fade-in-then-semi-out">
+                                    <li>E.g. avoid opening a socket, starting a Thread, etc. in a static initializer</li>
+                                </ul>
+                            </li>
+                            <li class="fragment">Cut off uneeded code (and its dependencies)
+                                <ul>
+                                    <li class="fragment fade-in-then-semi-out">E.g. parsing an XML config that is not supported on Quarkus</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section id="substitutions-example">
+                        <h3>A substitution example</h3>
+                        <small>(1/2)</small>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>/* The original class (simplified) */
+package com.mysql.cj.jdbc;
+public class AbandonedConnectionCleanupThread implements Runnable {
+  private static final ExecutorService cleanupThreadExcecutorService;
+  private static Thread threadRef = null;
+
+  static {
+    cleanupThreadExcecutorService =
+        Executors.newSingleThreadExecutor(r -> { ... });
+    <span class="fragment" data-fragment-index="1">/* GraalVM does not like threads being started in a static block */</span>
+    cleanupThreadExcecutorService.<mark class="fragment" data-fragment-index="2">execute</mark>(
+        new AbandonedConnectionCleanupThread());
+  }
+  ...
+}</code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/mysql/mysql-connector-j/blob/36534fa273b4d7824a8668ca685465cf8eaeadd9/src/main/user-impl/java/com/mysql/cj/jdbc/AbandonedConnectionCleanupThread.java#L49">MySQL JDBC driver</a></small>
+                    </section>
+                    <section id="substitutions-example">
+                        <h3>A substitution example</h3>
+                        <small>(2/2)</small>
+                        <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim><span class="fragment">@Substitute</span> /* The substitution class */
+<span class="fragment">@TargetClass(AbandonedConnectionCleanupThread.class)</span>
+final public class AbandonedConnectionCleanupThread_disable {
+
+  <span class="fragment">/* No static initializer here */</span>
+
+  <span class="fragment">@Substitute
+  protected static void trackConnection(
+      MysqlConnection conn, NetworkResources io) {
+      <span class="fragment">/* A no-op method */</span>
+  }</span>
+}</code></pre>
+                        <small>Code Adapted from the <a href="https://github.com/quarkusio/quarkus/blob/2c1f2cf96e69906fecbfad5f01b8edc8dd641d31/extensions/jdbc/jdbc-mysql/runtime/src/main/java/io/quarkus/jdbc/mysql/runtime/graal/AbandonedConnectionCleanupThread_disable.java#L18">MySQL JDBC extension</a></small>
+                    </section>
+                </section>
+
+                <section id="demo">
+                    <h1>Demo</h1>
+                    <p><br><a href="https://github.com/ppalaga/quarkus-ahc">https://github.com/ppalaga/quarkus-ahc</a>
+                </section>
+
+                <section id="end">
+                    <section id="wrap-up">
+                        <small>Writing extensions</small>
+                        <h2>Wrap up</h2>
+                        <ol>
+                            <li class="fragment">Shrink and speedup the app
+                                <ul class="check" style="font-size: 32px">
+                                    <li class="fragment fade-in-then-semi-out">Inspect the app code (annotations, interfaces, config files ...) at build time</li>
+                                    <li class="fragment fade-in-then-semi-out">Bootstrap and configure the app via @Recorder methods</li>
+                                </ul>
+                            </li>
+                            <li class="fragment">Make the AoT compiler happy
+                                <ul class="check" style="font-size: 32px">
+                                    <li class="fragment fade-in-then-semi-out">Register reflection, proxies, JNI, ...</li>
+                                    <li class="fragment fade-in-then-semi-out">Resources to include in the native image</li>
+                                    <li class="fragment fade-in-then-semi-out">Substitutions</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </section>
+                    <section id="lib-question">
+                        <p style="font-size: 32px">Will my lib work?</p>
+                    </section>
+                    <section id="will-my-lib-work" data-state="no-footer" data-background-image="images/borat-yes.jpg"></section>
+                    <section id="framework-question">
+                        <p style="font-size: 32px">Will my framework work?</p>
+                    </section>
+                    <section id="will-my-framework-work" data-state="no-footer" data-background-image="images/dr-evil-depends.jpg"></section>
+                    <section id="quarkus-links">
+                        <h2>Quarkus links</h2>
+                        <br><br>
+                        <ul class="check">
+                            <li>Docs &amp; guides: <a href="https://quarkus.io/">https://quarkus.io/</a>
+                                <ul>
+                                    <li>Esp. the <a href="https://quarkus.io/guides/writing-extensions">guide for extension authors</a></li>
+                                </ul>
+                            </li>
+                            <li>Stack Overflow tag: <a href="https://stackoverflow.com/questions/tagged/quarkus">quarkus</a></li>
+                            <li><a href="">Chat</a>, <a href="https://groups.google.com/d/forum/quarkus-dev">dev list</a></li>
+                        </ul>
+                        <br>
+                        <p>Follow <a href="https://twitter.com/QuarkusIO">@QuarkusIO</a> on Twitter!</p>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                progress: true,
+                history: true,
+                controls: false,
+                margin: 0.01,
+                transition: 'fade', // none/fade/slide/convex/concave/zoom
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                ]
+            });
+            Reveal.configure({
+                keyboard: {
+                    // Make stock laser pointers work
+                    39: 'next', // Right Arrow
+                    37: 'prev',  // Left Arrow
+                    // ... and map the navigation methods to numpad numbers so that there is a proper way to navigate properly
+                    98: 'down', // numpad 2
+                    100: 'left', // numpad 4
+                    102: 'right', // numpad 6
+                    104: 'up' // numpad 8
+                }
+              });
+            function adjustFooterAndConfBannerVisibility(event) {
+                if (Reveal.isFirstSlide()) {
+                    //document.querySelector('.reveal .conf-banner').style.display = 'block';
+                } else {
+                    //document.querySelector('.reveal .conf-banner').style.display = 'none';
+                }
+            }
+            Reveal.addEventListener('slidechanged', adjustFooterAndConfBannerVisibility);
+            Reveal.addEventListener('ready', adjustFooterAndConfBannerVisibility);
+        </script>
+    </body>
+</html>
