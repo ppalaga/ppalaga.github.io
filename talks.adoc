@@ -7,6 +7,7 @@ icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} i
 
 == 2020
 
+* link:presentations/200108-camel/index.html[Integrating systems in the age of Quarkus, Knative and Kafka Connect] JUG Bern 2020-01-08
 * link:presentations/200107-writing-quarkus-extensions/index.html[Will my lib or framework work on Quarkus (and GraalVM)?] JUG Basel 2020-01-07
 
 == 2019
