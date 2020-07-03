@@ -91,7 +91,7 @@ and finally</p>
 </div>
 <div class="paragraph">
 <p>The last step is what usually fails due to network and other factors you typically do not have under your control.
-Once you have the git tag in your in your repo, there is no point performing the first two steps once again. There is
+Once you have the git tag in your repo, there is no point performing the first two steps once again. There is
 also no point in newly uploading the artifacts which were uploaded successfully. All you need to do is the following:</p>
 </div>
 <div class="ulist">
@@ -106,14 +106,16 @@ also no point in newly uploading the artifacts which were uploaded successfully.
 </li>
 <li>
 <p>If you do not have <code>&lt;your-repo-root&gt;/target/checkout</code> because you e.g. cleaned in between, you can re-build
-all necessary artifacts in your main tree. It is important that you activate all profiles that <code>release:perform</code>
-activates. That&#8217;s typically something like <code>-Prelease</code> (or <code>-Papache-release</code> in case ASF projects). Those
-profiles include generation of source jar, JavaDoc, GPG signing, etc. which are usually skipped during common
-development builds. So you do something like the following to get what you&#8217;d otherwise find in
+all necessary artifacts using the tag in your main tree. It is important that you activate all profiles that
+<code>release:perform</code> activates. That&#8217;s typically something like <code>-Prelease</code> (or <code>-Papache-release</code> in
+case ASF projects). Those profiles include generation of source jar, JavaDoc, GPG signing, etc. which are usually
+skipped during common development builds. So you do something like the following to get what you&#8217;d otherwise find in
 <code>&lt;your-repo-root&gt;/target/checkout</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre>mvn clean package -Prelease -DskipTests</pre>
+<pre>cd &lt;your-repo-root&gt;
+git checkout 0.1.0 # the tag you are releasing
+mvn clean package -Prelease -DskipTests</pre>
 </div>
 </div>
 </li>
@@ -121,7 +123,11 @@ development builds. So you do something like the following to get what you&#8217
 <p>Once you have all artifacts built in your source tree, you can resume the deployment where it originally failed:</p>
 <div class="listingblock">
 <div class="content">
-<pre>mvn deploy -Prelease -DskipTests -rf :the-module-where-it-broke</pre>
+<pre># Either
+# cd &lt;your-repo-root&gt;/target/checkout
+# or
+# cd &lt;your-repo-root&gt;
+mvn deploy -Prelease -DskipTests -rf :the-module-where-it-broke</pre>
 </div>
 </div>
 <div class="paragraph">
