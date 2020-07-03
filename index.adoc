@@ -9,6 +9,7 @@ Senior software engineer at Red Hat Middleware working on WildFly Camel and Fuse
 
 == Posts
 
+* link:/2020/07/03/releasing-large-maven-projects.html[Resuming large Maven releases]
 * link:/2018/10/21/srcdeps.masterConfig.html[`srcdeps.masterConfig` - build direct and transitive dependencies with a single `srcdeps.yaml` file]
 * link:/2018/06/05/srcdeps-do-not-touch-my-poms.html[`srcdeps`, do not touch my poms!]
 
