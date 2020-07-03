@@ -31,7 +31,7 @@ The `release:prepare release:perform` combo does a couple of things under the ho
   `mvn deploy` there.
 
 The last step is what usually fails due to network and other factors you typically do not have under your control.
-Once you have the git tag in your in your repo, there is no point performing the first two steps once again. There is
+Once you have the git tag in your repo, there is no point performing the first two steps once again. There is
 also no point in newly uploading the artifacts which were uploaded successfully. All you need to do is the following:
 
 * Find the `artifactId` of the module whose deployment failed in the output of the failed release build. Say the
@@ -39,19 +39,25 @@ also no point in newly uploading the artifacts which were uploaded successfully.
 * Either find the temporary directory where `release:perform` run `mvn clean deploy` it is typically
   `<your-repo-root>/target/checkout`
 * If you do not have `<your-repo-root>/target/checkout` because you e.g. cleaned in between, you can re-build
-  all necessary artifacts in your main tree. It is important that you activate all profiles that `release:perform`
-  activates. That's typically something like `-Prelease` (or `-Papache-release` in case ASF projects). Those
-  profiles include generation of source jar, JavaDoc, GPG signing, etc. which are usually skipped during common
-  development builds. So you do something like the following to get what you'd otherwise find in
+  all necessary artifacts using the tag in your main tree. It is important that you activate all profiles that
+  `release:perform` activates. That's typically something like `-Prelease` (or `-Papache-release` in
+  case ASF projects). Those profiles include generation of source jar, JavaDoc, GPG signing, etc. which are usually
+  skipped during common development builds. So you do something like the following to get what you'd otherwise find in
   `<your-repo-root>/target/checkout`:
 +
 ----
+cd <your-repo-root>
+git checkout 0.1.0 # the tag you are releasing
 mvn clean package -Prelease -DskipTests
 ----
 +
 * Once you have all artifacts built in your source tree, you can resume the deployment where it originally failed:
 +
 ----
+# Either
+# cd <your-repo-root>/target/checkout
+# or
+# cd <your-repo-root>
 mvn deploy -Prelease -DskipTests -rf :the-module-where-it-broke
 ----
 +
