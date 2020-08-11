@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file</title>
+    <title>History of Camel Quarkus from the very beginning to 1.0.0</title>
     <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
@@ -47,57 +47,56 @@
     <!-- Main Blog Content -->
     <div class="large-9 columns" role="content">
 
-        <h1><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file</h1>
+        <h1>History of Camel Quarkus from the very beginning to 1.0.0</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<a class="image" href="https://github.com/srcdeps/srcdeps"><img src="/images/2018/srcdeps-logo-with-text.svg" alt="srcdeps" height="60"></a>
-</div>
-</div>
 <div class="paragraph">
-<p>Before <code>srcdeps-maven</code> 3.4.0 and <code>srcdeps.yaml</code> model version 2.4, building of dependencies from source "on the
-fly" worked only for direct dependencies. If <code>my-project</code> depended on <code>dependency-1</code>, I could declare <code>dependency-1</code>
-as a source dependency in <code>srcdeps.yaml</code> of <code>my-project</code>. But if I also wanted a specific unreleased commit of
-<code>dependency-2</code>, which <code>dependency-1</code> depends on (and needs to be built and run against), I had no other option than
-fork <code>dependency-1</code> and add <code>srcdeps.yaml</code> with <code>dependency-2</code> there.</p>
-</div>
-<div class="paragraph">
-<p>The new <code>srcdeps.masterConfig</code> feature allows you to avoid the intermediary <code>srcdeps.yaml</code> files. Now you can declare
-<code>dependency-2</code> in the <code>srcdeps.yaml</code> file of <code>my-project</code> and you do not need to fork <code>dependency-1</code>.</p>
+<p>I have originally written this for the
+<a href="https://camel.apache.org/blog/2020/08/camel-quarkus-release-1.0.0/">Camel Quarkus 1.0.0 announcement</a>, but then decided
+to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so
+I am pasting it here.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="how_it_works">How it works</h2>
+<h2 id="when_and_how_camel_quarkus_was_born">When and how Camel Quarkus was born?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>srcdeps.yaml</code> configuration model version 2.4 introduces a new boolean attribute <code>forwardAsMasterConfig</code>. If it
-is <code>true</code>, the URI of the current <code>srcdeps.yaml</code> file will be forwarded as a system property <code>srcdeps.masterConfig</code> to
-every dependency builder. The dependency builder picks <code>srcdeps.yaml</code> from the URI, uses it during its own build and
-forwards it to every dependency build it triggers itself.</p>
-</div>
-<div class="paragraph">
-<p>With <code>forwardAsMasterConfig: true</code> the dependency also does not need to have <code>srcdeps-maven-local-repository</code> declared
-in its <code>.mvn/extensions.xml</code>. After checking out the sources of the dependency, <code>srcdeps-maven</code> auto-creates (or
-upgrades) the <code>.mvn/extensions.xml</code> file as necessary.</p>
-</div>
-<div class="paragraph">
-<p><code>forwardAsMasterConfig</code> attribute is optional and the default value is <code>false</code>.</p>
+<p><a href="https://github.com/lburgazzoli">Luca</a> and <a href="https://github.com/gnodet">Guillaume</a> started porting Camel to
+<a href="https://github.com/quarkusio/quarkus">Quarkus</a> very early while Quarkus was still in the stealth mode at Red Hat.
+The work started around November 2018 and was
+<a href="https://github.com/quarkusio/quarkus/commit/549c74d74f4ae6af83854e51f14db429adef7483">merged to Quarkus master</a> on Feb.
+28, 2019 - shortly before Quarkus was
+<a href="https://developers.redhat.com/blog/2019/03/07/quarkus-next-generation-kubernetes-native-java-framework/">publicly announced</a>
+on March 7, 2019. At that time, Quarkus
+<a href="https://github.com/quarkusio/quarkus/tree/0.11.0/extensions/camel">supported just a handful of Camel components</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="limitations">Limitations</h2>
+<h2 id="moving_to_asf">Moving to ASF</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>srcdeps.masterConfig</code> is not supported by our experimental Gradle builder. You can still have direct Gradle
-dependencies but builds those will not forward the master <code>srcdeps.yaml</code> to the eventual builds of their own
-dependencies.</p>
+<p>The next important milestone was donating the Camel specific bits from the main Quarkus source tree to Apache Software
+Foundation (ASF). This happened around July 2019 and the current
+<a href="https://github.com/apache/camel-quarkus">GitHub home of the project</a> is the result. Camel Quarkus thus became a
+subproject of Apache Camel, along with [Camel K], <a href="https://github.com/apache/camel-spring-boot">Camel Spring Boot</a>
+<a href="https://github.com/apache/camel-karaf">Camel Karaf</a> and <a href="https://github.com/apache/camel-kafka-connector">Camel Kafka
+Connector</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_life_under_asf">The life under ASF</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Under the new home, the project attracted a fair amount of new contributors (currently
+<a href="https://github.com/apache/camel-quarkus/graphs/contributors">36 in total</a>) which in turn brought a lot of
+contributions.</p>
 </div>
 <div class="paragraph">
-<p>Any feedback is welcome via GitHub <a href="https://github.com/srcdeps/srcdeps-core/issues">issues</a> or via
-<a href="https://twitter.com/ppalaga">@ppalaga</a> on Twitter.</p>
+<p>Within those ~13 month from migrating to the ASF repo to 1.0.0 we released 7 milestones and 3 candidate releases.
+That gives a rough average cadence of one release every ~5 weeks.</p>
 </div>
 </div>
 </div>
