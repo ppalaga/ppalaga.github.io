@@ -1,0 +1,40 @@
+= History of Camel Quarkus from the very beginning to 1.0.0
+:showtitle:
+:page-navtitle: Camel Quarkus early history
+:page-root: ../../../
+
+I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided
+to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so
+I am pasting it here.
+
+=== When and how https://github.com/apache/camel-quarkus[Camel Quarkus] was born?
+
+https://github.com/lburgazzoli[Luca] and https://github.com/gnodet[Guillaume] started porting Camel to
+https://github.com/quarkusio/quarkus[Quarkus] very early while Quarkus was still in the stealth mode at Red Hat.
+The work started around November 2018 and was
+https://github.com/quarkusio/quarkus/commit/549c74d74f4ae6af83854e51f14db429adef7483[merged to Quarkus master] on Feb.
+28, 2019 - shortly before Quarkus was
+https://developers.redhat.com/blog/2019/03/07/quarkus-next-generation-kubernetes-native-java-framework/[publicly announced]
+on March 7, 2019. At that time, Quarkus
+https://github.com/quarkusio/quarkus/tree/0.11.0/extensions/camel[supported just a handful of Camel components].
+
+=== Moving to ASF
+
+The next important milestone was donating the Camel specific bits from the main Quarkus source tree to Apache Software
+Foundation (ASF). This happened around July 2019 and the current
+https://github.com/apache/camel-quarkus[GitHub home of the project] is the result. Camel Quarkus thus became a
+subproject of Apache Camel, along with https://github.com/apache/camel-k[Camel K],
+https://github.com/apache/camel-spring-boot[Camel Spring Boot],
+https://github.com/apache/camel-karaf[Camel Karaf] and https://github.com/apache/camel-kafka-connector[Camel Kafka
+Connector].
+
+=== The life under ASF
+
+Under the new home, the project attracted a fair amount of new contributors (currently
+https://github.com/apache/camel-quarkus/graphs/contributors[36 in total]) which in turn brought a lot of
+contributions.
+
+Within those ~13 month from migrating to the ASF repo to 1.0.0 we released 7 milestones and 3 candidate releases.
+That gives a rough average cadence of one release every ~5 weeks.
+
+Stay tuned for Camel Quarkus 1.0.0!
