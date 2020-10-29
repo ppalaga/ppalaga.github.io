@@ -7,8 +7,9 @@ icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} i
 
 Senior software engineer at Red Hat Middleware working on https://github.com/apache/camel-quarkus[Camel Quarkus].
 
-== Posts
+== Blog
 
+* link:/2020/10/29/skipping-maven-mojos-properly.html[When `-DskipTests` is not fast enough: skip Maven mojos properly]
 * link:/2020/08/11/camel-quarkus-early-history.html[Camel Quarkus early history]
 * link:/2020/07/03/releasing-large-maven-projects.html[Resuming large Maven releases]
 * link:/2018/10/21/srcdeps.masterConfig.html[`srcdeps.masterConfig` - build direct and transitive dependencies with a single `srcdeps.yaml` file]
