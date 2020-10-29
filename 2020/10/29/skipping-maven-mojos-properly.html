@@ -55,7 +55,7 @@ already.</p>
 </div>
 <div class="paragraph">
 <p>This kind of skipping is not specific to <code>maven-surefire-plugin</code>. Many other plugins have similar options:
-Enforcer plugin has <code>-Denforcer.skip</code>, License Maven plugin has <code>-Dlicense.skip</code>, etc. The more you want to
+Enforcer has <code>-Denforcer.skip</code>, License Maven plugin has <code>-Dlicense.skip</code>, etc. The more you want to
 build quickly, without running needless mojos, the more you search for these skip parameters.</p>
 </div>
 <div class="paragraph">
@@ -66,7 +66,7 @@ profiling your build either by using a stock Java profiler or by leveraging Mave
 </div>
 <div class="paragraph">
 <p>At some point you are skipping every mojo execution that is not essential to your build. You create a dedicated
-Maven profile, so that you do not need to remember and type all those skip flags by hand.</p>
+Maven profile listing all those skip flags, so that you do not need to remember and type them by hand.</p>
 </div>
 <div class="paragraph">
 <p>But what if that&#8217;s still not fast enough? Say that you work on a
@@ -86,14 +86,14 @@ Maven profile, so that you do not need to remember and type all those skip flags
 <p>is not something you are happy about. How can this be made even faster?</p>
 </div>
 <div class="paragraph">
-<p>Well, common sense or further profiling with a Java profiler may unveil that the named <code>skip*</code> properties
+<p>Well, common sense (or further profiling with a Java profiler) may unveil that the named <code>skip*</code> properties
 do not prevent the skipped mojos' classes from being loaded, initialized, instantiated, configured and their
-<code>execute()</code> method from being invoked (where the `skip*``parameters are actually being evaluated). That&#8217;s quite
-a lot of useless CPU cycles and luckily, Maven offers a way how to avoid them.</p>
+<code>execute()</code> method from being invoked (that&#8217;s where the <code>skip*</code> parameters are actually being evaluated). That
+might be quite a lot of superfluous CPU cycles and luckily, Maven offers a way how to avoid them.</p>
 </div>
 <div class="paragraph">
 <p>The trick is to remove the skippable mojos from the Maven execution plan altogether. How can that be done? - the key
-is in playing with the <code>&lt;phase&gt;</code> to which the given mojo is bound. There are two ways how reach that some mojo
+is in playing with the <code>&lt;phase&gt;</code> to which the given mojo is bound. There are two ways how to reach that some mojo
 is bound to no phase:</p>
 </div>
 <div class="olist arabic">
@@ -121,9 +121,9 @@ property.</p>
 </div>
 <div class="paragraph">
 <p>To implement that, we need a profile. Surprisingly the profile is not going to exclude stuff when <code>-Dquickly</code> is
-present, it will rather include the stuff in the default "profile-less" build. To make <code>-Dquickly</code> to work like that,
-the profile will be enabled by default and disabled when <code>-Dquickly</code> is present. This can be done using Maven&#8217;s
-<code>&lt;property&gt;&lt;name&gt;!quickly&lt;/name&gt;&lt;/property&gt;</code> profile activation.</p>
+present, it will rather include the stuff in the default "profile-less" build. To make <code>-Dquickly</code> to work the way
+we want, the profile will be enabled by default and disabled when <code>-Dquickly</code> is present. This can be done using
+Maven&#8217;s "negated" property profile activation: <code>&lt;property&gt;&lt;name&gt;!quickly&lt;/name&gt;&lt;/property&gt;</code>.</p>
 </div>
 <div class="paragraph">
 <p>This is what it looks like for <code>surefire-maven-plugin</code> and <code>maven-enforcer-plugin</code>:</p>
@@ -194,8 +194,8 @@ the profile will be enabled by default and disabled when <code>-Dquickly</code> 
 </div>
 </div>
 <div class="paragraph">
-<p>After <a href="https://github.com/apache/camel-quarkus/pull/1962/files">applying this trick</a> to the source tree with 1200+
-modules mentioned above, the quick build time goes down from 03:53 to 2:44:</p>
+<p>After <a href="https://github.com/apache/camel-quarkus/pull/1962/files">applying this trick</a> to all non-essential mojos in
+the source tree with 1200+ modules mentioned above, the quick build time goes down from 03:53 to 2:44:</p>
 </div>
 <div class="listingblock">
 <div class="content">
