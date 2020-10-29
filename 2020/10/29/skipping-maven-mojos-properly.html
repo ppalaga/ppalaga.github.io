@@ -1,0 +1,278 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When <code>-DskipTests</code> is not fast enough: skip Maven mojos properly</title>
+    <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body>
+
+
+<!-- Nav Bar -->
+
+<nav class="top-bar" data-topbar>
+    <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name">
+            <h1>
+                <a href="/index.html">Home</a>
+            </h1>
+        </li>
+        <li class="name">
+            <h1>
+                <a href="/talks.html">Talks</a>
+            </h1>
+        </li>
+        <!-- <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li> -->
+    </ul>
+</nav>
+<!-- End Nav -->
+
+
+<!-- Main Page Content and Sidebar -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div class="large-9 columns" role="content">
+
+        <div class="paragraph">
+<p><code>-DskipTests</code> is a well known way to skip the execution of unit tests during a Maven build and thus save time.
+This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI
+already.</p>
+</div>
+<div class="paragraph">
+<p>This kind of skipping is not specific to <code>maven-surefire-plugin</code>. Many other plugins have similar options:
+Enforcer plugin has <code>-Denforcer.skip</code>, License Maven plugin has <code>-Dlicense.skip</code>, etc. The more you want to
+build quickly, without running needless mojos, the more you search for these skip parameters.</p>
+</div>
+<div class="paragraph">
+<p>Some candidates for skipping, like unit tests and integration tests, are pretty obvious. Other may get revealed by
+profiling your build either by using a stock Java profiler or by leveraging Maven specific tools like
+<a href="https://github.com/khmarbaise/maven-buildtime-profiler">maven-buildtime-profiler</a> or
+<a href="https://scans.gradle.com/#maven">Gradle build scans for Maven</a>.</p>
+</div>
+<div class="paragraph">
+<p>At some point you are skipping every mojo execution that is not essential to your build. You create a dedicated
+Maven profile, so that you do not need to remember and type all those skip flags by hand.</p>
+</div>
+<div class="paragraph">
+<p>But what if that&#8217;s still not fast enough? Say that you work on a
+<a href="https://github.com/apache/camel-quarkus">source tree that has 1200+ modules</a> and</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ mvn clean install -DskipTests -Denforcer.skip -Dformatter.skip -Dimpsort.skip -Dquarkus.build.skip -Dgroovy.skip
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:53 min</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is not something you are happy about. How can this be made even faster?</p>
+</div>
+<div class="paragraph">
+<p>Well, common sense or further profiling with a Java profiler may unveil that the named <code>skip*</code> properties
+do not prevent the skipped mojos' classes from being loaded, initialized, instantiated, configured and their
+<code>execute()</code> method from being invoked (where the `skip*``parameters are actually being evaluated). That&#8217;s quite
+a lot of useless CPU cycles and luckily, Maven offers a way how to avoid them.</p>
+</div>
+<div class="paragraph">
+<p>The trick is to remove the skippable mojos from the Maven execution plan altogether. How can that be done? - the key
+is in playing with the <code>&lt;phase&gt;</code> to which the given mojo is bound. There are two ways how reach that some mojo
+is bound to no phase:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>By setting <code>&lt;phase&gt;none&lt;/phase&gt;</code> or shortly <code>&lt;phase/&gt;</code></p>
+</li>
+<li>
+<p>By moving the given plugin definition from the the default profile-less <code>&lt;build&gt;</code> section to a profile.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The option 1. needs to be used for mojos that Maven binds to some phase by default. E.g. the <code>test</code> mojo of
+<code>surefire-maven-plugin</code> is bound to the <code>test</code> phase by default. The option 2. may be used for all other mojos.</p>
+</div>
+<div class="paragraph">
+<p>Once we manage it to remove a mojo from the execution plan, its classes will neither be loaded, initialized,
+instantiated, configured nor their <code>execute()</code> methods will be called.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at an example. Say, that we want all the tests and source tree validation to happen in the default
+"profile-less" build (<code>mvn verify</code>) but we want them all to be skipped when building with the <code>-Dquickly</code>
+property.</p>
+</div>
+<div class="paragraph">
+<p>To implement that, we need a profile. Surprisingly the profile is not going to exclude stuff when <code>-Dquickly</code> is
+present, it will rather include the stuff in the default "profile-less" build. To make <code>-Dquickly</code> to work like that,
+the profile will be enabled by default and disabled when <code>-Dquickly</code> is present. This can be done using Maven&#8217;s
+<code>&lt;property&gt;&lt;name&gt;!quickly&lt;/name&gt;&lt;/property&gt;</code> profile activation.</p>
+</div>
+<div class="paragraph">
+<p>This is what it looks like for <code>surefire-maven-plugin</code> and <code>maven-enforcer-plugin</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;build&gt;</span>
+    <span class="tag">&lt;plugins&gt;</span>
+        <span class="tag">&lt;plugin&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;executions&gt;</span>
+                <span class="tag">&lt;execution&gt;</span>
+                    <span class="tag">&lt;id&gt;</span>default-test<span class="tag">&lt;/id&gt;</span>
+                    <span class="tag">&lt;phase</span><span class="tag">/&gt;</span><span class="comment">&lt;!-- disable here but enable in the full profile --&gt;</span>
+                <span class="tag">&lt;/execution&gt;</span>
+            <span class="tag">&lt;/executions&gt;</span>
+        <span class="tag">&lt;/plugin&gt;</span>
+
+        <span class="comment">&lt;!-- We do not need to disable enforcer here, because --&gt;</span>
+        <span class="comment">&lt;!-- Maven does not bind it to any phase by default --&gt;</span>
+
+    <span class="tag">&lt;/plugins&gt;</span>
+<span class="tag">&lt;/build&gt;</span>
+<span class="tag">&lt;profiles&gt;</span>
+    <span class="tag">&lt;profile&gt;</span>
+        <span class="comment">&lt;!-- Tests and sanity checks are disabled when building with '-Dquickly' --&gt;</span>
+        <span class="tag">&lt;id&gt;</span>full<span class="tag">&lt;/id&gt;</span>
+        <span class="tag">&lt;activation&gt;</span>
+            <span class="tag">&lt;property&gt;</span>
+                <span class="tag">&lt;name&gt;</span>!quickly<span class="tag">&lt;/name&gt;</span>
+            <span class="tag">&lt;/property&gt;</span>
+        <span class="tag">&lt;/activation&gt;</span>
+        <span class="tag">&lt;build&gt;</span>
+            <span class="tag">&lt;plugins&gt;</span>
+                <span class="tag">&lt;plugin&gt;</span>
+                    <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+                    <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                    <span class="tag">&lt;executions&gt;</span>
+                        <span class="tag">&lt;execution&gt;</span>
+                            <span class="tag">&lt;id&gt;</span>default-test<span class="tag">&lt;/id&gt;</span>
+                            <span class="comment">&lt;!-- assigned to a phase only if the full profile is active --&gt;</span>
+                            <span class="tag">&lt;phase&gt;</span>test<span class="tag">&lt;/phase&gt;</span>
+                        <span class="tag">&lt;/execution&gt;</span>
+                    <span class="tag">&lt;/executions&gt;</span>
+                <span class="tag">&lt;/plugin&gt;</span>
+                <span class="tag">&lt;plugin&gt;</span>
+                    <span class="comment">&lt;!-- Enforcer is included in the execution plan only if --&gt;</span>
+                    <span class="comment">&lt;!-- the full profile is active --&gt;</span>
+                    <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+                    <span class="tag">&lt;artifactId&gt;</span>maven-enforcer-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                    <span class="tag">&lt;executions&gt;</span>
+                        <span class="tag">&lt;execution&gt;</span>
+                            <span class="tag">&lt;id&gt;</span>my-enforcer-rules<span class="tag">&lt;/id&gt;</span>
+                            <span class="tag">&lt;goals&gt;</span>
+                                <span class="tag">&lt;goal&gt;</span>enforce<span class="tag">&lt;/goal&gt;</span>
+                            <span class="tag">&lt;/goals&gt;</span>
+                            <span class="tag">&lt;configuration&gt;</span>
+                                ...
+                            <span class="tag">&lt;/configuration&gt;</span>
+                        <span class="tag">&lt;/execution&gt;</span>
+                    <span class="tag">&lt;/executions&gt;</span>
+                <span class="tag">&lt;/plugin&gt;</span>
+            <span class="tag">&lt;/plugins&gt;</span>
+        <span class="tag">&lt;/build&gt;</span>
+    <span class="tag">&lt;/profile&gt;</span>
+<span class="tag">&lt;/profiles&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After <a href="https://github.com/apache/camel-quarkus/pull/1962/files">applying this trick</a> to the source tree with 1200+
+modules mentioned above, the quick build time goes down from 03:53 to 2:44:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">mvn clean install -Dquickly
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:44 min</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Who would expect such a big speedup?</p>
+</div>
+<div class="paragraph">
+<p>P.S.: You may want to try <code><a href="https://github.com/mvndaemon/mvnd">mvnd</a></code>, the Maven Daemon to reduce your build
+times even further.</p>
+</div>
+
+    </div>
+
+    <!-- End Main Content -->
+
+    <!-- Sidebar
+
+    <aside class="large-3 columns">
+
+        <h4>Posts</h4>
+        <ul id="posts" class="posts nav">
+            
+            <li><a href="./2020/10/29/skipping-maven-mojos-properly.html"></a></li>
+            
+            <li><a href="./2020/08/11/camel-quarkus-early-history.html">Camel Quarkus early history</a></li>
+            
+            <li><a href="./2020/07/03/releasing-large-maven-projects.html">Resuming large Maven releases</a></li>
+            
+            <li><a href="./2018/10/21/srcdeps.masterConfig.html">srcdeps.masterConfig - build all dependencies with single `srcdeps.yaml`</a></li>
+            
+            <li><a href="./2018/06/05/srcdeps-do-not-touch-my-poms.html">srcdeps, do not touch my poms!</a></li>
+            
+        </ul>
+
+        <div class="panel">
+            <h5>Featured</h5>
+
+            <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball irure bacon
+                nulla pork belly cupidatat meatloaf cow.</p>
+        </div>
+
+    </aside>
+
+    -->
+    <!-- End Sidebar -->
+</div>
+
+<!-- End Main Content and Sidebar -->
+
+
+<!-- Footer
+
+<footer class="row">
+    <div class="large-12 columns">
+        <hr>
+        <div class="row">
+            <div class="large-12 columns">
+                <p>Footer</p>
+            </div>
+        </div>
+    </div>
+</footer>
+-->
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>
