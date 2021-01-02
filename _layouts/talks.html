@@ -1,0 +1,23 @@
+---
+layout: default
+---
+{{ content }}
+
+<div class="local-post-list">
+{%- assign lastTalksYear = 0 -%}
+{%- for talk in site.data.talks -%}
+    {%- assign currentTalksYear = talk.date | date: '%-Y' -%}
+    {%- if lastTalksYear == 0 or lastTalksYear != currentTalksYear -%}
+<hr>
+<div class="local-list-item">
+    <h2>{{ currentTalksYear }}</h2>
+</div>
+    {%- endif -%}
+    {%- assign lastTalksYear = currentTalksYear -%}
+<div class="local-list-item">
+    <h3><small>{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a></small></h3>
+    <h4><a href="{{ talk.slidesUri }}" target="_blank">{{ talk.title }}</a></h4>
+</div>
+
+{%- endfor -%}
+</div>

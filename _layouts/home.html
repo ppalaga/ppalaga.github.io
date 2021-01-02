@@ -1,0 +1,39 @@
+---
+layout: default
+---
+<div class="paragraph">
+<p></p>
+</div>
+<div class="paragraph">
+<p>A software engineer at <a href="https://www.redhat.com/en/products/integration" target="_blank">Red Hat Integration</a>, working mostly on
+<a href="https://github.com/apache/camel-quarkus" target="_blank">Apache Camel Quarkus</a>.&nbsp;&nbsp;&nbsp;<a href="/about.html">More about me...</a></p>
+</div>
+
+<h2>Recent talks</h2>
+<div class="local-post-list">
+{%- for talk in site.data.talks limit:3 -%}
+<div class="local-list-item">
+    <h3><small>{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a></small></h3>
+    <h4><a href="{{ talk.slidesUri }}" target="_blank">{{ talk.title }}</a></h4>
+</div>
+{%- endfor -%}
+    <a href="/talks.html">Older talks...</a>
+</div>
+
+<h2>Recent posts</h2>
+<div class="local-post-list">
+{%- for post in site.posts limit:3 -%}
+{%- assign excerpt_parts = post.excerpt | split: '<div class="paragraph">' -%}
+<hr>
+<div class="local-list-item">
+    <h3><small>{{ post.date | date: site.date_format }}</small><br><a href="{{ post.url }}">{{ post.title }}</a></h3>
+    {%- for excerpt_part in excerpt_parts offset:1 -%}
+    <div class="paragraph">{{ excerpt_part }}
+    {%- endfor -%}
+    <a href="{{ post.url }}">Read more...</a>
+</div>
+{%- endfor -%}
+<div class="paragraph">
+    <p><br><a href="/blog.html">Older posts...</a><br></p>
+</div>
+</div>
