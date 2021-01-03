@@ -1,0 +1,151 @@
+#local-body {
+    height: auto;
+    background-color: #f5f5f5;
+}
+
+#local-header {
+    background-image: url(../images/2019/horizon-header.jpg);
+    background-size: cover;
+}
+
+#local-header .top-bar {
+    background-color: transparent;
+}
+
+#local-header .top-bar .name {
+    white-space: nowrap;
+}
+
+#local-header .top-bar .name h1 {
+    line-height: 5rem;
+    font-size: 6.5vw;
+}
+
+#local-header .top-bar .name h1 a {
+    font-weight: 1000;
+    color: #00000050;
+}
+
+#local-header .top-bar .toggle-topbar.menu-icon {
+    margin-top: 0;
+    background-color: #00000050;
+}
+
+#local-header .top-bar .toggle-topbar.menu-icon a {
+    height: 2.8125rem;
+    line-height: 2.8125rem;
+    padding: 0 1.9375rem 0 0.9375rem;
+}
+
+#local-header .top-bar-section ul {
+    display: block;
+}
+#local-header .top-bar-section li:not(.has-form) a:not(.button) {
+    background-color: #00000080;
+    padding: 0 0 0 0.9375rem;
+    line-height: 2.8125rem;
+}
+#local-header .top-bar-section ul:not(.local-social) li:not(.has-form):last-child a:not(.button) {
+    padding-right: 0.9375rem;
+}
+#local-header .top-bar-section ul.local-social li:not(.has-form) a {
+    padding: 0;
+    background: none;
+}
+#local-header .top-bar-section ul.local-social li {
+    float: right;
+}
+
+#local-header .top-bar-section ul li {
+    background: none;
+}
+
+#local-content {
+    background-color: #fff;
+}
+
+#local-header li ul.local-social a {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+#local-header .fa {
+    border-radius: 30px;
+    color: #fff;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin: auto 3px;
+    width: 30px;
+    font-size: 15px;
+    text-align: center;
+}
+#local-header .fa-twitter { background-color: #32b9e7; }
+#local-header .fa-linkedin { background-color: #0087be; }
+#local-header .fa-github { background-color: #333; }
+
+.local-list-item h2 {
+    margin-top: -0.2em;
+    margin-bottom: 0.3em;
+}
+.local-list-item h3 {
+    margin-top: -0.2em;
+    margin-bottom: 0.1em;
+}
+.local-list-item h4 {
+    margin-top: -0.3em;
+}
+.local-list-item h3 small {
+    word-spacing: normal;
+}
+.local-list-item h3 > a, .local-list-item h4 > a {
+    color: inherit;
+}
+
+.local-list-item p {
+    margin-bottom: 0.5em;
+}
+
+@media only screen and (min-width: 40.063em) {
+    #local-header {
+        height: 7rem;
+    }
+    #local-header .top-bar .name {
+        height: 5rem;
+        margin-top: 1rem;
+    }
+    #local-avatar {
+        height: 5rem;
+    }
+}
+@media only screen and (max-width: 40.062em) {
+    #local-avatar {
+        display: none;
+    }
+    #local-header .top-bar .name h1 {
+        line-height: 2.8125rem;
+        font-size: 1.0625rem;
+    }
+    #local-header .top-bar .name h1 a {
+        color: #00000080;
+    }
+    #local-header :not(.expanded) .top-bar-section div {
+        display: none;
+    }
+
+    #local-header .expanded .top-bar-section div {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+}
+@media only screen and (min-width: 899px) {
+    #local-header .top-bar .name h1 {
+        line-height: 5rem;
+        font-size: 5rem;
+    }
+    #local-header .top-bar .name h1 a {
+        padding-left: 0.3em;
+        color: #00000030;
+    }
+}

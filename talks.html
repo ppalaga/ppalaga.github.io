@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter Palaga's talks</title>
+    <title>Talks - Peter Palaga</title>
     <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
@@ -13,224 +13,138 @@
     <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/coderay.css">
     <link rel="stylesheet" href="css/asciidoctor.css">
+    <link rel="stylesheet" href="css/adoc-foundation.css">
+    <link rel="stylesheet" href="css/local.css">
     <script src="js/vendor/modernizr.js"></script>
     <script src="js/toc.js"></script>
 </head>
-<body>
-
+<body id="local-body">
 
 <!-- Nav Bar -->
-
-<nav class="top-bar" data-topbar>
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
-        <!-- Title Area -->
-        <li class="name">
-            <h1>
-                <a href="/index.html">Home</a>
-            </h1>
-        </li>
-        <li class="name">
-            <h1>
-                <a href="/talks.html">Talks</a>
-            </h1>
-        </li>
-        <!-- <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li> -->
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
     </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
 </nav>
+</div>
 <!-- End Nav -->
-
-
-<!-- Main Page Content and Sidebar -->
 
 <div class="row">
 
     <!-- Main Blog Content -->
-    <div class="large-9 columns" role="content">
+    <div id="local-content" class="large-12 columns" role="content">
 
-        <h1>Peter Palaga&#8217;s talks</h1>
-<div id="preamble">
-<div class="sectionbody">
+        <h1>Talks</h1>
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-twitter"></i></span> <a href="https://twitter.com/ppalaga">@ppalaga</a>  &#160;&#160;&#160;&#160; <span class="icon"><i class="fa fa-github"></i></span> <a href="https://github.com/ppalaga">ppalaga</a></p>
+<p>Here is the list of Conferences and Java User Groups (JUGs) I spoke on:</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2020">2020</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/200108-camel/index.html">Integrating systems in the age of Quarkus, Knative and Kafka Connect</a> JUG Bern 2020-01-08</p>
-</li>
-<li>
-<p><a href="presentations/200107-writing-quarkus-extensions/index.html">Will my lib or framework work on Quarkus (and GraalVM)?</a> JUG Basel 2020-01-07</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2019">2019</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/191106-w-jax-quarkus/index.html">Quarkus from Inside</a> W-JAX Munich 2019-11-06</p>
-</li>
-<li>
-<p><a href="presentations/191017-baselone-camel/index.html">Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative</a> BaselOne 2019-10-17</p>
-</li>
-<li>
-<p><a href="presentations/191017-baselone-quarkus/index.html">Quarkus - Supersonic Subatomic Java</a> BaselOne 2019-10-17</p>
-</li>
-<li>
-<p><a href="presentations/190925-jcon-duesseldorf/index.html">Quarkus - Supersonic Subatomic Java</a> JCOn Düsseldorf 2019-09-25</p>
-</li>
-<li>
-<p><a href="presentations/190414-quarkus-microxchng-berlin/index.html">Quarkus - Supersonic Subatomic Java</a> microXchg Berlin 2019-04-01</p>
-</li>
-<li>
-<p><a href="presentations/190322-camel-k-vd-bucharest/index.html">Apache Camel K: ~1 sec. build and deploy on Kubernetes</a> Voxxed Days Bucharest 2019-03-22</p>
-</li>
-<li>
-<p><a href="presentations/190321-quarkus-vd-bucharest/index.html">Quarkus - Supersonic Subatomic Java</a> Voxxed Days Bucharest 2019-03-21</p>
-</li>
-<li>
-<p><a href="presentations/190125-devconf-brno/index.html">Apache Camel K: ~1 sec. build and deploy on Kubernetes</a> DevConf Brno 2019-01-25</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2018">2018</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/181127-jvm-con-cologne/index.html">Blue-green Deployments and Canary Releases on Kubernetes</a> JVM Con Cologne 2018-11-27</p>
-</li>
-<li>
-<p><a href="presentations/181011-jcon-duesseldorf/index.html">srcdeps: Don&#8217;t let dependencies dictate your life!</a> JCON Düsseldorf 2018-10-11</p>
-</li>
-<li>
-<p><a href="presentations/180622-voxxed-days-luxembourg/index.html">Blue-green Deployments and Canary Releases on Kubernetes</a> Voxxed Days Luxembourg 2018-06-22</p>
-</li>
-<li>
-<p><a href="presentations/180509-geecon-krakow/index.html">srcdeps: Stop letting dependencies dictate your life!</a> GeeCon Krakow 2018-05-09</p>
-</li>
-<li>
-<p><a href="presentations/180322-voxxed-bucharest/index.html">Blue-green Deployments and Canary Releases on Kubernetes</a> Voxxed Days Bucharest 2018-03-22</p>
-</li>
-<li>
-<p><a href="presentations/180312-voxxed-vienna/index.html">Blue-green Deployments and Canary Releases on Kubernetes</a> Voxxed Days Vienna 2018-03-12</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2017">2017</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/171020-geecon-prague/index.html">srcdeps - source dependencies with Maven and Gradle</a> GeeCon Prague 2017-10-20</p>
-</li>
-<li>
-<p><a href="presentations/170508-jug-vienna/index.html">srcdeps - source dependencies with Maven and Gradle</a> Java Vieanna Meetup 2017-05-08</p>
-</li>
-<li>
-<p><a href="presentations/170316-voxxed-days-vienna/index.html">Java EE Microservices with WildFly Swarm</a> Voxxed Days Vienna 2017-03-16</p>
-</li>
-<li>
-<p><a href="presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html">Getting Continuous with Maven and srcdeps</a> DevConf Brno 2017-01-28</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2016">2016</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html">Continuous Integration/Delivery with Maven and srcdeps</a> 2016-09-09</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="2015">2015</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentations/150929-srcdeps-maven-plugin/150929-srcdeps-maven-plugin.html">srcdeps-maven-plugin - an intro</a> 2015-09-29</p>
-</li>
-<li>
-<p><a href="presentations/150207-devconf-brno/nested-projects-in-eclipse.html">Presenting large multi-module projects in Eclipse</a> DevConf Brno 2015</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
+
+<div class="local-post-list"><hr>
+<div class="local-list-item">
+    <h2>2020</h2>
+</div><div class="local-list-item">
+    <h3><small>Jan 8, 2020&nbsp;&nbsp;•&nbsp;&nbsp;JUG Bern&nbsp;&nbsp;•&nbsp;&nbsp;<a href="/presentations/200108-camel/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="/presentations/200108-camel/index.html" target="_blank">Integrating systems in the age of Quarkus, Knative and Kafka Connect</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Jan 7, 2020&nbsp;&nbsp;•&nbsp;&nbsp;JUG Basel&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/200107-writing-quarkus-extensions/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/200107-writing-quarkus-extensions/index.html" target="_blank">Will my lib or framework work on Quarkus (and GraalVM)?</a></h4>
+</div><hr>
+<div class="local-list-item">
+    <h2>2019</h2>
+</div><div class="local-list-item">
+    <h3><small>Nov 6, 2019&nbsp;&nbsp;•&nbsp;&nbsp;W-JAX Munich&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/191106-w-jax-quarkus/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/191106-w-jax-quarkus/index.html" target="_blank">Quarkus from Inside</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Oct 17, 2019&nbsp;&nbsp;•&nbsp;&nbsp;BaselOne&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/191017-baselone-camel/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/191017-baselone-camel/index.html" target="_blank">Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Oct 17, 2019&nbsp;&nbsp;•&nbsp;&nbsp;BaselOne&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/191017-baselone-quarkus/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/191017-baselone-quarkus/index.html" target="_blank">Quarkus - Supersonic Subatomic Java</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Sep 25, 2019&nbsp;&nbsp;•&nbsp;&nbsp;JCOn Düsseldorf&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/190925-jcon-duesseldorf/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/190925-jcon-duesseldorf/index.html" target="_blank">Quarkus - Supersonic Subatomic Java</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Apr 1, 2019&nbsp;&nbsp;•&nbsp;&nbsp;microXchg Berlin&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/190414-quarkus-microxchng-berlin/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/190414-quarkus-microxchng-berlin/index.html" target="_blank">Quarkus - Supersonic Subatomic Java</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Mar 22, 2019&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Bucharest&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/190322-camel-k-vd-bucharest/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/190322-camel-k-vd-bucharest/index.html" target="_blank">Apache Camel K: ~1 sec. build and deploy on Kubernetes</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Mar 21, 2019&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Bucharest&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/190321-quarkus-vd-bucharest/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/190321-quarkus-vd-bucharest/index.html" target="_blank">Quarkus - Supersonic Subatomic Java</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Jan 25, 2019&nbsp;&nbsp;•&nbsp;&nbsp;DevConf Brno&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/190125-devconf-brno/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/190125-devconf-brno/index.html" target="_blank">Apache Camel K: ~1 sec. build and deploy on Kubernetes</a></h4>
+</div><hr>
+<div class="local-list-item">
+    <h2>2018</h2>
+</div><div class="local-list-item">
+    <h3><small>Nov 27, 2018&nbsp;&nbsp;•&nbsp;&nbsp;JVM Con Cologne&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/181127-jvm-con-cologne/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/181127-jvm-con-cologne/index.html" target="_blank">Blue-green Deployments and Canary Releases on Kubernetes</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Oct 11, 2018&nbsp;&nbsp;•&nbsp;&nbsp;JCON Düsseldorf&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/181011-jcon-duesseldorf/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/181011-jcon-duesseldorf/index.html" target="_blank">srcdeps: Don't let dependencies dictate your life!</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Jun 22, 2018&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Luxembourg&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/180622-voxxed-days-luxembourg/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/180622-voxxed-days-luxembourg/index.html" target="_blank">Blue-green Deployments and Canary Releases on Kubernetes</a></h4>
+</div><div class="local-list-item">
+    <h3><small>May 9, 2018&nbsp;&nbsp;•&nbsp;&nbsp;GeeCon Krakow&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/180509-geecon-krakow/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/180509-geecon-krakow/index.html" target="_blank">srcdeps: Stop letting dependencies dictate your life!</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Mar 22, 2018&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Bucharest&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/180322-voxxed-bucharest/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/180322-voxxed-bucharest/index.html" target="_blank">Blue-green Deployments and Canary Releases on Kubernetes</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Mar 12, 2018&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Vienna&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/180312-voxxed-vienna/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/180312-voxxed-vienna/index.html" target="_blank">Blue-green Deployments and Canary Releases on Kubernetes</a></h4>
+</div><hr>
+<div class="local-list-item">
+    <h2>2017</h2>
+</div><div class="local-list-item">
+    <h3><small>Oct 20, 2017&nbsp;&nbsp;•&nbsp;&nbsp;GeeCon Prague&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/171020-geecon-prague/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/171020-geecon-prague/index.html" target="_blank">srcdeps - source dependencies with Maven and Gradle</a></h4>
+</div><div class="local-list-item">
+    <h3><small>May 8, 2017&nbsp;&nbsp;•&nbsp;&nbsp;Java Vieanna Meetup&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/170508-jug-vienna/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/170508-jug-vienna/index.html" target="_blank">srcdeps - source dependencies with Maven and Gradle</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Mar 16, 2017&nbsp;&nbsp;•&nbsp;&nbsp;Voxxed Days Vienna&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/170316-voxxed-days-vienna/index.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/170316-voxxed-days-vienna/index.html" target="_blank">Java EE Microservices with WildFly Swarm</a></h4>
+</div><div class="local-list-item">
+    <h3><small>Jan 28, 2017&nbsp;&nbsp;•&nbsp;&nbsp;DevConf Brno&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html" target="_blank">Getting Continuous with Maven and srcdeps</a></h4>
+</div><hr>
+<div class="local-list-item">
+    <h2>2015</h2>
+</div><div class="local-list-item">
+    <h3><small>Feb 7, 2015&nbsp;&nbsp;•&nbsp;&nbsp;DevConf Brno&nbsp;&nbsp;•&nbsp;&nbsp;<a href="presentations/150207-devconf-brno/nested-projects-in-eclipse.html" target="_blank">Slides</a></small></h3>
+    <h4><a href="presentations/150207-devconf-brno/nested-projects-in-eclipse.html" target="_blank">Presenting large multi-module projects in Eclipse</a></h4>
+</div></div>
+
 
     </div>
 
-    <!-- End Main Content -->
-
-    <!-- Sidebar
-
-    <aside class="large-3 columns">
-
-        <h4>Posts</h4>
-        <ul id="posts" class="posts nav">
-            
-            <li><a href="./2020/10/29/skipping-maven-mojos-properly.html"></a></li>
-            
-            <li><a href="./2020/08/11/camel-quarkus-early-history.html">Camel Quarkus early history</a></li>
-            
-            <li><a href="./2020/07/03/releasing-large-maven-projects.html">Resuming large Maven releases</a></li>
-            
-            <li><a href="./2018/10/21/srcdeps.masterConfig.html">srcdeps.masterConfig - build all dependencies with single `srcdeps.yaml`</a></li>
-            
-            <li><a href="./2018/06/05/srcdeps-do-not-touch-my-poms.html">srcdeps, do not touch my poms!</a></li>
-            
-        </ul>
-
-        <div class="panel">
-            <h5>Featured</h5>
-
-            <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball irure bacon
-                nulla pork belly cupidatat meatloaf cow.</p>
-        </div>
-
-    </aside>
-
-    -->
-    <!-- End Sidebar -->
 </div>
-
-<!-- End Main Content and Sidebar -->
-
-
-<!-- Footer
-
-<footer class="row">
-    <div class="large-12 columns">
-        <hr>
-        <div class="row">
-            <div class="large-12 columns">
-                <p>Footer</p>
-            </div>
-        </div>
-    </div>
-</footer>
--->
 
 <script src="js/vendor/jquery.js"></script>
 <script src="js/foundation.min.js"></script>

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file</title>
+    <title><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file - Peter Palaga</title>
     <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
@@ -13,39 +13,48 @@
     <link rel="stylesheet" href="../../../css/font-awesome.css">
     <link rel="stylesheet" href="../../../css/coderay.css">
     <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
     <script src="../../../js/vendor/modernizr.js"></script>
     <script src="../../../js/toc.js"></script>
 </head>
-<body>
-
+<body id="local-body">
 
 <!-- Nav Bar -->
-
-<nav class="top-bar" data-topbar>
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
     <ul class="title-area">
-        <!-- Title Area -->
-        <li class="name">
-            <h1>
-                <a href="/index.html">Home</a>
-            </h1>
-        </li>
-        <li class="name">
-            <h1>
-                <a href="/talks.html">Talks</a>
-            </h1>
-        </li>
-        <!-- <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li> -->
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+       <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
     </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
 </nav>
+</div>
 <!-- End Nav -->
-
-
-<!-- Main Page Content and Sidebar -->
 
 <div class="row">
 
     <!-- Main Blog Content -->
-    <div class="large-9 columns" role="content">
+    <div id="local-content" class="large-12 columns" role="content">
 
         <h1><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file</h1>
 <div id="preamble">
@@ -104,56 +113,7 @@ dependencies.</p>
 
     </div>
 
-    <!-- End Main Content -->
-
-    <!-- Sidebar
-
-    <aside class="large-3 columns">
-
-        <h4>Posts</h4>
-        <ul id="posts" class="posts nav">
-            
-            <li><a href="./2020/10/29/skipping-maven-mojos-properly.html"></a></li>
-            
-            <li><a href="./2020/08/11/camel-quarkus-early-history.html">Camel Quarkus early history</a></li>
-            
-            <li><a href="./2020/07/03/releasing-large-maven-projects.html">Resuming large Maven releases</a></li>
-            
-            <li><a href="./2018/10/21/srcdeps.masterConfig.html">srcdeps.masterConfig - build all dependencies with single `srcdeps.yaml`</a></li>
-            
-            <li><a href="./2018/06/05/srcdeps-do-not-touch-my-poms.html">srcdeps, do not touch my poms!</a></li>
-            
-        </ul>
-
-        <div class="panel">
-            <h5>Featured</h5>
-
-            <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball irure bacon
-                nulla pork belly cupidatat meatloaf cow.</p>
-        </div>
-
-    </aside>
-
-    -->
-    <!-- End Sidebar -->
 </div>
-
-<!-- End Main Content and Sidebar -->
-
-
-<!-- Footer
-
-<footer class="row">
-    <div class="large-12 columns">
-        <hr>
-        <div class="row">
-            <div class="large-12 columns">
-                <p>Footer</p>
-            </div>
-        </div>
-    </div>
-</footer>
--->
 
 <script src="../../../js/vendor/jquery.js"></script>
 <script src="../../../js/foundation.min.js"></script>
