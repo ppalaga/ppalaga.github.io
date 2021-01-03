@@ -16,6 +16,10 @@ asciidoctor:
     - source-highlighter=coderay
     - icons=font
 date_format: '%b %-d, %Y'
+url: https://ppalaga.github.io
+canonical: https://ppalaga.github.io
+github: https://github.com/ppalaga/ppalaga.github.io
+production_url: https://ppalaga.github.io
 
 # GitHub
 username: ppalaga
