@@ -105,6 +105,14 @@
     margin-bottom: 0.5em;
 }
 
+.local-footer {
+    background-color: #999999;
+    color: #e7e7e7;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 12px;
+}
+
 @media only screen and (min-width: 40.063em) {
     #local-header {
         height: 7rem;
