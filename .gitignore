@@ -12,3 +12,4 @@ _site
 .jekyll-metadata
 /Gemfile.lock
 vendor
+/.jekyll-cache/

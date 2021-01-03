@@ -1,0 +1,8 @@
+---
+layout: blog
+---
+= Blog
+:showtitle:
+:page-title: Blog
+:icons: font
+

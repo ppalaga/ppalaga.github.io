@@ -1,28 +1,7 @@
+---
+layout: home
+---
 = Peter Palaga
 :showtitle:
 :page-title: Peter Palaga
 :icons: font
-
-icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
-
-Senior software engineer at Red Hat Middleware working on https://github.com/apache/camel-quarkus[Camel Quarkus].
-
-== Blog
-
-* link:/2020/10/29/skipping-maven-mojos-properly.html[When `-DskipTests` is not fast enough: skip Maven mojos properly]
-* link:/2020/08/11/camel-quarkus-early-history.html[Camel Quarkus early history]
-* link:/2020/07/03/releasing-large-maven-projects.html[Resuming large Maven releases]
-* link:/2018/10/21/srcdeps.masterConfig.html[`srcdeps.masterConfig` - build direct and transitive dependencies with a single `srcdeps.yaml` file]
-* link:/2018/06/05/srcdeps-do-not-touch-my-poms.html[`srcdeps`, do not touch my poms!]
-
-== Talks
-
-* link:presentations/200108-camel/index.html[Integrating systems in the age of Quarkus, Knative and Kafka Connect] JUG Bern 2020-01-08
-* link:presentations/200107-writing-quarkus-extensions/index.html[Will my lib or framework work on Quarkus (and GraalVM)?] JUG Basel 2020-01-07
-* link:presentations/191106-w-jax-quarkus/index.html[Quarkus from Inside] W-JAX Munich 2019-11-06
-* link:presentations/191017-baselone-camel/index.html[Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative] BaselOne 2019-10-17
-* link:presentations/191017-baselone-quarkus/index.html[Quarkus - Supersonic Subatomic Java] BaselOne 2019-10-17
-* link:presentations/190925-jcon-duesseldorf/index.html[Quarkus - Supersonic Subatomic Java] JCOn Düsseldorf 2019-09-25
-* link:presentations/190414-quarkus-microxchng-berlin/index.html[Quarkus - Supersonic Subatomic Java] microXchg Berlin 2019-04-01
-* link:talks.html[Older talks]
-

@@ -1,0 +1,17 @@
+= About me
+:showtitle:
+:page-title: About me
+:icons: font
+
+I am a software engineer at https://www.redhat.com/en/products/integration[Red Hat Integration], working mostly on
+https://github.com/apache/camel-quarkus[Apache Camel Quarkus].
+
+Earlier, I used to be a sustaining engineer for https://github.com/wildfly-extras/wildfly-camel[WildFly Camel]
+(the upstream of https://www.redhat.com/en/technologies/jboss-middleware/fuse[Fuse] on EAP),
+https://www.redhat.com/en/technologies/jboss-middleware/application-platform[JBoss EAP]/link:https://github.com/wildfly/wildfly[WildFly] and other Red Hat Middleware projects.
+
+I like tinkering around build tools, most notably https://github.com/mvndaemon/mvnd[mvnd] (a.k.a. Maven daemon),
+https://github.com/srcdeps/srcdeps-maven[srcdeps] (source dependencies for Maven and Gradle)
+and https://github.com/ec4j/ec4j[ec4j] (https://editorconfig.org/[EditorConfig] for Java).
+
+I speak on link:/talks.html[software conferences and Java user groups] from time to time.

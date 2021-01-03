@@ -1,47 +1,9 @@
-= Peter Palaga's talks
+---
+layout: talks
+---
+= Talks
 :showtitle:
-:page-title: Peter Palaga's talks
+:page-title: Talks
 :icons: font
 
-icon:twitter[] https://twitter.com/ppalaga[@ppalaga]  {nbsp}{nbsp}{nbsp}{nbsp} icon:github[] https://github.com/ppalaga[ppalaga]
-
-== 2020
-
-* link:presentations/200108-camel/index.html[Integrating systems in the age of Quarkus, Knative and Kafka Connect] JUG Bern 2020-01-08
-* link:presentations/200107-writing-quarkus-extensions/index.html[Will my lib or framework work on Quarkus (and GraalVM)?] JUG Basel 2020-01-07
-
-== 2019
-
-* link:presentations/191106-w-jax-quarkus/index.html[Quarkus from Inside] W-JAX Munich 2019-11-06
-* link:presentations/191017-baselone-camel/index.html[Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative] BaselOne 2019-10-17
-* link:presentations/191017-baselone-quarkus/index.html[Quarkus - Supersonic Subatomic Java] BaselOne 2019-10-17
-* link:presentations/190925-jcon-duesseldorf/index.html[Quarkus - Supersonic Subatomic Java] JCOn Düsseldorf 2019-09-25
-* link:presentations/190414-quarkus-microxchng-berlin/index.html[Quarkus - Supersonic Subatomic Java] microXchg Berlin 2019-04-01
-* link:presentations/190322-camel-k-vd-bucharest/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] Voxxed Days Bucharest 2019-03-22
-* link:presentations/190321-quarkus-vd-bucharest/index.html[Quarkus - Supersonic Subatomic Java] Voxxed Days Bucharest 2019-03-21
-* link:presentations/190125-devconf-brno/index.html[Apache Camel K: ~1 sec. build and deploy on Kubernetes] DevConf Brno 2019-01-25
-
-== 2018
-
-* link:presentations/181127-jvm-con-cologne/index.html[Blue-green Deployments and Canary Releases on Kubernetes] JVM Con Cologne 2018-11-27
-* link:presentations/181011-jcon-duesseldorf/index.html[srcdeps: Don't let dependencies dictate your life!] JCON Düsseldorf 2018-10-11
-* link:presentations/180622-voxxed-days-luxembourg/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Luxembourg 2018-06-22
-* link:presentations/180509-geecon-krakow/index.html[srcdeps: Stop letting dependencies dictate your life!] GeeCon Krakow 2018-05-09
-* link:presentations/180322-voxxed-bucharest/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Bucharest 2018-03-22
-* link:presentations/180312-voxxed-vienna/index.html[Blue-green Deployments and Canary Releases on Kubernetes] Voxxed Days Vienna 2018-03-12
-
-== 2017
-
- * link:presentations/171020-geecon-prague/index.html[srcdeps - source dependencies with Maven and Gradle] GeeCon Prague 2017-10-20
- * link:presentations/170508-jug-vienna/index.html[srcdeps - source dependencies with Maven and Gradle] Java Vieanna Meetup 2017-05-08
- * link:presentations/170316-voxxed-days-vienna/index.html[Java EE Microservices with WildFly Swarm] Voxxed Days Vienna 2017-03-16
- * link:presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html[Getting Continuous with Maven and srcdeps] DevConf Brno 2017-01-28
-
-== 2016
-
- * link:presentations/160909-ci-cd-with-maven-and-srcdeps/160906-srcdeps.html[Continuous Integration/Delivery with Maven and srcdeps] 2016-09-09
-
-== 2015
-
- * link:presentations/150929-srcdeps-maven-plugin/150929-srcdeps-maven-plugin.html[srcdeps-maven-plugin - an intro] 2015-09-29
- * link:presentations/150207-devconf-brno/nested-projects-in-eclipse.html[Presenting large multi-module projects in Eclipse] DevConf Brno 2015
+Here is the list of Conferences and Java User Groups (JUGs) I spoke on:

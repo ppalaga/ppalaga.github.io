@@ -15,6 +15,7 @@ asciidoctor:
     - idseparator=_
     - source-highlighter=coderay
     - icons=font
+date_format: '%b %-d, %Y'
 
 # GitHub
 username: ppalaga
@@ -24,3 +25,6 @@ branch: source
 # Jekyll source / destination
 source:               .
 destination:          _site
+
+plugins:
+  - jekyll-regex-replace

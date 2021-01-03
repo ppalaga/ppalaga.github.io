@@ -3,6 +3,7 @@
 :page-navtitle: srcdeps, do not touch my poms!
 :page-excerpt: Excerpt goes here.
 :page-root: ../../../
+:page-excerpt: This is the _excerpt_ of this post.
 
 image::/images/2018/srcdeps-logo-with-text.svg[srcdeps,height=60,alt=srcdeps,link="https://github.com/srcdeps/srcdeps"]
 

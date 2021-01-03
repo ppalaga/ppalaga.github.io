@@ -1,0 +1,128 @@
+[
+    {
+        "slidesUri": "/presentations/200108-camel/index.html",
+        "eventName": "JUG Bern",
+        "title": "Integrating systems in the age of Quarkus, Knative and Kafka Connect",
+        "date": "2020-01-08"
+    },
+    {
+        "slidesUri": "presentations/200107-writing-quarkus-extensions/index.html",
+        "title": "Will my lib or framework work on Quarkus (and GraalVM)?",
+        "eventName": "JUG Basel",
+        "date": "2020-01-07"
+    },
+    {
+        "slidesUri": "presentations/191106-w-jax-quarkus/index.html",
+        "title": "Quarkus from Inside",
+        "eventName": "W-JAX Munich",
+        "date": "2019-11-06"
+    },
+    {
+        "slidesUri": "presentations/191017-baselone-camel/index.html",
+        "title": "Apache Camel K - Supersonic Subatomic Integrations on Kubernetes and Knative",
+        "eventName": "BaselOne",
+        "date": "2019-10-17"
+    },
+    {
+        "slidesUri": "presentations/191017-baselone-quarkus/index.html",
+        "title": "Quarkus - Supersonic Subatomic Java",
+        "eventName": "BaselOne",
+        "date": "2019-10-17"
+    },
+    {
+        "slidesUri": "presentations/190925-jcon-duesseldorf/index.html",
+        "title": "Quarkus - Supersonic Subatomic Java",
+        "eventName": "JCOn Düsseldorf",
+        "date": "2019-09-25"
+    },
+    {
+        "slidesUri": "presentations/190414-quarkus-microxchng-berlin/index.html",
+        "title": "Quarkus - Supersonic Subatomic Java",
+        "eventName": "microXchg Berlin",
+        "date": "2019-04-01"
+    },
+    {
+        "slidesUri": "presentations/190322-camel-k-vd-bucharest/index.html",
+        "title": "Apache Camel K: ~1 sec. build and deploy on Kubernetes",
+        "eventName": "Voxxed Days Bucharest",
+        "date": "2019-03-22"
+    },
+    {
+        "slidesUri": "presentations/190321-quarkus-vd-bucharest/index.html",
+        "title": "Quarkus - Supersonic Subatomic Java",
+        "eventName": "Voxxed Days Bucharest",
+        "date": "2019-03-21"
+    },
+    {
+        "slidesUri": "presentations/190125-devconf-brno/index.html",
+        "title": "Apache Camel K: ~1 sec. build and deploy on Kubernetes",
+        "eventName": "DevConf Brno",
+        "date": "2019-01-25"
+    },
+    {
+        "slidesUri": "presentations/181127-jvm-con-cologne/index.html",
+        "title": "Blue-green Deployments and Canary Releases on Kubernetes",
+        "eventName": "JVM Con Cologne",
+        "date": "2018-11-27"
+    },
+    {
+        "slidesUri": "presentations/181011-jcon-duesseldorf/index.html",
+        "title": "srcdeps: Don't let dependencies dictate your life!",
+        "eventName": "JCON Düsseldorf",
+        "date": "2018-10-11"
+    },
+    {
+        "slidesUri": "presentations/180622-voxxed-days-luxembourg/index.html",
+        "title": "Blue-green Deployments and Canary Releases on Kubernetes",
+        "eventName": "Voxxed Days Luxembourg",
+        "date": "2018-06-22"
+    },
+    {
+        "slidesUri": "presentations/180509-geecon-krakow/index.html",
+        "title": "srcdeps: Stop letting dependencies dictate your life!",
+        "eventName": "GeeCon Krakow",
+        "date": "2018-05-09"
+    },
+    {
+        "slidesUri": "presentations/180322-voxxed-bucharest/index.html",
+        "title": "Blue-green Deployments and Canary Releases on Kubernetes",
+        "eventName": "Voxxed Days Bucharest",
+        "date": "2018-03-22"
+    },
+    {
+        "slidesUri": "presentations/180312-voxxed-vienna/index.html",
+        "title": "Blue-green Deployments and Canary Releases on Kubernetes",
+        "eventName": "Voxxed Days Vienna",
+        "date": "2018-03-12"
+    },
+    {
+        "slidesUri": "presentations/171020-geecon-prague/index.html",
+        "title": "srcdeps - source dependencies with Maven and Gradle",
+        "eventName": "GeeCon Prague",
+        "date": "2017-10-20"
+    },
+    {
+        "slidesUri": "presentations/170508-jug-vienna/index.html",
+        "title": "srcdeps - source dependencies with Maven and Gradle",
+        "eventName": "Java Vieanna Meetup",
+        "date": "2017-05-08"
+    },
+    {
+        "slidesUri": "presentations/170316-voxxed-days-vienna/index.html",
+        "title": "Java EE Microservices with WildFly Swarm",
+        "eventName": "Voxxed Days Vienna",
+        "date": "2017-03-16"
+    },
+    {
+        "slidesUri": "presentations/170128-srcdeps-devconf-2017/170128-srcdeps-devconf-2017.html",
+        "title": "Getting Continuous with Maven and srcdeps",
+        "eventName": "DevConf Brno",
+        "date": "2017-01-28"
+    },
+    {
+        "slidesUri": "presentations/150207-devconf-brno/nested-projects-in-eclipse.html",
+        "title": "Presenting large multi-module projects in Eclipse",
+        "eventName": "DevConf Brno",
+        "date": "2015-02-07"
+    }
+]
