@@ -20,7 +20,7 @@ date_format: '%b %-d, %Y'
 # GitHub
 username: ppalaga
 repo: ppalaga.github.io
-branch: source
+branch: master
 
 # Jekyll source / destination
 source:               .
