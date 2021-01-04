@@ -112,6 +112,9 @@
     padding-bottom: 1rem;
     font-size: 12px;
 }
+.local-footer a {
+    color: #b3d5e0;
+}
 
 @media only screen and (min-width: 40.063em) {
     #local-header {
