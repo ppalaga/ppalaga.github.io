@@ -15,8 +15,8 @@ layout: default
     {%- endif -%}
     {%- assign lastTalksYear = currentTalksYear -%}
 <div class="local-list-item">
-    <h3><small>{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a></small></h3>
-    <h4><a href="{{ talk.slidesUri }}" target="_blank">{{ talk.title }}</a></h4>
+    <h3><span class="local-subtitle">{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a></span><br>
+    <a href="{{ talk.slidesUri }}" target="_blank">{{ talk.title }}</a></h3>
 </div>
 
 {%- endfor -%}

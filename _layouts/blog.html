@@ -8,11 +8,13 @@ layout: default
 {%- assign excerpt_parts = post.excerpt | split: '<div class="paragraph">' -%}
 <hr>
 <div class="local-list-item">
-    <h3><small>{{ post.date | date: site.date_format }}</small><br><a href="{{ post.url }}">{{ post.title }}</a></h3>
+    <h3><span class="local-subtitle">{{ post.date | date: site.date_format }}</span><br>
+    <a href="{{ post.url }}">{{ post.title }}</a></h3>
+    <div class="paragraph"><p>
     {%- for excerpt_part in excerpt_parts offset:1 -%}
-    <div class="paragraph">{{ excerpt_part }}
+    {{ excerpt_part | replace: '<p>', '' | replace: '</p>', '' | replace: '</div>', '' }}
     {%- endfor -%}
-    <a href="{{ post.url }}">Read more...</a>
+    <a href="{{ post.url }}">Read more...</a></p></div>
 </div>
 
 {%- endfor -%}
