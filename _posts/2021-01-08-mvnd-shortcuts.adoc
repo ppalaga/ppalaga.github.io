@@ -1,0 +1,49 @@
+= `mvnd` tip: shortcuts
+:showtitle:
+:page-root: ../../../
+
+I am starting to write these tips as a base for the future `https://github.com/mvndaemon/mvnd[mvnd]`
+documentation. Today about keystrokes supported in the `mvnd` client UI.
+
+== `+`/`-` to reveal/hide rolling log lines for the individual builder threads
+
+If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+`mvnd` will by default choose the threaded view (as opposed to the rolling view known from the stock Maven). This
+view will normally show a single status line for each builder thread containing the `artifactId` of the module being
+build along with the currently executed Maven mojo.
+
+If you want to see the rolling log messages for each thread, hit `+` one or more times. Press `-` to hide them again.
+I am hitting 3 times `+` and three times `-` in this video:
+
+image::/images/2021/01-08-mvnd-shortcuts/mvnd-plus-minus.gif["Pressing three times plus and three times minus in a build with 5 threads",alt="Pressing three times plus and three times minus in a build with 5 threads"]
+
+[TIP]
+====
+You can pass your preferred rolling window size using `-Dmvnd.rollingWindowSize=3` on the command line or you
+can store it permanently in `~/.m2/mvnd.properties`:
+
+[source,properties]
+----
+mvnd.rollingWindowSize = 3
+----
+====
+
+== `CTRL+B` to toggle between threaded and rolling views
+
+If you do not like the default threaded view for some reason, you can switch to the rolling view and back by hitting
+`CTRL+B`:
+
+image::/images/2021/01-08-mvnd-shortcuts/mvnd-ctrl-b.gif["Toggling between threaded and rolling views via CTRL+B",alt="Toggling between threaded and rolling views via CTRL+B"]
+
+[TIP]
+====
+You can pass `-Dmvnd.noBuffering` on the command line to start with the rolling view or you can store your
+preference permanently in `~/.m2/mvnd.properties`:
+
+[source,properties]
+----
+mvnd.noBuffering = true
+----
+====
+
+image::https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon[link="https://twitter.com/mvndaemon"]
