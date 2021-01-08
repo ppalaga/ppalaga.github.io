@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file - Peter Palaga</title>
+    <title>mvnd tip: shortcuts - Peter Palaga</title>
     <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
@@ -55,57 +55,91 @@
     <!-- Main Blog Content -->
     <div id="local-content" class="large-12 columns" role="content">
 
-        <h1><code>srcdeps.masterConfig</code> - build direct and transitive dependencies with a single <code>srcdeps.yaml</code> file</h1>
+        <h1><code>mvnd</code> tip: shortcuts</h1>
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>I am starting to write these tips as a base for the future <code><a href="https://github.com/mvndaemon/mvnd">mvnd</a></code>
+documentation. Today about keystrokes supported in the <code>mvnd</code> client UI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="to_revealhide_rolling_log_lines_for_the_individual_builder_threads"><code>+</code>/<code>-</code> to reveal/hide rolling log lines for the individual builder threads</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+<code>mvnd</code> will by default choose the threaded view (as opposed to the rolling view known from the stock Maven). This
+view will normally show a single status line for each builder thread containing the <code>artifactId</code> of the module being
+build along with the currently executed Maven mojo.</p>
+</div>
+<div class="paragraph">
+<p>If you want to see the rolling log messages for each thread, hit <code>+</code> one or more times. Press <code>-</code> to hide them again.
+I am hitting 3 times <code>+</code> and three times <code>-</code> in this video:</p>
+</div>
 <div class="imageblock">
 <div class="content">
-<a class="image" href="https://github.com/srcdeps/srcdeps"><img src="/images/2018/srcdeps-logo-with-text.svg" alt="srcdeps" height="60"></a>
+<img src="/images/2021/01-08-mvnd-shortcuts/mvnd-plus-minus.gif" alt="Pressing three times plus and three times minus in a build with 5 threads">
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>Before <code>srcdeps-maven</code> 3.4.0 and <code>srcdeps.yaml</code> model version 2.4, building of dependencies from source "on the
-fly" worked only for direct dependencies. If <code>my-project</code> depended on <code>dependency-1</code>, I could declare <code>dependency-1</code>
-as a source dependency in <code>srcdeps.yaml</code> of <code>my-project</code>. But if I also wanted a specific unreleased commit of
-<code>dependency-2</code>, which <code>dependency-1</code> depends on (and needs to be built and run against), I had no other option than
-fork <code>dependency-1</code> and add <code>srcdeps.yaml</code> with <code>dependency-2</code> there.</p>
+<p>You can pass your preferred rolling window size using <code>-Dmvnd.rollingWindowSize=3</code> on the command line or you
+can store it permanently in <code>~/.m2/mvnd.properties</code>:</p>
 </div>
-<div class="paragraph">
-<p>The new <code>srcdeps.masterConfig</code> feature allows you to avoid the intermediary <code>srcdeps.yaml</code> files. Now you can declare
-<code>dependency-2</code> in the <code>srcdeps.yaml</code> file of <code>my-project</code> and you do not need to fork <code>dependency-1</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">mvnd.rollingWindowSize = 3</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="how_it_works">How it works</h2>
+<h2 id="ctrlb_to_toggle_between_threaded_and_rolling_views"><code>CTRL+B</code> to toggle between threaded and rolling views</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>srcdeps.yaml</code> configuration model version 2.4 introduces a new boolean attribute <code>forwardAsMasterConfig</code>. If it
-is <code>true</code>, the URI of the current <code>srcdeps.yaml</code> file will be forwarded as a system property <code>srcdeps.masterConfig</code> to
-every dependency builder. The dependency builder picks <code>srcdeps.yaml</code> from the URI, uses it during its own build and
-forwards it to every dependency build it triggers itself.</p>
+<p>If you do not like the default threaded view for some reason, you can switch to the rolling view and back by hitting
+<code>CTRL+B</code>:</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/01-08-mvnd-shortcuts/mvnd-ctrl-b.gif" alt="Toggling between threaded and rolling views via CTRL+B">
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>With <code>forwardAsMasterConfig: true</code> the dependency also does not need to have <code>srcdeps-maven-local-repository</code> declared
-in its <code>.mvn/extensions.xml</code>. After checking out the sources of the dependency, <code>srcdeps-maven</code> auto-creates (or
-upgrades) the <code>.mvn/extensions.xml</code> file as necessary.</p>
+<p>You can pass <code>-Dmvnd.noBuffering</code> on the command line to start with the rolling view or you can store your
+preference permanently in <code>~/.m2/mvnd.properties</code>:</p>
 </div>
-<div class="paragraph">
-<p><code>forwardAsMasterConfig</code> attribute is optional and the default value is <code>false</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">mvnd.noBuffering = true</code></pre>
 </div>
 </div>
+</td>
+</tr>
+</table>
 </div>
-<div class="sect1">
-<h2 id="limitations">Limitations</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>srcdeps.masterConfig</code> is not supported by our experimental Gradle builder. You can still have direct Gradle
-dependencies but builds those will not forward the master <code>srcdeps.yaml</code> to the eventual builds of their own
-dependencies.</p>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://twitter.com/mvndaemon"><img src="https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon" alt="mvndaemon"></a>
 </div>
-<div class="paragraph">
-<p>Any feedback is welcome via GitHub <a href="https://github.com/srcdeps/srcdeps-core/issues">issues</a> or via
-<a href="https://twitter.com/ppalaga">@ppalaga</a> on Twitter.</p>
 </div>
 </div>
 </div>
