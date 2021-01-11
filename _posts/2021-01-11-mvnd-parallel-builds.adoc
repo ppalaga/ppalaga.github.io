@@ -1,0 +1,101 @@
+= `mvnd` tip: Parallel and non-parallel builds
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [mvnd]
+
+link:/2021/01/08/mvnd-shortcuts.html[Another] tip that will serve as a base for the future
+`https://github.com/mvndaemon/mvnd[mvnd]` documentation. Today about parallel and non-parallel builds.
+
+== Parallel by default
+
+If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+`mvnd` will, by default, build them in parallel for you. The default number of threads is one or
+`Runtime.getRuntime().availableProcessors() - 1`, whichever is greater. You can change this value using
+Maven's standard parameter `-T`/`--threads`. E.g. to use five threads the command would look like this:
+
+[source,shell]
+----
+$ mvnd package -T5
+----
+
+How many threads should you use? Well, it depends on two factors at least:
+
+1. How many CPU cores are available on your machine? It typically does not bring any speedup to use more threads than
+   the number of threads your machine can run at the same time. Use `lscpu` on Linux or its equivalent for your
+   operating system to figure out how many CPU cores you have available.
+
+2. Which other tasks is your machine running? If you want to work inside your IDE or browser during the build, you
+   should leave one or two cores out of the set assigned to `mvnd`. That's actually the assumption behind the default
+   value chosen by `mvnd`.
+
+These are just general rules that may or may not hold for your situation. Feel free to experiment with various `-T`
+values and see which setting works best for you.
+
+[TIP]
+====
+`-T`/`--threads` allows for a "processor count multiplier" notation using `-T<n>C` where `<n>` is a (potentially
+decimal) number to multiply the number of processors of the current machine. E.g. to use a half of the processors,
+you'd use `-T0.5C`, to use twice as many threads as the number of processors, you'd use `-T2C`.
+====
+
+You can persist your preference in `~/.m2/mvnd.properties` as follows:
+
+[source,properties]
+----
+mvnd.threads = 5
+# or alternatively using the multiplier notation
+# mvnd.threads = 0.5C
+----
+
+== `smart` builder by default
+
+Maven has the concept of pluggable `builder` since version 3.2.1.
+It is https://maven.apache.org/docs/3.2.1/release-notes#new-builder-interface-mng-5575[described] as a strategy for
+scheduling and building projects. Stock Maven offers two builder implementations: `singlethreaded` and `multithreaded`.
+
+Except for these two, at least one more can be found in the wild: the
+http://takari.io/book/30-team-maven.html#takari-smart-builder[Takari Smart Builder]. ``mvnd``'s `smart` builder is
+based on this one. It is actually a copy with a few minor modifications.
+
+To characterize the Takari Smart Builder, let's cite from its http://takari.io/book/30-team-maven.html#takari-smart-builder[documentation]:
+
+[quote]
+____
+The primary difference between the standard multi-threaded scheduler in Maven and the Takari smart builder is illustrated below.
+
+image::/images/2021/01-11-mvnd-parallel-builds/smart-builder-scheduler.png["Standard and Smart Builder Scheduling",alt="Standard and Smart Builder Scheduling"]
+
+The standard multi-threaded scheduler is using a rather naive and simple approach of using dependency-depth information in the project. It builds everything at a given dependency-depth before continuing to the next level.
+
+The Takari Smart Builder is using a more advanced approach of dependency-path information. Projects are aggressively built along a dependency-path in topological order as upstream dependencies have been satisfied.
+____
+
+`smart` builder is one of the features that make `mvnd` so much faster from the standard Maven. (The other ones are
+classloader caching in the Daemon and `mvnd` command line client being a https://www.graalvm.org/[GraalVM] native executable.)
+
+== Maven's serial builder via `-1`/`--serial`
+
+You can hit various issues when building with `smart` builder, such as hidden dependencies between modules,
+plugins relying on global mutable state, modules racing for system resources, etc. I am planning to dedicate my next
+`mvnd` tip to those issues and I'd also like to sketch some possible solutions there. Before I do that that I can
+offer only a very crude workaround if you encounter any issues with `smart` builder: fallback to the stock Maven's
+single-threaded builder by passing `-1` or `--serial` on the command line:
+
+[source,shell]
+----
+$ mvnd package -1
+----
+
+or you can store your choice permanently in `~/.m2/mvnd.properties`:
+
+[source,properties]
+----
+mvnd.serial = true
+----
+
+{nbsp} +
+
+That's it for today, stay tuned for the next `mvnd` tip!
+
+image::https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon[link="https://twitter.com/mvndaemon"]

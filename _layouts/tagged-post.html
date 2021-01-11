@@ -1,0 +1,37 @@
+---
+layout: default
+---
+{{ content }}
+
+{% if page.tags.size > 0 %}
+<hr>
+<h3>Related posts</h3>
+<div class="local-post-list">
+{%- assign postCounter = 0 -%}
+{% for pageTag in page.tags limit:1 %}
+    {% for siteTag in site.tags %}
+        {% if pageTag == siteTag[0] %}
+            {% for post in siteTag[1] %}
+                {% if postCounter < site.related_posts_count %}
+                    {% if post.url != page.url %}
+                        {%- assign postCounter = postCounter + 1 -%}
+    <div class="local-list-item">
+        <h4><span class="local-subtitle">{{ post.date | date: site.date_format }}</span><br>
+        <a href="{{ post.url }}">{{ post.title }}</a></h4>
+    </div>
+                    {% endif %}
+                {% else %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+    <ul>
+    </ul>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+</div>
+
+{% endif %}

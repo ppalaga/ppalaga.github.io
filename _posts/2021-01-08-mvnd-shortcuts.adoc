@@ -1,6 +1,8 @@
-= `mvnd` tip: shortcuts
+= `mvnd` tip: Shortcuts
 :showtitle:
+:page-layout: tagged-post
 :page-root: ../../../
+:page-tags: [mvnd]
 
 I am starting to write these tips as a base for the future `https://github.com/mvndaemon/mvnd[mvnd]`
 documentation. Today about keystrokes supported in the `mvnd` client UI.
@@ -13,7 +15,7 @@ view will normally show a single status line for each builder thread containing 
 build along with the currently executed Maven mojo.
 
 If you want to see the rolling log messages for each thread, hit `+` one or more times. Press `-` to hide them again.
-I am hitting 3 times `+` and three times `-` in this video:
+I am hitting three times `+` and three times `-` in this video:
 
 image::/images/2021/01-08-mvnd-shortcuts/mvnd-plus-minus.gif["Pressing three times plus and three times minus in a build with 5 threads",alt="Pressing three times plus and three times minus in a build with 5 threads"]
 

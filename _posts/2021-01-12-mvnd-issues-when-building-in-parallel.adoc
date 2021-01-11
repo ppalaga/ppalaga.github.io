@@ -1,0 +1,105 @@
+= `mvnd` tip: Common issues when building in parallel
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [mvnd]
+
+Regardless whether you use Maven's `parallel` builder or ``mvnd``'s `smart` builder, you can hit some of the
+following issues:
+
+=== Hidden dependencies between modules
+
+Switching to `mvnd` and its `smart` builder may reveal that modules in your source tree have some hidden
+dependencies. You may have never noticed these when building with standard Maven's serial builder, because it orders
+the modules deterministically not only based on explicit `dependency` relationships, but also based on the order of
+modules in the `<modules>` element. If your modules depend on each other like this
+
+[source,text]
+----
+
+    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D
+
+----
+
+and if these modules are ordered like this in the parent `pom.xml`
+
+[source,xml]
+----
+<modules>
+    <module>A</module>
+    <module>B</module>
+    <module>C</module>
+    <module>D</module>
+</modules>
+----
+
+then with `serial` Maven builder, the module `B` is always completely built before the module `C`. It will work fine
+even if `C` has some non-explicit dependency on `B` - let's say it is reading a file in ``B``'s `target` folder.
+
+Of course a build like this will not work correctly with neither `smart` nor `parallel` builder. It may sometimes
+fail with file not found exception in `C` or (on Windows) `clean` will not be able to delete the file in `B/target`
+because `C` is reading it.
+
+There are more ways to solve this kind of situation, but I'll show you only the most generic one.
+
+If you want to instruct `smart` or `parallel` builder to build `B` before `C`, put the following dependency into `C`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.my-group</groupId>
+    <artifactId>B</artifactId>
+    <version>${project.version}</version>
+    <type>pom</type>
+    <scope>test</scope>
+    <exclusions>
+        <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+----
+
+It won't add any real dependency to `C` but will ensure that `B` is fully built before `C`.
+
+=== Plugins relying on global mutable state
+
+Maven plugins used in your build may rely on something stored in a mutable global variable. Using Java system properties
+in the following way is a typical example:
+
+[source,Java]
+----
+@Mojo(name = "some-mojo")
+public class SomeMojo extends AbstractMojo {
+    @Parameter(property = "project", required = true, readonly = true)
+    protected MavenProject project;
+
+    @Override
+    public void execute() {
+        System.setProperty("currentArtifactId", project.getArtifact().getArtifactId());
+        // some code assuming that this instance of the mojo observes what we have set
+        // on the previous line
+        assert project.getArtifact().getArtifactId().equals(System.getProperty("currentArtifactId"));
+    }
+}
+----
+
+In the snippet above, the `currentArtifactId` property is set at the beginning of the `execute()` method and
+the author apparently assumes that the method cannot be called from multiple threads concurrently. The assumption holds
+when building with the `serial` builder, but does not with `smart` and `parallel` builders. If modules are built
+in parallel, it may happen that instance 2 of the mojo will overwrite the value of the property set by instance 1 before
+the instance 1 can read it. Instance 1 thus observes the value set by instance 2 and the assertion will fail.
+
+There are many other ways to implement this kind of antipattern.
+
+I have no better remedy than fixing the given plugin.
+
+=== Racing for system resources
+
+This may include reading/writing files, opening sockets, etc., e.g. in tests that start a database on a fixed port. To
+avoid this, redesign your tests to use random ports (or use https://www.testcontainers.org/features/networking/[Testcontainers]).
