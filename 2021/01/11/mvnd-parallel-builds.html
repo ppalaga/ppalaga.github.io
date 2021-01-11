@@ -1,0 +1,257 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mvnd tip: Parallel and non-parallel builds - Peter Palaga</title>
+    <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body id="local-body">
+
+<!-- Nav Bar -->
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+    </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
+</nav>
+</div>
+<!-- End Nav -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div id="local-content" class="large-12 columns" role="content">
+
+        <h1><code>mvnd</code> tip: Parallel and non-parallel builds</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="/2021/01/08/mvnd-shortcuts.html">Another</a> tip that will serve as a base for the future
+<code><a href="https://github.com/mvndaemon/mvnd">mvnd</a></code> documentation. Today about parallel and non-parallel builds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="parallel_by_default">Parallel by default</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+<code>mvnd</code> will, by default, build them in parallel for you. The default number of threads is one or
+<code>Runtime.getRuntime().availableProcessors() - 1</code>, whichever is greater. You can change this value using
+Maven&#8217;s standard parameter <code>-T</code>/<code>--threads</code>. E.g. to use five threads the command would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ mvnd package -T5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How many threads should you use? Well, it depends on two factors at least:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>How many CPU cores are available on your machine? It typically does not bring any speedup to use more threads than
+the number of threads your machine can run at the same time. Use <code>lscpu</code> on Linux or its equivalent for your
+operating system to figure out how many CPU cores you have available.</p>
+</li>
+<li>
+<p>Which other tasks is your machine running? If you want to work inside your IDE or browser during the build, you
+should leave one or two cores out of the set assigned to <code>mvnd</code>. That&#8217;s actually the assumption behind the default
+value chosen by <code>mvnd</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These are just general rules that may or may not hold for your situation. Feel free to experiment with various <code>-T</code>
+values and see which setting works best for you.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>-T</code>/<code>--threads</code> allows for a "processor count multiplier" notation using <code>-T&lt;n&gt;C</code> where <code>&lt;n&gt;</code> is a (potentially
+decimal) number to multiply the number of processors of the current machine. E.g. to use a half of the processors,
+you&#8217;d use <code>-T0.5C</code>, to use twice as many threads as the number of processors, you&#8217;d use <code>-T2C</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can persist your preference in <code>~/.m2/mvnd.properties</code> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">mvnd.threads = 5
+# or alternatively using the multiplier notation
+# mvnd.threads = 0.5C</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="smart_builder_by_default"><code>smart</code> builder by default</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Maven has the concept of pluggable <code>builder</code> since version 3.2.1.
+It is <a href="https://maven.apache.org/docs/3.2.1/release-notes#new-builder-interface-mng-5575">described</a> as a strategy for
+scheduling and building projects. Stock Maven offers two builder implementations: <code>singlethreaded</code> and <code>multithreaded</code>.</p>
+</div>
+<div class="paragraph">
+<p>Except for these two, at least one more can be found in the wild: the
+<a href="http://takari.io/book/30-team-maven.html#takari-smart-builder">Takari Smart Builder</a>. <code>mvnd</code>'s <code>smart</code> builder is
+based on this one. It is actually a copy with a few minor modifications.</p>
+</div>
+<div class="paragraph">
+<p>To characterize the Takari Smart Builder, let&#8217;s cite from its <a href="http://takari.io/book/30-team-maven.html#takari-smart-builder">documentation</a>:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The primary difference between the standard multi-threaded scheduler in Maven and the Takari smart builder is illustrated below.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/01-11-mvnd-parallel-builds/smart-builder-scheduler.png" alt="Standard and Smart Builder Scheduling">
+</div>
+</div>
+<div class="paragraph">
+<p>The standard multi-threaded scheduler is using a rather naive and simple approach of using dependency-depth information in the project. It builds everything at a given dependency-depth before continuing to the next level.</p>
+</div>
+<div class="paragraph">
+<p>The Takari Smart Builder is using a more advanced approach of dependency-path information. Projects are aggressively built along a dependency-path in topological order as upstream dependencies have been satisfied.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><code>smart</code> builder is one of the features that make <code>mvnd</code> so much faster from the standard Maven. (The other ones are
+classloader caching in the Daemon and <code>mvnd</code> command line client being a <a href="https://www.graalvm.org/">GraalVM</a> native executable.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mavens_serial_builder_via_1_serial">Maven&#8217;s serial builder via <code>-1</code>/<code>--serial</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can hit various issues when building with <code>smart</code> builder, such as hidden dependencies between modules,
+plugins relying on global mutable state, modules racing for system resources, etc. I am planning to dedicate my next
+<code>mvnd</code> tip to those issues and I&#8217;d also like to sketch some possible solutions there. Before I do that that I can
+offer only a very crude workaround if you encounter any issues with <code>smart</code> builder: fallback to the stock Maven&#8217;s
+single-threaded builder by passing <code>-1</code> or <code>--serial</code> on the command line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ mvnd package -1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or you can store your choice permanently in <code>~/.m2/mvnd.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">mvnd.serial = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#160;<br></p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it for today, stay tuned for the next <code>mvnd</code> tip!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://twitter.com/mvndaemon"><img src="https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon" alt="mvndaemon"></a>
+</div>
+</div>
+</div>
+</div>
+
+
+<hr>
+<h3>Related posts</h3>
+<div class="local-post-list">
+    
+        
+            
+                
+                    
+                
+            
+                
+                    <div class="local-list-item">
+        <h4><span class="local-subtitle">Jan 8, 2021</span><br>
+        <a href="/2021/01/08/mvnd-shortcuts.html"><code>mvnd</code> tip: Shortcuts</a></h4>
+    </div>
+                    
+                
+            
+    <ul>
+    </ul>
+        
+    
+
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+</div>
+
+
+
+
+    </div>
+</div>
+<footer class="local-footer">
+    <div class="row">
+        <div class="small-12 small-centered columns text-center">
+            Copyright © Peter Palaga 2021&nbsp;&nbsp;•&nbsp;&nbsp;Header background by <a href="https://www.facebook.com/steve.cord.56" target="_blank">Steve Cord</a>
+        </div>
+    </div>
+</footer>
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>
