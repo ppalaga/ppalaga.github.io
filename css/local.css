@@ -82,6 +82,7 @@
 #local-header .fa-twitter { background-color: #32b9e7; }
 #local-header .fa-linkedin { background-color: #0087be; }
 #local-header .fa-github { background-color: #333; }
+#local-header .fa-rss { background-color: #ea6221; }
 
 .local-list-item h2 {
     margin-top: -0.2em;
@@ -100,6 +101,14 @@
 
 .local-list-item p {
     margin-bottom: 0.5em;
+}
+
+#local-content h1 {
+    margin-top: 0.3em;
+}
+
+#local-content h1:first-child {
+    margin-top: 1em;
 }
 
 .local-subtitle {

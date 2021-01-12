@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-01-12T11:42:07+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">mvnd tip: Solving common issues of parallel builds</title><link href="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Solving common issues of parallel builds" /><published>2021-01-12T00:00:00+00:00</published><updated>2021-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Solving common issues of parallel builds&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the &lt;a href=&quot;/2021/01/11/mvnd-parallel-builds.html#smart_builder_by_default&quot;&gt;previous &lt;code&gt;mvnd&lt;/code&gt; tip&lt;/a&gt;, we have introduced
+&lt;code&gt;mvnd&lt;/code&gt;'s &lt;code&gt;smart&lt;/code&gt; builder and explained how it works. Today, I&amp;#8217;d like discuss various issues you may hit when
+migrating from Maven &lt;code&gt;singlethreaded&lt;/code&gt; builder and I&amp;#8217;ll propose some solutions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;hidden_dependencies_between_modules&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#hidden_dependencies_between_modules&quot;&gt;&lt;/a&gt;Hidden dependencies between modules&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Switching to &lt;code&gt;mvnd&lt;/code&gt; and its &lt;code&gt;smart&lt;/code&gt; builder may reveal that modules in your source tree have some hidden
+dependencies. You may have never noticed these when building with standard Maven&amp;#8217;s &lt;code&gt;singlethreaded&lt;/code&gt; builder,
+because it orders the modules deterministically not only based on explicit &lt;code&gt;&amp;lt;dependency&amp;gt;&lt;/code&gt; relationships, but also
+based on the order of modules in the &lt;code&gt;&amp;lt;modules&amp;gt;&lt;/code&gt; element. If your modules depend on each other like this&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;text&quot;&gt;    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;and if these modules are ordered like this in the parent &lt;code&gt;pom.xml&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;modules&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;module&amp;gt;&lt;/span&gt;A&lt;span class=&quot;tag&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;module&amp;gt;&lt;/span&gt;B&lt;span class=&quot;tag&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;module&amp;gt;&lt;/span&gt;C&lt;span class=&quot;tag&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;module&amp;gt;&lt;/span&gt;D&lt;span class=&quot;tag&quot;&gt;&amp;lt;/module&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/modules&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;then with &lt;code&gt;singlethreaded&lt;/code&gt; Maven builder, the module &lt;code&gt;B&lt;/code&gt; is always completely built before the module &lt;code&gt;C&lt;/code&gt;.
+The build will work fine even if &lt;code&gt;C&lt;/code&gt; has some non-explicit dependency on &lt;code&gt;B&lt;/code&gt;.
+For instance, it could be reading a file in &lt;code&gt;B&lt;/code&gt;'s &lt;code&gt;target&lt;/code&gt; folder, its test could dynamically read an artifact
+produced by module &lt;code&gt;B&lt;/code&gt; from the local Maven repository, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A build like this may start failing with &lt;code&gt;smart&lt;/code&gt; builder or &lt;code&gt;multithreaded&lt;/code&gt; builder.
+Because concurrency is a part of the game, the failure may happen sporadically and the symptoms may include something like&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;File &lt;code&gt;B/target/whatever&lt;/code&gt; not found exception thrown during the build of module &lt;code&gt;C&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;(On Windows) &lt;code&gt;clean&lt;/code&gt; unable to delete the file in &lt;code&gt;B/target&lt;/code&gt; because some part of the &lt;code&gt;C&lt;/code&gt; build is reading it, etc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;remedy&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#remedy&quot;&gt;&lt;/a&gt;Remedy&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are more ways to solve this, but I am going to show you only the most generic one.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you want to instruct &lt;code&gt;smart&lt;/code&gt; or &lt;code&gt;multithreaded&lt;/code&gt; builder to build &lt;code&gt;B&lt;/code&gt; before &lt;code&gt;C&lt;/code&gt;, put the following dependency into &lt;code&gt;C&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;B&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${project.version}&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span class=&quot;tag&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;exclusions&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;exclusion&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;*&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;*&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/exclusion&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/exclusions&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It won&amp;#8217;t add any real dependency to &lt;code&gt;C&lt;/code&gt; but it will guarantee that &lt;code&gt;B&lt;/code&gt; is fully built before &lt;code&gt;C&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;plugins_relying_on_global_mutable_state&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#plugins_relying_on_global_mutable_state&quot;&gt;&lt;/a&gt;Plugins relying on global mutable state&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Some Maven plugin used in your build may rely on some data stored in a mutable global variable.
+Using Java system properties in the following way is a typical example:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;Java&quot;&gt;&lt;span class=&quot;annotation&quot;&gt;@Mojo&lt;/span&gt;(name = &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;some-mojo&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;)
+&lt;span class=&quot;directive&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;SomeMojo&lt;/span&gt; &lt;span class=&quot;directive&quot;&gt;extends&lt;/span&gt; AbstractMojo {
+    &lt;span class=&quot;annotation&quot;&gt;@Parameter&lt;/span&gt;(property = &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;project&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, required = &lt;span class=&quot;predefined-constant&quot;&gt;true&lt;/span&gt;, readonly = &lt;span class=&quot;predefined-constant&quot;&gt;true&lt;/span&gt;)
+    &lt;span class=&quot;directive&quot;&gt;protected&lt;/span&gt; MavenProject project;
+
+    &lt;span class=&quot;annotation&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;directive&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;type&quot;&gt;void&lt;/span&gt; execute() {
+        &lt;span class=&quot;predefined-type&quot;&gt;System&lt;/span&gt;.setProperty(&lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;currentArtifactId&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, project.getArtifact().getArtifactId());
+        &lt;span class=&quot;comment&quot;&gt;// some code assuming that this instance of the mojo observes what we have set&lt;/span&gt;
+        &lt;span class=&quot;comment&quot;&gt;// on the previous line&lt;/span&gt;
+        &lt;span class=&quot;keyword&quot;&gt;assert&lt;/span&gt; project.getArtifact().getArtifactId().equals(&lt;span class=&quot;predefined-type&quot;&gt;System&lt;/span&gt;.getProperty(&lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;currentArtifactId&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;));
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the snippet above, the &lt;code&gt;currentArtifactId&lt;/code&gt; system property is set at the beginning of the &lt;code&gt;execute()&lt;/code&gt; method
+and the author apparently assumes that the method cannot be called from multiple threads concurrently.
+The assumption holds when building with the &lt;code&gt;singlethreaded&lt;/code&gt; builder,
+but it does not with &lt;code&gt;smart&lt;/code&gt; and &lt;code&gt;multithreaded&lt;/code&gt; builders.
+If modules are built in parallel, it may happen
+that instance 2 of the mojo will overwrite the value of the property value set by instance 1 before the instance 1 can read it.
+Instance 1 thus observes the value set by instance 2 and the assertion in the above snippet will fail.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;remedy_2&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#remedy_2&quot;&gt;&lt;/a&gt;Remedy&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The primary recommendation for this kind issue is to go and fix the given plugin.
+Or at least report the issue in its issue tracker.
+Or in case the issue was reported already, make sure that you upvote the issue so that the plugin author sees that the issue matters to you.
+In that way the issue can be fixed once for all users of &lt;code&gt;mvnd&lt;/code&gt; and for all users of &lt;code&gt;multithreaded&lt;/code&gt; builder.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After reporting the issue, you may also consider &lt;a href=&quot;/2021/01/11/mvnd-parallel-builds.html#mavens_serial_builder_via_1_serial&quot;&gt;falling back to &lt;code&gt;singlethreaded&lt;/code&gt; builder&lt;/a&gt;. However, by doing that you&amp;#8217;ll loose one of the most important benefits of &lt;code&gt;mvnd&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;race_for_system_resources&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#race_for_system_resources&quot;&gt;&lt;/a&gt;Race for system resources&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The most prominent example of this kind of issue is opening sockets using a fixed port in modules built in parallel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Say that your module dependencies are like this again&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;text&quot;&gt;    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;and say that both &lt;code&gt;B&lt;/code&gt; and &lt;code&gt;C&lt;/code&gt; contain some tests and that the tests in both modules start some helper service on a fixed port, e.g. &lt;code&gt;1234&lt;/code&gt;.
+The service can be the application under test itself, a database, a message broker, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I am sure you see the problem:
+the tests either in &lt;code&gt;B&lt;/code&gt; or in &lt;code&gt;C&lt;/code&gt; won&amp;#8217;t be able to start the service,
+because the port is already occupied by the service started from the other module.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;remedy_3&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#remedy_3&quot;&gt;&lt;/a&gt;Remedy&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When it comes to solutions, I suggest you first decide for yourself, whether running tests in parallel is a goal worth pursuing at all.
+Maybe it is too much work, maybe the test isolation is hard to guarantee.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I generally do not do it and I barely need to.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On my desktop, I prefer building the whole tree &lt;a href=&quot;/2020/10/29/skipping-maven-mojos-properly.html&quot;&gt;as fast as possible without tests&lt;/a&gt;
+and then running the individual tests for the area I am working on using &lt;code&gt;-Dtest=MyTest&lt;/code&gt; or &lt;code&gt;-Dit.test=MyIntegrationTest&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On CI servers, I prefer using stock Maven with its default &lt;code&gt;singlethreaded&lt;/code&gt; builder to run all tests properly isolated.
+To speed it up, it is often possible to split a large build into groups of modules which can be built and tested on separate worker nodes in parallel.
+On those nodes I still use &lt;code&gt;singlethreaded&lt;/code&gt; builder so that the execution is serialized and reproducible.
+That&amp;#8217;s quite easy to do in environments like GitHub actions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Anyway if you conclude that (module-wise) parallel tests are a worthwhile goal, here is a couple of thoughts:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Starting helper services lazily (start only if it does not run already) may or may not solve the problem.
+It depends on how your tests are written whether the situation morphes into the problem of shared mutable state I have described above.
+Closing the resources after the tests may get tricky as well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Redesigning your tests to use random ports might be a better strategy.
+Using &lt;a href=&quot;https://www.testcontainers.org/features/networking/&quot;&gt;Testcontainers&lt;/a&gt; is a great way to do it for databases and other kinds of services are containerized or containerizable at least.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That&amp;#8217;s it for today.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Feel free to ping me on twitter (&lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; or &lt;a href=&quot;https://twitter.com/mvndaemon&quot;&gt;@mvndaemon&lt;/a&gt;)
+or via &lt;a href=&quot;https://github.com/mvndaemon/mvnd/issues&quot;&gt;GitHub issues&lt;/a&gt; if you have more interesting issues related to parallel builds with &lt;code&gt;mvnd&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Stay tuned for the next &lt;code&gt;mvnd&lt;/code&gt; tip!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;https://twitter.com/mvndaemon&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&amp;label=Follow%20%40mvndaemon&quot; alt=&quot;mvndaemon&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Solving common issues of parallel builds In the previous mvnd tip, we have introduced mvnd's smart builder and explained how it works. Today, I&amp;#8217;d like discuss various issues you may hit when migrating from Maven singlethreaded builder and I&amp;#8217;ll propose some solutions.</summary></entry><entry><title type="html">mvnd tip: Parallel and non-parallel builds</title><link href="https://peter.palaga.org/2021/01/11/mvnd-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Parallel and non-parallel builds" /><published>2021-01-11T00:00:00+00:00</published><updated>2021-01-11T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/11/mvnd-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/11/mvnd-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Parallel and non-parallel builds&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;/2021/01/08/mvnd-shortcuts.html&quot;&gt;Another&lt;/a&gt; tip that will serve as a base for the future
+&lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt; documentation. Today about parallel and non-parallel builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;parallel_by_default&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#parallel_by_default&quot;&gt;&lt;/a&gt;Parallel by default&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+&lt;code&gt;mvnd&lt;/code&gt; will, by default, build them in parallel for you. The default number of threads is one or
+&lt;code&gt;Runtime.getRuntime().availableProcessors() - 1&lt;/code&gt;, whichever is greater. You can change this value using
+Maven&amp;#8217;s standard parameter &lt;code&gt;-T&lt;/code&gt;/&lt;code&gt;--threads&lt;/code&gt;. E.g. to use five threads the command would look like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvnd package -T5&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How many threads should you use? Well, it depends on two factors at least:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;How many CPU cores are available on your machine? It typically does not bring any speedup to use more threads than
+the number of threads your machine can run at the same time. Use &lt;code&gt;lscpu&lt;/code&gt; on Linux or its equivalent for your
+operating system to figure out how many CPU cores you have available.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Which other tasks is your machine running? If you want to work inside your IDE or browser during the build, you
+should leave one or two cores out of the set assigned to &lt;code&gt;mvnd&lt;/code&gt;. That&amp;#8217;s actually the assumption behind the default
+value chosen by &lt;code&gt;mvnd&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;These are just general rules that may or may not hold for your situation. Feel free to experiment with various &lt;code&gt;-T&lt;/code&gt;
+values and see which setting works best for you.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-T&lt;/code&gt;/&lt;code&gt;--threads&lt;/code&gt; allows for a &quot;processor count multiplier&quot; notation using &lt;code&gt;-T&amp;lt;n&amp;gt;C&lt;/code&gt; where &lt;code&gt;&amp;lt;n&amp;gt;&lt;/code&gt; is a (potentially
+decimal) number to multiply the number of processors of the current machine. E.g. to use a half of the processors,
+you&amp;#8217;d use &lt;code&gt;-T0.5C&lt;/code&gt;, to use twice as many threads as the number of processors, you&amp;#8217;d use &lt;code&gt;-T2C&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can persist your preference in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.threads = 5
+# or alternatively using the multiplier notation
+# mvnd.threads = 0.5C&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;smart_builder_by_default&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#smart_builder_by_default&quot;&gt;&lt;/a&gt;&lt;code&gt;smart&lt;/code&gt; builder by default&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven has the concept of pluggable &lt;code&gt;builder&lt;/code&gt; since version 3.2.1.
+It is &lt;a href=&quot;https://maven.apache.org/docs/3.2.1/release-notes#new-builder-interface-mng-5575&quot;&gt;described&lt;/a&gt; as a strategy for
+scheduling and building projects. Stock Maven offers two builder implementations: &lt;code&gt;singlethreaded&lt;/code&gt; and &lt;code&gt;multithreaded&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Except for these two, at least one more can be found in the wild: the
+&lt;a href=&quot;http://takari.io/book/30-team-maven.html#takari-smart-builder&quot;&gt;Takari Smart Builder&lt;/a&gt;. &lt;code&gt;mvnd&lt;/code&gt;'s &lt;code&gt;smart&lt;/code&gt; builder is
+based on this one. It is actually a copy with a few minor modifications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To characterize the Takari Smart Builder, let&amp;#8217;s cite from its &lt;a href=&quot;http://takari.io/book/30-team-maven.html#takari-smart-builder&quot;&gt;documentation&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The primary difference between the standard multi-threaded scheduler in Maven and the Takari smart builder is illustrated below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/01-11-mvnd-parallel-builds/smart-builder-scheduler.png&quot; alt=&quot;Standard and Smart Builder Scheduling&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The standard multi-threaded scheduler is using a rather naive and simple approach of using dependency-depth information in the project. It builds everything at a given dependency-depth before continuing to the next level.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Takari Smart Builder is using a more advanced approach of dependency-path information. Projects are aggressively built along a dependency-path in topological order as upstream dependencies have been satisfied.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;smart&lt;/code&gt; builder is one of the features that make &lt;code&gt;mvnd&lt;/code&gt; so much faster from the standard Maven. (The other ones are
+classloader caching in the Daemon and &lt;code&gt;mvnd&lt;/code&gt; command line client being a &lt;a href=&quot;https://www.graalvm.org/&quot;&gt;GraalVM&lt;/a&gt; native executable.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;mavens_serial_builder_via_1_serial&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#mavens_serial_builder_via_1_serial&quot;&gt;&lt;/a&gt;Maven&amp;#8217;s serial builder via &lt;code&gt;-1&lt;/code&gt;/&lt;code&gt;--serial&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can hit various issues when building with &lt;code&gt;smart&lt;/code&gt; builder, such as hidden dependencies between modules,
+plugins relying on global mutable state, modules racing for system resources, etc. I am planning to dedicate my next
+&lt;code&gt;mvnd&lt;/code&gt; tip to those issues and I&amp;#8217;d also like to sketch some possible solutions there. Before I do that that I can
+offer only a very crude workaround if you encounter any issues with &lt;code&gt;smart&lt;/code&gt; builder: fallback to the stock Maven&amp;#8217;s
+single-threaded builder by passing &lt;code&gt;-1&lt;/code&gt; or &lt;code&gt;--serial&lt;/code&gt; on the command line:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvnd package -1&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;or you can store your choice permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.serial = true&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That&amp;#8217;s it for today, stay tuned for the next &lt;code&gt;mvnd&lt;/code&gt; tip!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;https://twitter.com/mvndaemon&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&amp;label=Follow%20%40mvndaemon&quot; alt=&quot;mvndaemon&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Parallel and non-parallel builds Another tip that will serve as a base for the future mvnd documentation. Today about parallel and non-parallel builds.</summary></entry><entry><title type="html">mvnd tip: Shortcuts</title><link href="https://peter.palaga.org/2021/01/08/mvnd-shortcuts.html" rel="alternate" type="text/html" title="mvnd tip: Shortcuts" /><published>2021-01-08T00:00:00+00:00</published><updated>2021-01-08T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/08/mvnd-shortcuts</id><content type="html" xml:base="https://peter.palaga.org/2021/01/08/mvnd-shortcuts.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Shortcuts&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I am starting to write these tips as a base for the future &lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt;
+documentation. Today about keystrokes supported in the &lt;code&gt;mvnd&lt;/code&gt; client UI.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;to_revealhide_rolling_log_lines_for_the_individual_builder_threads&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#to_revealhide_rolling_log_lines_for_the_individual_builder_threads&quot;&gt;&lt;/a&gt;&lt;code&gt;+&lt;/code&gt;/&lt;code&gt;-&lt;/code&gt; to reveal/hide rolling log lines for the individual builder threads&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
+&lt;code&gt;mvnd&lt;/code&gt; will by default choose the threaded view (as opposed to the rolling view known from the stock Maven). This
+view will normally show a single status line for each builder thread containing the &lt;code&gt;artifactId&lt;/code&gt; of the module being
+build along with the currently executed Maven mojo.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you want to see the rolling log messages for each thread, hit &lt;code&gt;+&lt;/code&gt; one or more times. Press &lt;code&gt;-&lt;/code&gt; to hide them again.
+I am hitting three times &lt;code&gt;+&lt;/code&gt; and three times &lt;code&gt;-&lt;/code&gt; in this video:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/01-08-mvnd-shortcuts/mvnd-plus-minus.gif&quot; alt=&quot;Pressing three times plus and three times minus in a build with 5 threads&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can pass your preferred rolling window size using &lt;code&gt;-Dmvnd.rollingWindowSize=3&lt;/code&gt; on the command line or you
+can store it permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.rollingWindowSize = 3&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;ctrlb_to_toggle_between_threaded_and_rolling_views&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#ctrlb_to_toggle_between_threaded_and_rolling_views&quot;&gt;&lt;/a&gt;&lt;code&gt;CTRL+B&lt;/code&gt; to toggle between threaded and rolling views&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you do not like the default threaded view for some reason, you can switch to the rolling view and back by hitting
+&lt;code&gt;CTRL+B&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/01-08-mvnd-shortcuts/mvnd-ctrl-b.gif&quot; alt=&quot;Toggling between threaded and rolling views via CTRL+B&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can pass &lt;code&gt;-Dmvnd.noBuffering&lt;/code&gt; on the command line to start with the rolling view or you can store your
+preference permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.noBuffering = true&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;https://twitter.com/mvndaemon&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&amp;label=Follow%20%40mvndaemon&quot; alt=&quot;mvndaemon&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Shortcuts I am starting to write these tips as a base for the future mvnd documentation. Today about keystrokes supported in the mvnd client UI.</summary></entry><entry><title type="html">When -DskipTests is not fast enough: skip Maven mojos properly</title><link href="https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly.html" rel="alternate" type="text/html" title="When -DskipTests is not fast enough: skip Maven mojos properly" /><published>2020-10-29T00:00:00+00:00</published><updated>2020-10-29T00:00:00+00:00</updated><id>https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly</id><content type="html" xml:base="https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly.html">&lt;h1&gt;When &lt;code&gt;-DskipTests&lt;/code&gt; is not fast enough: skip Maven mojos properly&lt;/h1&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-DskipTests&lt;/code&gt; is a well known way to skip the execution of unit tests during a Maven build and thus save time.
+This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI
+already.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This kind of skipping is not specific to &lt;code&gt;maven-surefire-plugin&lt;/code&gt;. Many other plugins have similar options:
+Enforcer has &lt;code&gt;-Denforcer.skip&lt;/code&gt;, License Maven plugin has &lt;code&gt;-Dlicense.skip&lt;/code&gt;, etc. The more you want to
+build quickly, without running needless mojos, the more you search for these skip parameters.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Some candidates for skipping, like unit tests and integration tests, are pretty obvious. Other may get revealed by
+profiling your build either by using a stock Java profiler or by leveraging Maven specific tools like
+&lt;a href=&quot;https://github.com/khmarbaise/maven-buildtime-profiler&quot;&gt;maven-buildtime-profiler&lt;/a&gt; or
+&lt;a href=&quot;https://scans.gradle.com/#maven&quot;&gt;Gradle build scans for Maven&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;At some point you are skipping every mojo execution that is not essential to your build. You create a dedicated
+Maven profile listing all those skip flags, so that you do not need to remember and type them by hand.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But what if that&amp;#8217;s still not fast enough? Say that you work on a
+&lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;source tree that has 1200+ modules&lt;/a&gt; and&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvn clean install -DskipTests -Denforcer.skip -Dformatter.skip -Dimpsort.skip -Dquarkus.build.skip -Dgroovy.skip
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:53 min&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;is not something you are happy about. How can this be made even faster?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Well, common sense (or further profiling with a Java profiler) may unveil that the named &lt;code&gt;skip*&lt;/code&gt; properties
+do not prevent the skipped mojos' classes from being loaded, initialized, instantiated, configured and their
+&lt;code&gt;execute()&lt;/code&gt; method from being invoked (that&amp;#8217;s where the &lt;code&gt;skip*&lt;/code&gt; parameters are actually being evaluated). That
+might be quite a lot of superfluous CPU cycles and luckily, Maven offers a way how to avoid them.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The trick is to remove the skippable mojos from the Maven execution plan altogether. How can that be done? - the key
+is in playing with the &lt;code&gt;&amp;lt;phase&amp;gt;&lt;/code&gt; to which the given mojo is bound. There are two ways how to reach that some mojo
+is bound to no phase:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;By setting &lt;code&gt;&amp;lt;phase&amp;gt;none&amp;lt;/phase&amp;gt;&lt;/code&gt; or shortly &lt;code&gt;&amp;lt;phase/&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;By moving the given plugin definition from the the default profile-less &lt;code&gt;&amp;lt;build&amp;gt;&lt;/code&gt; section to a profile.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The option 1. needs to be used for mojos that Maven binds to some phase by default. E.g. the &lt;code&gt;test&lt;/code&gt; mojo of
+&lt;code&gt;surefire-maven-plugin&lt;/code&gt; is bound to the &lt;code&gt;test&lt;/code&gt; phase by default. The option 2. may be used for all other mojos.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once we manage it to remove a mojo from the execution plan, its classes will neither be loaded, initialized,
+instantiated, configured nor their &lt;code&gt;execute()&lt;/code&gt; methods will be called.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s have a look at an example. Say, that we want all the tests and source tree validation to happen in the default
+&quot;profile-less&quot; build (&lt;code&gt;mvn verify&lt;/code&gt;) but we want them all to be skipped when building with the &lt;code&gt;-Dquickly&lt;/code&gt;
+property.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To implement that, we need a profile. Surprisingly the profile is not going to exclude stuff when &lt;code&gt;-Dquickly&lt;/code&gt; is
+present, it will rather include the stuff in the default &quot;profile-less&quot; build. To make &lt;code&gt;-Dquickly&lt;/code&gt; to work the way
+we want, the profile will be enabled by default and disabled when &lt;code&gt;-Dquickly&lt;/code&gt; is present. This can be done using
+Maven&amp;#8217;s &quot;negated&quot; property profile activation: &lt;code&gt;&amp;lt;property&amp;gt;&amp;lt;name&amp;gt;!quickly&amp;lt;/name&amp;gt;&amp;lt;/property&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is what it looks like for &lt;code&gt;surefire-maven-plugin&lt;/code&gt; and &lt;code&gt;maven-enforcer-plugin&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-surefire-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;default-test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;phase&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- disable here but enable in the full profile --&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- We do not need to disable enforcer here, because --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Maven does not bind it to any phase by default --&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;profiles&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;profile&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Tests and sanity checks are disabled when building with '-Dquickly' --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;full&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;activation&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;!quickly&lt;span class=&quot;tag&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/activation&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-surefire-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
+                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;default-test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- assigned to a phase only if the full profile is active --&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;phase&amp;gt;&lt;/span&gt;test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/phase&amp;gt;&lt;/span&gt;
+                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Enforcer is included in the execution plan only if --&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- the full profile is active --&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-enforcer-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
+                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;my-enforcer-rules&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;goals&amp;gt;&lt;/span&gt;
+                                &lt;span class=&quot;tag&quot;&gt;&amp;lt;goal&amp;gt;&lt;/span&gt;enforce&lt;span class=&quot;tag&quot;&gt;&amp;lt;/goal&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/goals&amp;gt;&lt;/span&gt;
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+                                ...
+                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
+                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/profile&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/profiles&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After &lt;a href=&quot;https://github.com/apache/camel-quarkus/pull/1962/files&quot;&gt;applying this trick&lt;/a&gt; to all non-essential mojos in
+the source tree with 1200+ modules mentioned above, the quick build time goes down from 03:53 to 2:44:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;mvn clean install -Dquickly
+...
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:44 min&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Who would expect such a big speedup?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;P.S.: You may want to try &lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt;, the Maven Daemon to reduce your build
+times even further.&lt;/p&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">When -DskipTests is not fast enough: skip Maven mojos properly -DskipTests is a well known way to skip the execution of unit tests during a Maven build and thus save time. This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI already.</summary></entry><entry><title type="html">History of Camel Quarkus from the very beginning to 1.0.0</title><link href="https://peter.palaga.org/2020/08/11/camel-quarkus-early-history.html" rel="alternate" type="text/html" title="History of Camel Quarkus from the very beginning to 1.0.0" /><published>2020-08-11T00:00:00+00:00</published><updated>2020-08-11T00:00:00+00:00</updated><id>https://peter.palaga.org/2020/08/11/camel-quarkus-early-history</id><content type="html" xml:base="https://peter.palaga.org/2020/08/11/camel-quarkus-early-history.html">&lt;h1&gt;History of Camel Quarkus from the very beginning to 1.0.0&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided
+to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so
+I am pasting it here.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;when_and_how_camel_quarkus_was_born&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#when_and_how_camel_quarkus_was_born&quot;&gt;&lt;/a&gt;When and how &lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;Camel Quarkus&lt;/a&gt; was born?&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/lburgazzoli&quot;&gt;Luca&lt;/a&gt; and &lt;a href=&quot;https://github.com/gnodet&quot;&gt;Guillaume&lt;/a&gt; started porting Camel to
+&lt;a href=&quot;https://github.com/quarkusio/quarkus&quot;&gt;Quarkus&lt;/a&gt; very early while Quarkus was still in the stealth mode at Red Hat.
+The work started around November 2018 and was
+&lt;a href=&quot;https://github.com/quarkusio/quarkus/commit/549c74d74f4ae6af83854e51f14db429adef7483&quot;&gt;merged to Quarkus master&lt;/a&gt; on Feb.
+28, 2019 - shortly before Quarkus was
+&lt;a href=&quot;https://developers.redhat.com/blog/2019/03/07/quarkus-next-generation-kubernetes-native-java-framework/&quot;&gt;publicly announced&lt;/a&gt;
+on March 7, 2019. At that time, Quarkus
+&lt;a href=&quot;https://github.com/quarkusio/quarkus/tree/0.11.0/extensions/camel&quot;&gt;supported just a handful of Camel components&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;moving_to_asf&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#moving_to_asf&quot;&gt;&lt;/a&gt;Moving to ASF&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The next important milestone was donating the Camel specific bits from the main Quarkus source tree to Apache Software
+Foundation (ASF). This happened around July 2019 and the current
+&lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;GitHub home of the project&lt;/a&gt; is the result. Camel Quarkus thus became a
+subproject of Apache Camel, along with &lt;a href=&quot;https://github.com/apache/camel-k&quot;&gt;Camel K&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/apache/camel-spring-boot&quot;&gt;Camel Spring Boot&lt;/a&gt;,
+&lt;a href=&quot;https://github.com/apache/camel-karaf&quot;&gt;Camel Karaf&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/camel-kafka-connector&quot;&gt;Camel Kafka
+Connector&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;the_life_under_asf&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#the_life_under_asf&quot;&gt;&lt;/a&gt;The life under ASF&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Under the new home, the project attracted a fair amount of new contributors (currently
+&lt;a href=&quot;https://github.com/apache/camel-quarkus/graphs/contributors&quot;&gt;36 in total&lt;/a&gt;) which in turn brought a lot of
+contributions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Within those ~13 month from migrating to the ASF repo to 1.0.0 we released 7 milestones and 3 candidate releases.
+That gives a rough average cadence of one release every ~5 weeks.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Stay tuned for Camel Quarkus 1.0.0!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">History of Camel Quarkus from the very beginning to 1.0.0 I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so I am pasting it here.</summary></entry><entry><title type="html">Resuming large Maven releases</title><link href="https://peter.palaga.org/2020/07/03/releasing-large-maven-projects.html" rel="alternate" type="text/html" title="Resuming large Maven releases" /><published>2020-07-03T00:00:00+00:00</published><updated>2020-07-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2020/07/03/releasing-large-maven-projects</id><content type="html" xml:base="https://peter.palaga.org/2020/07/03/releasing-large-maven-projects.html">&lt;h1&gt;Resuming large Maven releases&lt;/h1&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I happen to have released large Maven projects with hundreds of modules many times in the past and I am doing it right
+now as well for &lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;Camel Quarkus&lt;/a&gt;. The current Camel Quarkus 1.0.0-CR3 release
+comprises 694 Maven modules. That&amp;#8217;s rather big.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The stock knowledge for releasing Maven projects is to use the release plugin, something like&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;mvn clean release:clean release:prepare release:perform -DreleaseVersion=0.1.0 -DdevelopmentVersion=0.2.0-SNAPSHOT -B&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That&amp;#8217;s often fine, but when releasing really large source trees, it is rather likely, that something will break - be it
+network timeouts, repository manager failures, etc. Starting everything anew in such cases can be time consuming and
+of course the failures may occur again and again so there is no guarantee that some of the release runs will ever finish
+successfully.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Is there some way to resume a broken release? Yes there is, but let me explain some background information first.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The &lt;code&gt;release:prepare release:perform&lt;/code&gt; combo does a couple of things under the hood: Among others, it&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Calls &lt;code&gt;versions-maven-plugin&lt;/code&gt; to set the release version at the beginning and development version at the end
+of &lt;code&gt;release:prepare&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Calls &lt;code&gt;maven-scm-plugin&lt;/code&gt; to tag the release, to push it and commit the change to the new development iteration,
+and finally&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It creates a temporary directory where it freshly checks out your tag and performs something like
+&lt;code&gt;mvn deploy&lt;/code&gt; there.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The last step is what usually fails due to network and other factors you typically do not have under your control.
+Once you have the git tag in your repo, there is no point performing the first two steps once again. There is
+also no point in newly uploading the artifacts which were uploaded successfully. All you need to do is the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Find the &lt;code&gt;artifactId&lt;/code&gt; of the module whose deployment failed in the output of the failed release build. Say the
+&lt;code&gt;artifactId&lt;/code&gt; was &lt;code&gt;the-module-where-it-broke&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Either find the temporary directory where &lt;code&gt;release:perform&lt;/code&gt; run &lt;code&gt;mvn clean deploy&lt;/code&gt; it is typically
+&lt;code&gt;&amp;lt;your-repo-root&amp;gt;/target/checkout&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you do not have &lt;code&gt;&amp;lt;your-repo-root&amp;gt;/target/checkout&lt;/code&gt; because you e.g. cleaned in between, you can re-build
+all necessary artifacts using the tag in your main tree. It is important that you activate all profiles that
+&lt;code&gt;release:perform&lt;/code&gt; activates. That&amp;#8217;s typically something like &lt;code&gt;-Prelease&lt;/code&gt; (or &lt;code&gt;-Papache-release&lt;/code&gt; in
+case ASF projects). Those profiles include generation of source jar, JavaDoc, GPG signing, etc. which are usually
+skipped during common development builds. So you do something like the following to get what you&amp;#8217;d otherwise find in
+&lt;code&gt;&amp;lt;your-repo-root&amp;gt;/target/checkout&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;cd &amp;lt;your-repo-root&amp;gt;
+git checkout 0.1.0 # the tag you are releasing
+mvn clean package -Prelease -DskipTests&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Once you have all artifacts built in your source tree, you can resume the deployment where it originally failed:&lt;/p&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;# Either
+# cd &amp;lt;your-repo-root&amp;gt;/target/checkout
+# or
+# cd &amp;lt;your-repo-root&amp;gt;
+mvn deploy -Prelease -DskipTests -rf :the-module-where-it-broke&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If it breaks again after a couple of modules, you can resume in the same way, replacing
+&lt;code&gt;-rf :the-module-where-it-broke&lt;/code&gt; with the actual module, where it broke.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">Resuming large Maven releases I happen to have released large Maven projects with hundreds of modules many times in the past and I am doing it right now as well for Camel Quarkus. The current Camel Quarkus 1.0.0-CR3 release comprises 694 Maven modules. That&amp;#8217;s rather big.</summary></entry><entry><title type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</title><link href="https://peter.palaga.org/2018/10/21/srcdeps.masterConfig.html" rel="alternate" type="text/html" title="srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file" /><published>2018-10-21T00:00:00+00:00</published><updated>2018-10-21T00:00:00+00:00</updated><id>https://peter.palaga.org/2018/10/21/srcdeps.masterConfig</id><content type="html" xml:base="https://peter.palaga.org/2018/10/21/srcdeps.masterConfig.html">&lt;h1&gt;&lt;code&gt;srcdeps.masterConfig&lt;/code&gt; - build direct and transitive dependencies with a single &lt;code&gt;srcdeps.yaml&lt;/code&gt; file&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;&lt;img src=&quot;/images/2018/srcdeps-logo-with-text.svg&quot; alt=&quot;srcdeps&quot; height=&quot;60&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Before &lt;code&gt;srcdeps-maven&lt;/code&gt; 3.4.0 and &lt;code&gt;srcdeps.yaml&lt;/code&gt; model version 2.4, building of dependencies from source &quot;on the
+fly&quot; worked only for direct dependencies. If &lt;code&gt;my-project&lt;/code&gt; depended on &lt;code&gt;dependency-1&lt;/code&gt;, I could declare &lt;code&gt;dependency-1&lt;/code&gt;
+as a source dependency in &lt;code&gt;srcdeps.yaml&lt;/code&gt; of &lt;code&gt;my-project&lt;/code&gt;. But if I also wanted a specific unreleased commit of
+&lt;code&gt;dependency-2&lt;/code&gt;, which &lt;code&gt;dependency-1&lt;/code&gt; depends on (and needs to be built and run against), I had no other option than
+fork &lt;code&gt;dependency-1&lt;/code&gt; and add &lt;code&gt;srcdeps.yaml&lt;/code&gt; with &lt;code&gt;dependency-2&lt;/code&gt; there.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The new &lt;code&gt;srcdeps.masterConfig&lt;/code&gt; feature allows you to avoid the intermediary &lt;code&gt;srcdeps.yaml&lt;/code&gt; files. Now you can declare
+&lt;code&gt;dependency-2&lt;/code&gt; in the &lt;code&gt;srcdeps.yaml&lt;/code&gt; file of &lt;code&gt;my-project&lt;/code&gt; and you do not need to fork &lt;code&gt;dependency-1&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;how_it_works&quot;&gt;How it works&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;srcdeps.yaml&lt;/code&gt; configuration model version 2.4 introduces a new boolean attribute &lt;code&gt;forwardAsMasterConfig&lt;/code&gt;. If it
+is &lt;code&gt;true&lt;/code&gt;, the URI of the current &lt;code&gt;srcdeps.yaml&lt;/code&gt; file will be forwarded as a system property &lt;code&gt;srcdeps.masterConfig&lt;/code&gt; to
+every dependency builder. The dependency builder picks &lt;code&gt;srcdeps.yaml&lt;/code&gt; from the URI, uses it during its own build and
+forwards it to every dependency build it triggers itself.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With &lt;code&gt;forwardAsMasterConfig: true&lt;/code&gt; the dependency also does not need to have &lt;code&gt;srcdeps-maven-local-repository&lt;/code&gt; declared
+in its &lt;code&gt;.mvn/extensions.xml&lt;/code&gt;. After checking out the sources of the dependency, &lt;code&gt;srcdeps-maven&lt;/code&gt; auto-creates (or
+upgrades) the &lt;code&gt;.mvn/extensions.xml&lt;/code&gt; file as necessary.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;forwardAsMasterConfig&lt;/code&gt; attribute is optional and the default value is &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;srcdeps.masterConfig&lt;/code&gt; is not supported by our experimental Gradle builder. You can still have direct Gradle
+dependencies but builds those will not forward the master &lt;code&gt;srcdeps.yaml&lt;/code&gt; to the eventual builds of their own
+dependencies.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Any feedback is welcome via GitHub &lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issues&lt;/a&gt; or via
+&lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; on Twitter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</summary></entry><entry><title type="html">srcdeps, do not touch my poms!</title><link href="https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms.html" rel="alternate" type="text/html" title="srcdeps, do not touch my poms!" /><published>2018-06-05T00:00:00+00:00</published><updated>2018-06-05T00:00:00+00:00</updated><id>https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms</id><content type="html" xml:base="https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms.html">&lt;h1&gt;&lt;code&gt;srcdeps&lt;/code&gt;, do not touch my poms!&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;a class=&quot;image&quot; href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;&lt;img src=&quot;/images/2018/srcdeps-logo-with-text.svg&quot; alt=&quot;srcdeps&quot; height=&quot;60&quot;&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;traditional_dependencies&quot;&gt;Traditional dependencies&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Software projects often depend on artifacts produced by other projects. Those artifacts typically contain compiled code
+and are usually available in remote repositories (Maven Central, jcenter, &amp;#8230;&amp;#8203;) on the internet. Build tools, such as
+Maven and Gradle are responsible for finding them, downloading them and adding them to the build class path of the
+dependent project.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;source_dependencies&quot;&gt;Source dependencies&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sometimes, we find ourselves in a situation when some required binary dependency is not available in any remote
+artifact repository. But we still may have access to its sources. Building manually is often sufficient, but in case we
+need this regularly, a tool to automate the process becomes a necessity.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Such a tool would have to:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Check out the sources (e.g. from a git repo)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build the artifacts locally&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Put them wherever the dependent project expects them (in case of Maven, this would be in the Local Maven Repository)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;&lt;a href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;srcdeps&lt;/a&gt;&lt;/code&gt; is a set of tools which provide this functionality for Maven and Gradle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the_original_pom_destructive_mode&quot;&gt;The original &quot;pom destructive mode&quot;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;srcdeps&lt;/code&gt; before version 3.3.0 used to work in &quot;pom destructive mode&quot;: to be able to build some dependency from
+sources, it was necessary to edit &lt;code&gt;pom.xml&lt;/code&gt; of the dependent project, e.g.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;my-artifact&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2.3-SRC-revision-&lt;strong&gt;deadbeef&lt;/strong&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;&amp;lt;!--             ⬑ a git commit ID, branch or tag  --&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I heart voices not liking this, esp. if &lt;code&gt;srcdeps&lt;/code&gt; was considered for integration testing. Therefore I added the new
+&quot;pom non-desctructive mode&quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;the_new_pom_non_desctructive_mode&quot;&gt;The new &quot;pom non-desctructive mode&quot;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In this mode, the dependency in the dependent project can stay as it is, say&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;my-artifact&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2.3-SNAPSHOT&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To tell &lt;code&gt;srcdeps&lt;/code&gt; that this particular dependency is a source dependency, the configuration needs to be done in
+&lt;code&gt;&lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml&quot;&gt;srcdeps.yaml&lt;/a&gt;&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;key&quot;&gt;configModelVersion&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;2.3&lt;/span&gt;&lt;/span&gt;                &lt;span class=&quot;comment&quot;&gt;# srcdeps.yaml file&lt;/span&gt;
+&lt;span class=&quot;key&quot;&gt;repositories&lt;/span&gt;:
+  &lt;span class=&quot;key&quot;&gt;org.my-group&lt;/span&gt;:
+    &lt;span class=&quot;key&quot;&gt;includes&lt;/span&gt;:
+    - &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;org.my-group&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;key&quot;&gt;urls&lt;/span&gt;:
+    - &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;git:https://github.com/someorg/my-project.git&lt;/span&gt;&lt;/span&gt;
+
+    &lt;span class=&quot;key&quot;&gt;buildVersionPattern&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;.*-SNAPSHOT&lt;/span&gt;&lt;/span&gt;   &lt;span class=&quot;comment&quot;&gt;# any version matching this&lt;/span&gt;
+    &lt;span class=&quot;key&quot;&gt;buildRef&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;branch-master&lt;/span&gt;&lt;/span&gt;            &lt;span class=&quot;comment&quot;&gt;# will be rebuilt using&lt;/span&gt;
+                                       &lt;span class=&quot;comment&quot;&gt;# master branch&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, the &lt;code&gt;buildVersionPattern&lt;/code&gt; and &lt;code&gt;buildRef&lt;/code&gt; contain the same pieces of information that we originally stored
+in the version strings of &lt;code&gt;pom.xml&lt;/code&gt; files.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;srcdeps&lt;/code&gt; is able to rebuild any dependency version from any tag, commitID or branch name configured in
+&lt;code&gt;srcdeps.yaml&lt;/code&gt;. It does not need to be a SNAPSHOT version as in the example above.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;what_if_other_builds_mess_with_my_local_maven_repository&quot;&gt;What if other builds mess with my Local Maven Repository?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;What if I rebuild &lt;code&gt;org.my-group:my-artifact:1.2.3-SNAPSHOT&lt;/code&gt; at any random commit and install it to my Local
+Maven Repository? The above dependent project would then see an artifact it was not supposed to be built against, right?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;That&amp;#8217;s a valid concern and &lt;code&gt;srcdeps-maven&lt;/code&gt; (since 3.3.1) has a build-in mechanism to avoid such situations.
+When &lt;code&gt;srcdeps&lt;/code&gt; sees an artifact in the Local Maven Repository, that is supposed to be built from sources, it compares
+its sha1 hash against a hash it has stored itself when building it. In case of a mismatch, it simply rebuilds the
+artifact from sources and remembers the new hash.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;what_if_i_do_not_want_srcdeps_to_replace_my_local_snapshot&quot;&gt;What if I do not want &lt;code&gt;srcdeps&lt;/code&gt; to replace my local SNAPSHOT?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You can run the build with &lt;code&gt;-Dsrcdeps.skip=true&lt;/code&gt;. That turns the whole &lt;code&gt;srcdeps&lt;/code&gt; processing off.
+There is currently no way to turn &lt;code&gt;srcdeps&lt;/code&gt; off per source repository. Feel free to file an
+&lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issue&lt;/a&gt; if you need it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Any feedback is welcome via GitHub &lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issues&lt;/a&gt; or via
+&lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; on Twitter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps, do not touch my poms!</summary></entry></feed>

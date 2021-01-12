@@ -1,0 +1,340 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mvnd tip: Solving common issues of parallel builds - Peter Palaga</title>
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body id="local-body">
+
+<!-- Nav Bar -->
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+    </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
+</nav>
+</div>
+<!-- End Nav -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div id="local-content" class="large-12 columns" role="content">
+
+        <h3><span class="local-subtitle">Jan 12, 2021</span></h3>
+<h1><code>mvnd</code> tip: Solving common issues of parallel builds</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the <a href="/2021/01/11/mvnd-parallel-builds.html#smart_builder_by_default">previous <code>mvnd</code> tip</a>, we have introduced
+<code>mvnd</code>'s <code>smart</code> builder and explained how it works. Today, I&#8217;d like discuss various issues you may hit when
+migrating from Maven <code>singlethreaded</code> builder and I&#8217;ll propose some solutions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hidden_dependencies_between_modules"><a class="anchor" href="#hidden_dependencies_between_modules"></a>Hidden dependencies between modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Switching to <code>mvnd</code> and its <code>smart</code> builder may reveal that modules in your source tree have some hidden
+dependencies. You may have never noticed these when building with standard Maven&#8217;s <code>singlethreaded</code> builder,
+because it orders the modules deterministically not only based on explicit <code>&lt;dependency&gt;</code> relationships, but also
+based on the order of modules in the <code>&lt;modules&gt;</code> element. If your modules depend on each other like this</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and if these modules are ordered like this in the parent <code>pom.xml</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;modules&gt;</span>
+    <span class="tag">&lt;module&gt;</span>A<span class="tag">&lt;/module&gt;</span>
+    <span class="tag">&lt;module&gt;</span>B<span class="tag">&lt;/module&gt;</span>
+    <span class="tag">&lt;module&gt;</span>C<span class="tag">&lt;/module&gt;</span>
+    <span class="tag">&lt;module&gt;</span>D<span class="tag">&lt;/module&gt;</span>
+<span class="tag">&lt;/modules&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then with <code>singlethreaded</code> Maven builder, the module <code>B</code> is always completely built before the module <code>C</code>.
+The build will work fine even if <code>C</code> has some non-explicit dependency on <code>B</code>.
+For instance, it could be reading a file in <code>B</code>'s <code>target</code> folder, its test could dynamically read an artifact
+produced by module <code>B</code> from the local Maven repository, etc.</p>
+</div>
+<div class="paragraph">
+<p>A build like this may start failing with <code>smart</code> builder or <code>multithreaded</code> builder.
+Because concurrency is a part of the game, the failure may happen sporadically and the symptoms may include something like</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>File <code>B/target/whatever</code> not found exception thrown during the build of module <code>C</code></p>
+</li>
+<li>
+<p>(On Windows) <code>clean</code> unable to delete the file in <code>B/target</code> because some part of the <code>C</code> build is reading it, etc.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="remedy"><a class="anchor" href="#remedy"></a>Remedy</h3>
+<div class="paragraph">
+<p>There are more ways to solve this, but I am going to show you only the most generic one.</p>
+</div>
+<div class="paragraph">
+<p>If you want to instruct <code>smart</code> or <code>multithreaded</code> builder to build <code>B</code> before <code>C</code>, put the following dependency into <code>C</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.my-group<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>B<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>${project.version}<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+    <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;exclusions&gt;</span>
+        <span class="tag">&lt;exclusion&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>*<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>*<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/exclusion&gt;</span>
+    <span class="tag">&lt;/exclusions&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It won&#8217;t add any real dependency to <code>C</code> but it will guarantee that <code>B</code> is fully built before <code>C</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="plugins_relying_on_global_mutable_state"><a class="anchor" href="#plugins_relying_on_global_mutable_state"></a>Plugins relying on global mutable state</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some Maven plugin used in your build may rely on some data stored in a mutable global variable.
+Using Java system properties in the following way is a typical example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="annotation">@Mojo</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">some-mojo</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SomeMojo</span> <span class="directive">extends</span> AbstractMojo {
+    <span class="annotation">@Parameter</span>(property = <span class="string"><span class="delimiter">&quot;</span><span class="content">project</span><span class="delimiter">&quot;</span></span>, required = <span class="predefined-constant">true</span>, readonly = <span class="predefined-constant">true</span>)
+    <span class="directive">protected</span> MavenProject project;
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> execute() {
+        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentArtifactId</span><span class="delimiter">&quot;</span></span>, project.getArtifact().getArtifactId());
+        <span class="comment">// some code assuming that this instance of the mojo observes what we have set</span>
+        <span class="comment">// on the previous line</span>
+        <span class="keyword">assert</span> project.getArtifact().getArtifactId().equals(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentArtifactId</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the snippet above, the <code>currentArtifactId</code> system property is set at the beginning of the <code>execute()</code> method
+and the author apparently assumes that the method cannot be called from multiple threads concurrently.
+The assumption holds when building with the <code>singlethreaded</code> builder,
+but it does not with <code>smart</code> and <code>multithreaded</code> builders.
+If modules are built in parallel, it may happen
+that instance 2 of the mojo will overwrite the value of the property value set by instance 1 before the instance 1 can read it.
+Instance 1 thus observes the value set by instance 2 and the assertion in the above snippet will fail.</p>
+</div>
+<div class="sect2">
+<h3 id="remedy_2"><a class="anchor" href="#remedy_2"></a>Remedy</h3>
+<div class="paragraph">
+<p>The primary recommendation for this kind issue is to go and fix the given plugin.
+Or at least report the issue in its issue tracker.
+Or in case the issue was reported already, make sure that you upvote the issue so that the plugin author sees that the issue matters to you.
+In that way the issue can be fixed once for all users of <code>mvnd</code> and for all users of <code>multithreaded</code> builder.</p>
+</div>
+<div class="paragraph">
+<p>After reporting the issue, you may also consider <a href="/2021/01/11/mvnd-parallel-builds.html#mavens_serial_builder_via_1_serial">falling back to <code>singlethreaded</code> builder</a>. However, by doing that you&#8217;ll loose one of the most important benefits of <code>mvnd</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="race_for_system_resources"><a class="anchor" href="#race_for_system_resources"></a>Race for system resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The most prominent example of this kind of issue is opening sockets using a fixed port in modules built in parallel.</p>
+</div>
+<div class="paragraph">
+<p>Say that your module dependencies are like this again</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text">    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and say that both <code>B</code> and <code>C</code> contain some tests and that the tests in both modules start some helper service on a fixed port, e.g. <code>1234</code>.
+The service can be the application under test itself, a database, a message broker, etc.</p>
+</div>
+<div class="paragraph">
+<p>I am sure you see the problem:
+the tests either in <code>B</code> or in <code>C</code> won&#8217;t be able to start the service,
+because the port is already occupied by the service started from the other module.</p>
+</div>
+<div class="sect2">
+<h3 id="remedy_3"><a class="anchor" href="#remedy_3"></a>Remedy</h3>
+<div class="paragraph">
+<p>When it comes to solutions, I suggest you first decide for yourself, whether running tests in parallel is a goal worth pursuing at all.
+Maybe it is too much work, maybe the test isolation is hard to guarantee.</p>
+</div>
+<div class="paragraph">
+<p>I generally do not do it and I barely need to.</p>
+</div>
+<div class="paragraph">
+<p>On my desktop, I prefer building the whole tree <a href="/2020/10/29/skipping-maven-mojos-properly.html">as fast as possible without tests</a>
+and then running the individual tests for the area I am working on using <code>-Dtest=MyTest</code> or <code>-Dit.test=MyIntegrationTest</code>.</p>
+</div>
+<div class="paragraph">
+<p>On CI servers, I prefer using stock Maven with its default <code>singlethreaded</code> builder to run all tests properly isolated.
+To speed it up, it is often possible to split a large build into groups of modules which can be built and tested on separate worker nodes in parallel.
+On those nodes I still use <code>singlethreaded</code> builder so that the execution is serialized and reproducible.
+That&#8217;s quite easy to do in environments like GitHub actions.</p>
+</div>
+<div class="paragraph">
+<p>Anyway if you conclude that (module-wise) parallel tests are a worthwhile goal, here is a couple of thoughts:</p>
+</div>
+<div class="paragraph">
+<p>Starting helper services lazily (start only if it does not run already) may or may not solve the problem.
+It depends on how your tests are written whether the situation morphes into the problem of shared mutable state I have described above.
+Closing the resources after the tests may get tricky as well.</p>
+</div>
+<div class="paragraph">
+<p>Redesigning your tests to use random ports might be a better strategy.
+Using <a href="https://www.testcontainers.org/features/networking/">Testcontainers</a> is a great way to do it for databases and other kinds of services are containerized or containerizable at least.</p>
+</div>
+<div class="paragraph">
+<p>&#160;<br></p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it for today.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to ping me on twitter (<a href="https://twitter.com/ppalaga">@ppalaga</a> or <a href="https://twitter.com/mvndaemon">@mvndaemon</a>)
+or via <a href="https://github.com/mvndaemon/mvnd/issues">GitHub issues</a> if you have more interesting issues related to parallel builds with <code>mvnd</code>.</p>
+</div>
+<div class="paragraph">
+<p>Stay tuned for the next <code>mvnd</code> tip!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://twitter.com/mvndaemon"><img src="https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon" alt="mvndaemon"></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<a href="https://github.com/ppalaga/ppalaga.github.io/edit/master/_posts/2021-01-12-mvnd-solving-common-issues-of-parallel-builds.adoc" target="_blank">Edit this post</a>
+
+
+<hr>
+<h3>Related posts</h3>
+<div class="local-post-list">
+    
+        
+            
+                
+                    
+                
+            
+                
+                    <div class="local-list-item">
+        <h4><span class="local-subtitle">Jan 11, 2021</span><br>
+        <a href="/2021/01/11/mvnd-parallel-builds.html"><code>mvnd</code> tip: Parallel and non-parallel builds</a></h4>
+    </div>
+                    
+                
+            
+                
+                    <div class="local-list-item">
+        <h4><span class="local-subtitle">Jan 8, 2021</span><br>
+        <a href="/2021/01/08/mvnd-shortcuts.html"><code>mvnd</code> tip: Shortcuts</a></h4>
+    </div>
+                    
+                
+            
+    <ul>
+    </ul>
+        
+    
+
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+</div>
+
+
+
+
+    </div>
+</div>
+<footer class="local-footer">
+    <div class="row">
+        <div class="small-12 small-centered columns text-center">
+            Copyright © Peter Palaga 2021&nbsp;&nbsp;•&nbsp;&nbsp;Header background by <a href="https://www.facebook.com/steve.cord.56" target="_blank">Steve Cord</a>
+        </div>
+    </div>
+</footer>
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>

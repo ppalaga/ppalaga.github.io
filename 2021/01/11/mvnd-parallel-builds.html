@@ -6,9 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mvnd tip: Parallel and non-parallel builds - Peter Palaga</title>
-    <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
     <link rel="stylesheet" href="../../../css/foundation.css">
     <link rel="stylesheet" href="../../../css/font-awesome.css">
     <link rel="stylesheet" href="../../../css/coderay.css">
@@ -40,6 +41,7 @@
                 <li><a href="/about.html">About</a></li>
             </ul>
             <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
                 <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
                 <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
                 <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
@@ -55,7 +57,8 @@
     <!-- Main Blog Content -->
     <div id="local-content" class="large-12 columns" role="content">
 
-        <h1><code>mvnd</code> tip: Parallel and non-parallel builds</h1>
+        <h3><span class="local-subtitle">Jan 11, 2021</span></h3>
+<h1><code>mvnd</code> tip: Parallel and non-parallel builds</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -65,7 +68,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="parallel_by_default">Parallel by default</h2>
+<h2 id="parallel_by_default"><a class="anchor" href="#parallel_by_default"></a>Parallel by default</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
@@ -128,7 +131,7 @@ you&#8217;d use <code>-T0.5C</code>, to use twice as many threads as the number 
 </div>
 </div>
 <div class="sect1">
-<h2 id="smart_builder_by_default"><code>smart</code> builder by default</h2>
+<h2 id="smart_builder_by_default"><a class="anchor" href="#smart_builder_by_default"></a><code>smart</code> builder by default</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Maven has the concept of pluggable <code>builder</code> since version 3.2.1.
@@ -168,7 +171,7 @@ classloader caching in the Daemon and <code>mvnd</code> command line client bein
 </div>
 </div>
 <div class="sect1">
-<h2 id="mavens_serial_builder_via_1_serial">Maven&#8217;s serial builder via <code>-1</code>/<code>--serial</code></h2>
+<h2 id="mavens_serial_builder_via_1_serial"><a class="anchor" href="#mavens_serial_builder_via_1_serial"></a>Maven&#8217;s serial builder via <code>-1</code>/<code>--serial</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can hit various issues when building with <code>smart</code> builder, such as hidden dependencies between modules,
@@ -204,12 +207,22 @@ single-threaded builder by passing <code>-1</code> or <code>--serial</code> on t
 </div>
 </div>
 
+<a href="https://github.com/ppalaga/ppalaga.github.io/edit/master/_posts/2021-01-11-mvnd-parallel-builds.adoc" target="_blank">Edit this post</a>
+
 
 <hr>
 <h3>Related posts</h3>
 <div class="local-post-list">
     
         
+            
+                
+                    <div class="local-list-item">
+        <h4><span class="local-subtitle">Jan 12, 2021</span><br>
+        <a href="/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html"><code>mvnd</code> tip: Solving common issues of parallel builds</a></h4>
+    </div>
+                    
+                
             
                 
                     

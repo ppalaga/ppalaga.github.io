@@ -6,9 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peter Palaga</title>
-    <meta name="description" content="Senior sustaining engineer at Red Hat Middleware, WildFly Camel, previously JBoss EAP, Hawkular and others.">
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
     <meta name="author" content="Your name goes here">
     <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/coderay.css">
@@ -40,6 +41,7 @@
                 <li><a href="/about.html">About</a></li>
             </ul>
             <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
                 <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
                 <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
                 <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
@@ -86,6 +88,14 @@ and <a href="https://github.com/ec4j/ec4j">ec4j</a> (<a href="https://editorconf
 <hr>
 <h2>Recent posts</h2>
 <div class="local-post-list"><div class="local-list-item">
+    <h3><span class="local-subtitle">Jan 12, 2021</span><br>
+    <a href="/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html"><code>mvnd</code> tip: Solving common issues of parallel builds</a></h3>
+    <div class="paragraph"><p>
+In the <a href="/2021/01/11/mvnd-parallel-builds.html#smart_builder_by_default">previous <code>mvnd</code> tip</a>, we have introduced
+<code>mvnd</code>'s <code>smart</code> builder and explained how it works. Today, I&#8217;d like discuss various issues you may hit when
+migrating from Maven <code>singlethreaded</code> builder and I&#8217;ll propose some solutions.
+<a href="/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">Read more...</a></p></div>
+</div><div class="local-list-item">
     <h3><span class="local-subtitle">Jan 11, 2021</span><br>
     <a href="/2021/01/11/mvnd-parallel-builds.html"><code>mvnd</code> tip: Parallel and non-parallel builds</a></h3>
     <div class="paragraph"><p>
@@ -99,14 +109,6 @@ and <a href="https://github.com/ec4j/ec4j">ec4j</a> (<a href="https://editorconf
 I am starting to write these tips as a base for the future <code><a href="https://github.com/mvndaemon/mvnd">mvnd</a></code>
 documentation. Today about keystrokes supported in the <code>mvnd</code> client UI.
 <a href="/2021/01/08/mvnd-shortcuts.html">Read more...</a></p></div>
-</div><div class="local-list-item">
-    <h3><span class="local-subtitle">Oct 29, 2020</span><br>
-    <a href="/2020/10/29/skipping-maven-mojos-properly.html">When <code>-DskipTests</code> is not fast enough: skip Maven mojos properly</a></h3>
-    <div class="paragraph"><p>
-<code>-DskipTests</code> is a well known way to skip the execution of unit tests during a Maven build and thus save time.
-This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI
-already.
-<a href="/2020/10/29/skipping-maven-mojos-properly.html">Read more...</a></p></div>
 </div><div class="paragraph">
     <p><br><a href="/blog.html">Older posts...</a><br></p>
 </div>
