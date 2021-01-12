@@ -1,3 +1,3 @@
-Sources of http://ppalaga.github.io/[Peter Palaga's personal web].
+Sources of https://peter.palaga.org/[Peter Palaga's personal web].
 
 Run locally with `bundle exec jekyll serve`

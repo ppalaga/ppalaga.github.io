@@ -3,6 +3,7 @@
 :page-layout: tagged-post
 :page-root: ../../../
 :page-tags: [mvnd]
+:sectanchors:
 
 I am starting to write these tips as a base for the future `https://github.com/mvndaemon/mvnd[mvnd]`
 documentation. Today about keystrokes supported in the `mvnd` client UI.

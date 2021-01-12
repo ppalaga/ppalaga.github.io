@@ -3,6 +3,7 @@
 :page-layout: tagged-post
 :page-root: ../../../
 :page-tags: [mvnd]
+:sectanchors:
 
 link:/2021/01/08/mvnd-shortcuts.html[Another] tip that will serve as a base for the future
 `https://github.com/mvndaemon/mvnd[mvnd]` documentation. Today about parallel and non-parallel builds.

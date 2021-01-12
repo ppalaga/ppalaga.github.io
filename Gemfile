@@ -7,4 +7,5 @@ gem 'rake-jekyll', '~> 1.1.0'
 group :jekyll_plugins do
   gem 'jekyll-asciidoc', '~> 3.0.0'
   gem 'jekyll-regex-replace', '~> 1.1.0'
+  gem 'jekyll-feed', '~> 0.15.1'
 end

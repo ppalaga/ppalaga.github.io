@@ -1,7 +1,10 @@
 ---
 layout: default
 ---
+<h3><span class="local-subtitle">{{ page.date | date: site.date_format }}</span></h3>
 {{ content }}
+
+<a href="{{ site.github }}/edit/master/{{ page.path }}" target="_blank">Edit this post</a>
 
 {% if page.tags.size > 0 %}
 <hr>

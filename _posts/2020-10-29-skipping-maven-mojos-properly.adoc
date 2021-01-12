@@ -1,6 +1,7 @@
 = When `-DskipTests` is not fast enough: skip Maven mojos properly
 :showtitle:
 :page-root: ../../../
+:sectanchors:
 
 `-DskipTests` is a well known way to skip the execution of unit tests during a Maven build and thus save time.
 This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI

@@ -2,6 +2,7 @@
 :showtitle:
 :page-navtitle: Camel Quarkus early history
 :page-root: ../../../
+:sectanchors:
 
 I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided
 to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so

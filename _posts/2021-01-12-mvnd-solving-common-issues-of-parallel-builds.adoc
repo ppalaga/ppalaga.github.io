@@ -1,0 +1,174 @@
+= `mvnd` tip: Solving common issues of parallel builds
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [mvnd]
+:sectanchors:
+
+In the link:/2021/01/11/mvnd-parallel-builds.html#smart_builder_by_default[previous `mvnd` tip], we have introduced
+``mvnd``'s `smart` builder and explained how it works. Today, I'd like discuss various issues you may hit when
+migrating from Maven `singlethreaded` builder and I'll propose some solutions.
+
+== Hidden dependencies between modules
+
+Switching to `mvnd` and its `smart` builder may reveal that modules in your source tree have some hidden
+dependencies. You may have never noticed these when building with standard Maven's `singlethreaded` builder,
+because it orders the modules deterministically not only based on explicit `<dependency>` relationships, but also
+based on the order of modules in the `<modules>` element. If your modules depend on each other like this
+
+[source,text]
+----
+
+    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D
+
+----
+
+and if these modules are ordered like this in the parent `pom.xml`
+
+[source,xml]
+----
+<modules>
+    <module>A</module>
+    <module>B</module>
+    <module>C</module>
+    <module>D</module>
+</modules>
+----
+
+then with `singlethreaded` Maven builder, the module `B` is always completely built before the module `C`.
+The build will work fine even if `C` has some non-explicit dependency on `B`.
+For instance, it could be reading a file in ``B``'s `target` folder, its test could dynamically read an artifact
+produced by module `B` from the local Maven repository, etc.
+
+A build like this may start failing with `smart` builder or `multithreaded` builder.
+Because concurrency is a part of the game, the failure may happen sporadically and the symptoms may include something like
+
+* File `B/target/whatever` not found exception thrown during the build of module `C`
+* (On Windows) `clean` unable to delete the file in `B/target` because some part of the `C` build is reading it, etc.
+
+=== Remedy
+
+There are more ways to solve this, but I am going to show you only the most generic one.
+
+If you want to instruct `smart` or `multithreaded` builder to build `B` before `C`, put the following dependency into `C`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.my-group</groupId>
+    <artifactId>B</artifactId>
+    <version>${project.version}</version>
+    <type>pom</type>
+    <scope>test</scope>
+    <exclusions>
+        <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+----
+
+It won't add any real dependency to `C` but it will guarantee that `B` is fully built before `C`.
+
+== Plugins relying on global mutable state
+
+Some Maven plugin used in your build may rely on some data stored in a mutable global variable.
+Using Java system properties in the following way is a typical example:
+
+[source,Java]
+----
+@Mojo(name = "some-mojo")
+public class SomeMojo extends AbstractMojo {
+    @Parameter(property = "project", required = true, readonly = true)
+    protected MavenProject project;
+
+    @Override
+    public void execute() {
+        System.setProperty("currentArtifactId", project.getArtifact().getArtifactId());
+        // some code assuming that this instance of the mojo observes what we have set
+        // on the previous line
+        assert project.getArtifact().getArtifactId().equals(System.getProperty("currentArtifactId"));
+    }
+}
+----
+
+In the snippet above, the `currentArtifactId` system property is set at the beginning of the `execute()` method
+and the author apparently assumes that the method cannot be called from multiple threads concurrently.
+The assumption holds when building with the `singlethreaded` builder,
+but it does not with `smart` and `multithreaded` builders.
+If modules are built in parallel, it may happen
+that instance 2 of the mojo will overwrite the value of the property value set by instance 1 before the instance 1 can read it.
+Instance 1 thus observes the value set by instance 2 and the assertion in the above snippet will fail.
+
+=== Remedy
+
+The primary recommendation for this kind issue is to go and fix the given plugin.
+Or at least report the issue in its issue tracker.
+Or in case the issue was reported already, make sure that you upvote the issue so that the plugin author sees that the issue matters to you.
+In that way the issue can be fixed once for all users of `mvnd` and for all users of `multithreaded` builder.
+
+After reporting the issue, you may also consider link:/2021/01/11/mvnd-parallel-builds.html#mavens_serial_builder_via_1_serial[falling back to `singlethreaded` builder]. However, by doing that you'll loose one of the most important benefits of `mvnd`.
+
+== Race for system resources
+
+The most prominent example of this kind of issue is opening sockets using a fixed port in modules built in parallel.
+
+Say that your module dependencies are like this again
+
+[source,text]
+----
+
+    A
+   / \
+  B   C    (Lower depends on upper)
+   \ /
+    D
+
+----
+
+and say that both `B` and `C` contain some tests and that the tests in both modules start some helper service on a fixed port, e.g. `1234`.
+The service can be the application under test itself, a database, a message broker, etc.
+
+I am sure you see the problem:
+the tests either in `B` or in `C` won't be able to start the service,
+because the port is already occupied by the service started from the other module.
+
+=== Remedy
+
+When it comes to solutions, I suggest you first decide for yourself, whether running tests in parallel is a goal worth pursuing at all.
+Maybe it is too much work, maybe the test isolation is hard to guarantee.
+
+I generally do not do it and I barely need to.
+
+On my desktop, I prefer building the whole tree link:/2020/10/29/skipping-maven-mojos-properly.html[as fast as possible without tests]
+and then running the individual tests for the area I am working on using `-Dtest=MyTest` or `-Dit.test=MyIntegrationTest`.
+
+On CI servers, I prefer using stock Maven with its default `singlethreaded` builder to run all tests properly isolated.
+To speed it up, it is often possible to split a large build into groups of modules which can be built and tested on separate worker nodes in parallel.
+On those nodes I still use `singlethreaded` builder so that the execution is serialized and reproducible.
+That's quite easy to do in environments like GitHub actions.
+
+Anyway if you conclude that (module-wise) parallel tests are a worthwhile goal, here is a couple of thoughts:
+
+Starting helper services lazily (start only if it does not run already) may or may not solve the problem.
+It depends on how your tests are written whether the situation morphes into the problem of shared mutable state I have described above.
+Closing the resources after the tests may get tricky as well.
+
+Redesigning your tests to use random ports might be a better strategy.
+Using https://www.testcontainers.org/features/networking/[Testcontainers] is a great way to do it for databases and other kinds of services are containerized or containerizable at least.
+
+{nbsp} +
+
+That's it for today.
+
+Feel free to ping me on twitter (https://twitter.com/ppalaga[@ppalaga] or https://twitter.com/mvndaemon[@mvndaemon])
+or via https://github.com/mvndaemon/mvnd/issues[GitHub issues] if you have more interesting issues related to parallel builds with `mvnd`.
+
+Stay tuned for the next `mvnd` tip!
+
+image::https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&label=Follow%20%40mvndaemon[link="https://twitter.com/mvndaemon"]
