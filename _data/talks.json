@@ -1,5 +1,11 @@
 [
     {
+        "slidesUri": "/presentations/210118-quarkus-for-extension-authors/index.html",
+        "eventName": "Red Hat Integration monthly meeting",
+        "title": "Quarkus: Deep dive for extension developers",
+        "date": "2021-01-18"
+    },
+    {
         "slidesUri": "/presentations/200108-camel/index.html",
         "eventName": "JUG Bern",
         "title": "Integrating systems in the age of Quarkus, Knative and Kafka Connect",
