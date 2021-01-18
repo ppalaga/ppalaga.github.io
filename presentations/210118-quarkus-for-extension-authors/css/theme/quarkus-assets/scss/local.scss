@@ -1,0 +1,80 @@
+// Put the styles applicable for your current presentation here
+
+
+#container-first td {
+  padding-top: 1.2em;
+  padding-left: 0.35em
+}
+#container-first td:first-of-type {
+  padding-left: 0em
+}
+#container-first td:nth-child(3) {
+  padding-left: 1.2em
+}
+
+#libs-frameworks a {
+  color: #fff;
+}
+
+#rss {
+    border-collapse: collapse;
+}
+#rss img {
+  height: 4em;
+}
+#rss tr:first-child td {
+  font-size: 25px;
+  white-space: nowrap;
+  padding: 0px;
+  text-shadow: none;
+}
+#rss td {
+  border-top: 40px solid #0000;
+  border-left: 30px solid #0000;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  font-size: 50px;
+  padding: 25px;
+  vertical-align: middle;
+  text-shadow: 2px 2px 5px #000;
+}
+#rss td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
+
+
+#jvm-graalvm {
+    border-collapse: collapse;
+}
+#jvm-graalvm tr:first-child td {
+  white-space: nowrap;
+  text-align: center;
+  color: $quarkusBlue;
+  letter-spacing: 0.2em;
+  font-weight: 300;
+  font-size: 50px;
+}
+#jvm-graalvm td {
+  border-top: 20px solid #0000;
+  border-left: 20px solid #0000;
+}
+#jvm-graalvm td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
+
+#wiring {
+  margin-top: 50px;
+  border-collapse: collapse;
+}
+#wiring td {
+  border-top: 20px solid #0000;
+  border-left: 50px solid #0000;
+  text-align: center;
+  vertical-align: middle;
+}
+#wiring td:first-child {
+  border-left: 0em solid #0000;
+  padding-left: 0px;
+}
