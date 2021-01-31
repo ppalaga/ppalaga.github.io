@@ -1,4 +1,316 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-01-31T23:50:27+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">mvnd tip: Solving common issues of parallel builds</title><link href="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Solving common issues of parallel builds" /><published>2021-01-12T00:00:00+00:00</published><updated>2021-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Solving common issues of parallel builds&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-01-31T23:55:45+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Using GraalVM native-image-agent when porting a library to Quarkus</title><link href="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html" rel="alternate" type="text/html" title="Using GraalVM native-image-agent when porting a library to Quarkus" /><published>2021-01-31T00:00:00+00:00</published><updated>2021-01-31T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus</id><content type="html" xml:base="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">&lt;h1&gt;Using GraalVM &lt;code&gt;native-image-agent&lt;/code&gt; when porting a library to Quarkus&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I pondered a bit about how &lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds&quot;&gt;GraalVM&amp;#8217;s &lt;code&gt;native-image-agent&lt;/code&gt;&lt;/a&gt; can be leveraged when writing Quarkus extensions.
+Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression
+where to look and which kinds of problems you need to solve.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Native compilation of Java using GraalVM&amp;#8217;s &lt;code&gt;native-image&lt;/code&gt; tool typically requires a lot of
+&lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/&quot;&gt;configuration&lt;/a&gt;.
+You need to list classes/methods/fields that require reflection, you need to register proxies,
+you need to declare which classes have to be initialized at runtime instead of build time, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you are on &lt;a href=&quot;https://quarkus.io/&quot;&gt;Quarkus&lt;/a&gt;, you usually do not need to care for these nitty-gritty details
+because Quarkus does it for you under the hood and &lt;code&gt;mvn package -Dnative&lt;/code&gt; is all you need to know.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But say, that you are not so lucky to have a ready to use Quarkus extension for some library and you want to write one.
+Folks who are not able or not wanting to use Quarkus are actually in quite a similar situation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;configuring_native_image&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#configuring_native_image&quot;&gt;&lt;/a&gt;Configuring &lt;code&gt;native-image&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So how can the &lt;code&gt;native-image&lt;/code&gt; configuration be put together? Generally speaking there are three options:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;a_pure_knowledge&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#a_pure_knowledge&quot;&gt;&lt;/a&gt;A. Pure knowledge&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You are a GraalVM guru and you know your complete class path so well
+that you can write your &lt;code&gt;native-image&lt;/code&gt; configuration from top of your head.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Well, this is probably not your case, because you are reading this blog post 😜&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;b_trial_and_error&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#b_trial_and_error&quot;&gt;&lt;/a&gt;B. Trial and error&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You first try to compile your application with no configuration at all.
+If the compilation fails, you try to understand the error message and fix what&amp;#8217;s necessary.
+If the message does not make any sense to you, you paste it to google and you hope to find a solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once the compilation succeeds, you start testing the native executable.
+It may fail with some &lt;code&gt;ClassNotFoundException&lt;/code&gt; if you forgot to register some class for reflection
+or with a &lt;code&gt;NullPointerException&lt;/code&gt; if you forgot to embed some resources to the native image.
+I may also fail with some cryptic exception that you have no clue about.
+You google again and you either find a solution that works for you
+or you see only reports of frustration similar to your own.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;c_native_image_agent&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#c_native_image_agent&quot;&gt;&lt;/a&gt;C. &lt;code&gt;native-image-agent&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The official &lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds&quot;&gt;recommendation of GraalVM&lt;/a&gt; is to use their &lt;code&gt;native-image-agent&lt;/code&gt;.
+You are supposed to put your application (with the agent attached) under a load
+that hits all execution paths that will be active also in production.
+Based on the runtime data, the agent outputs a configuration in a format acceptable for &lt;code&gt;native-image&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This sounds very promising, but of course the main caveat is that
+if you are unable to simulate the production load properly during the test runs,
+then the produced configuration will not be complete.
+Your native application may thus fail in production.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;native_image_vs_quarkus&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#native_image_vs_quarkus&quot;&gt;&lt;/a&gt;&lt;code&gt;native-image&lt;/code&gt; vs. Quarkus&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;native-image-agent&lt;/code&gt; was designed for use on plain GraalVM, without Quarkus.
+How can we benefit from it when writing Quarkus extensions?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The main idea here is to attach it to the JVM running the application against which we run integration tests.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;write_tests_first&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#write_tests_first&quot;&gt;&lt;/a&gt;Write tests first&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When porting a library or framework to Quarkus, I always start with writing some tests.
+Ideally, they should be integration tests.
+It means that there should be a real Quarkus application in &lt;code&gt;src/main/java&lt;/code&gt;
+and the tests should communicate with it only via network protocols, like HTTP.
+The tests should cover all important use cases of the ported library.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Check &lt;a href=&quot;https://quarkus.io/guides/getting-started-testing&quot;&gt;Quarkus testing guide&lt;/a&gt;
+to learn how to write integration tests for Quarkus applications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If I am extremely lucky, the tests just pass in native mode
+and the library can be considered working in native without any native image configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But that&amp;#8217;s very rare. The tests usually pass in JVM mode and they fail in native mode
+because some piece of &lt;code&gt;native-image&lt;/code&gt; configuration is missing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;run_tests_with_native_image_agent_attached&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#run_tests_with_native_image_agent_attached&quot;&gt;&lt;/a&gt;Run tests with &lt;code&gt;native-image-agent&lt;/code&gt; attached&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you do not know the internals of the ported library well enough &lt;code&gt;native-image-agent&lt;/code&gt; may come in very handy.
+Even if the configuration produced by it won&amp;#8217;t be 100% complete and relevat,
+it may give you a good initial impression where to look and which kinds of problems you need to solve.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How can you attach &lt;code&gt;native-image-agent&lt;/code&gt; to your tests?
+Let me explain first how
+&lt;a href=&quot;https://quarkus.io/guides/getting-started-testing#recap-of-http-based-testing-in-jvm-mode&quot;&gt;Quarkus JVM tests&lt;/a&gt;
+annotated with &lt;code&gt;@QuarkusTest&lt;/code&gt; work.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When running the tests from Maven via &lt;code&gt;mvn test&lt;/code&gt; there are two JVMs taking part in the game:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;The main Maven JVM&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A separate JVM started by surefire to run the tests&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Should &lt;code&gt;native-image-agent&lt;/code&gt; be attached to the second one?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;While it is certainly the better of the two options, it is still not perfect.
+The problem is that this JVM is used not only to run the application under test (living under &lt;code&gt;src/main&lt;/code&gt;),
+but also the test code living under &lt;code&gt;src/test&lt;/code&gt;.
+Clearly, we do not intend to compile the tests to native. We only want to compile the application.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So, how can we split the second JVM into a test JVM and an application JVM?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I have found the following hammer-and-nails procedure (please &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;let me know&lt;/a&gt; if know a better one):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Remove the &lt;code&gt;@QuarkusTest&lt;/code&gt; annotation from all your test classes.
+Why? - because otherwise Quarkus JUnit extension would start the application in the test JVM
+and that&amp;#8217;s exactly what we&amp;#8217;d like avoid.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Package your application skipping the tests&lt;/p&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvn clean package -DskipTests&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Start your application manually using GraalVM JRE (where &lt;code&gt;native-image-agent&lt;/code&gt; is available)
+with the agent attached and &lt;code&gt;test&lt;/code&gt; Quarkus profile activated:&lt;/p&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ export JAVA_HOME=/path/to/graalvm-ce-java11-...
+$ $JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=target/graal-config&amp;quot; -Dquarkus.profile=test -jar target/*-runner.jar
+...
+2021-01-31 15:58:31,675 INFO  [io.quarkus] (main) Profile test activated.
+2021-01-31 15:58:31,676 INFO  [io.quarkus] (main) Installed features: [..., cdi, resteasy]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the tests in another terminal:&lt;/p&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvn test # or alternatively mvn surefire:test might suffice too
+...
+[INFO] BUILD SUCCESS&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When all the tests have passed, terminate the application running in the first terminal by pressing &lt;code&gt;CTRL+C&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After that, the configuration for &lt;code&gt;native-image&lt;/code&gt; should be stored in &lt;code&gt;target/graal-config&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ tree target/graal-config
+target/graal-config
+├── proxy-config.json
+├── reflect-config.json
+├── resource-config.json
+└── ...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;translate_the_generated_config_to_quarkus_builditems&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#translate_the_generated_config_to_quarkus_builditems&quot;&gt;&lt;/a&gt;Translate the generated config to Quarkus &lt;code&gt;BuildItems&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once the &lt;code&gt;native-image-agent&lt;/code&gt; has generated the configuration, you can study the content of the files
+and consider whether and how you need to translate the individual items to Quarkus &lt;code&gt;BuildItems&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;You typically do not need to care for all configuration items
+because some of them are already covered by some core Quarkus extension,
+such as &lt;code&gt;quarkus-netty&lt;/code&gt;, &lt;code&gt;quarkus-jackson&lt;/code&gt;, &lt;code&gt;quarkus-vertx&lt;/code&gt;, etc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For the ones that are apparently related to the library you are porting, the mapping goes like the following:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;proxy-config.json&lt;/code&gt; → &lt;code&gt;&lt;a href=&quot;https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/builditem/nativeimage/NativeImageProxyDefinitionBuildItem.java&quot;&gt;NativeImageProxyDefinitionBuildItem&lt;/a&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;reflect-config.json&lt;/code&gt; → &lt;code&gt;&lt;a href=&quot;https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/builditem/nativeimage/ReflectiveClassBuildItem.java&quot;&gt;ReflectiveClassBuildItem&lt;/a&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;resource-config.json&lt;/code&gt; → &lt;code&gt;&lt;a href=&quot;https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/builditem/nativeimage/NativeImageResourceBuildItem.java&quot;&gt;NativeImageResourceBuildItem&lt;/a&gt;&lt;/code&gt; or &lt;code&gt;&lt;a href=&quot;https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/builditem/nativeimage/NativeImageResourceBundleBuildItem.java&quot;&gt;NativeImageResourceBundleBuildItem&lt;/a&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Check &lt;a href=&quot;https://quarkus.io/guides/all-builditems&quot;&gt;Quarkus &lt;code&gt;BuildItem&lt;/code&gt;s reference&lt;/a&gt; for more details about the available &lt;code&gt;BuildItem&lt;/code&gt;s.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Example: If you have something like the following in your &lt;code&gt;reflect-config.json&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;json&quot;&gt;[
+{
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;com.azure.core.util.DateTimeRfc1123&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;allDeclaredFields&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;value&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;allDeclaredMethods&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;value&quot;&gt;true&lt;/span&gt;,
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;allDeclaredConstructors&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;value&quot;&gt;true&lt;/span&gt;
+},
+{
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;com.azure.storage.blob.implementation.models.BlobsGetPropertiesResponse&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class=&quot;key&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;allDeclaredConstructors&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;:&lt;span class=&quot;value&quot;&gt;true&lt;/span&gt;
+}
+]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;this is how you would translate it to a Quarkus &lt;code&gt;@BuildStep&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;java&quot;&gt;&lt;span class=&quot;type&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;class&quot;&gt;AzureBuildSteps&lt;/span&gt; {
+
+    &lt;span class=&quot;annotation&quot;&gt;@BuildStep&lt;/span&gt;
+    &lt;span class=&quot;type&quot;&gt;void&lt;/span&gt; reflectiveClasses(BuildProducer&amp;lt;ReflectiveClassBuildItem&amp;gt; reflectiveClasses) {
+
+        reflectiveClasses.produce(
+                &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ReflectiveClassBuildItem(
+                        &lt;span class=&quot;predefined-constant&quot;&gt;true&lt;/span&gt;, &lt;span class=&quot;comment&quot;&gt;// allDeclaredMethods required&lt;/span&gt;
+                        &lt;span class=&quot;predefined-constant&quot;&gt;true&lt;/span&gt;, &lt;span class=&quot;comment&quot;&gt;// allDeclaredFields required&lt;/span&gt;
+                        &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;com.azure.core.util.DateTimeRfc1123&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;));
+
+        reflectiveClasses.produce(
+                &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ReflectiveClassBuildItem(
+                        &lt;span class=&quot;predefined-constant&quot;&gt;false&lt;/span&gt;, &lt;span class=&quot;comment&quot;&gt;// allDeclaredMethods not required&lt;/span&gt;
+                        &lt;span class=&quot;predefined-constant&quot;&gt;false&lt;/span&gt;, &lt;span class=&quot;comment&quot;&gt;// allDeclaredFields not required&lt;/span&gt;
+                        &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;content&quot;&gt;com.azure.storage.blob.implementation.models.BlobsGetPropertiesResponse&lt;/span&gt;&lt;span class=&quot;delimiter&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;));
+
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;is_that_all&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#is_that_all&quot;&gt;&lt;/a&gt;Is that all?&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Not necessarily.
+Running the tests in native mode may reveal more issues that may require additional &lt;code&gt;BuildItem&lt;/code&gt;s
+or even GraalVM &lt;a href=&quot;https://github.com/oracle/graal/blob/2c334c4db1ccd09b1a7ec5abdabad2e8ffe2d407/substratevm/src/com.oracle.svm.core/src/com/oracle/svm/core/annotate/TargetClass.java#L36-L70&quot;&gt;substitutions&lt;/a&gt;.
+That&amp;#8217;s already beyond the scope of this blog post where I primarily wanted to show
+how &lt;code&gt;native-image-agent&lt;/code&gt; can be leveraged when writing Quarkus extensions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><summary type="html">Using GraalVM native-image-agent when porting a library to Quarkus I pondered a bit about how GraalVM&amp;#8217;s native-image-agent can be leveraged when writing Quarkus extensions. Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression where to look and which kinds of problems you need to solve.</summary></entry><entry><title type="html">mvnd tip: Solving common issues of parallel builds</title><link href="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Solving common issues of parallel builds" /><published>2021-01-12T00:00:00+00:00</published><updated>2021-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Solving common issues of parallel builds&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
