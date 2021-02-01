@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-01-31T23:55:45+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Using GraalVM native-image-agent when porting a library to Quarkus</title><link href="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html" rel="alternate" type="text/html" title="Using GraalVM native-image-agent when porting a library to Quarkus" /><published>2021-01-31T00:00:00+00:00</published><updated>2021-01-31T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus</id><content type="html" xml:base="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">&lt;h1&gt;Using GraalVM &lt;code&gt;native-image-agent&lt;/code&gt; when porting a library to Quarkus&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-02-01T11:04:00+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Using GraalVM native-image-agent when porting a library to Quarkus</title><link href="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html" rel="alternate" type="text/html" title="Using GraalVM native-image-agent when porting a library to Quarkus" /><published>2021-01-31T00:00:00+00:00</published><updated>2021-01-31T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus</id><content type="html" xml:base="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">&lt;h1&gt;Using GraalVM &lt;code&gt;native-image-agent&lt;/code&gt; when porting a library to Quarkus&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I pondered a bit about how &lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds&quot;&gt;GraalVM&amp;#8217;s &lt;code&gt;native-image-agent&lt;/code&gt;&lt;/a&gt; can be leveraged when writing Quarkus extensions.
+&lt;p&gt;I pondered a bit how &lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds&quot;&gt;GraalVM&amp;#8217;s &lt;code&gt;native-image-agent&lt;/code&gt;&lt;/a&gt; can be leveraged when writing Quarkus extensions.
 Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression
 where to look and which kinds of problems you need to solve.&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;background&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#background&quot;&gt;&lt;/a&gt;Background&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Native compilation of Java using GraalVM&amp;#8217;s &lt;code&gt;native-image&lt;/code&gt; tool typically requires a lot of
 &lt;a href=&quot;https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/&quot;&gt;configuration&lt;/a&gt;.
@@ -49,7 +54,7 @@ If the message does not make any sense to you, you paste it to google and you ho
 &lt;p&gt;Once the compilation succeeds, you start testing the native executable.
 It may fail with some &lt;code&gt;ClassNotFoundException&lt;/code&gt; if you forgot to register some class for reflection
 or with a &lt;code&gt;NullPointerException&lt;/code&gt; if you forgot to embed some resources to the native image.
-I may also fail with some cryptic exception that you have no clue about.
+It may also fail with some cryptic exception that you have no clue about.
 You google again and you either find a solution that works for you
 or you see only reports of frustration similar to your own.&lt;/p&gt;
 &lt;/div&gt;
@@ -67,6 +72,11 @@ Based on the runtime data, the agent outputs a configuration in a format accepta
 if you are unable to simulate the production load properly during the test runs,
 then the produced configuration will not be complete.
 Your native application may thus fail in production.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Besides that, the agent records only the usage of some features (namely JNI, Reflection, Proxies and class path resources)
+while it does not help with configuring others, like delayed class initialization.
+So you still may have to assemble some parts of the configuration manually.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -117,7 +127,7 @@ because some piece of &lt;code&gt;native-image&lt;/code&gt; configuration is mis
 &lt;div class=&quot;sect2&quot;&gt;
 &lt;h3 id=&quot;run_tests_with_native_image_agent_attached&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#run_tests_with_native_image_agent_attached&quot;&gt;&lt;/a&gt;Run tests with &lt;code&gt;native-image-agent&lt;/code&gt; attached&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If you do not know the internals of the ported library well enough &lt;code&gt;native-image-agent&lt;/code&gt; may come in very handy.
+&lt;p&gt;If you do not know the internals of the ported library well, &lt;code&gt;native-image-agent&lt;/code&gt; may come in very handy.
 Even if the configuration produced by it won&amp;#8217;t be 100% complete and relevat,
 it may give you a good initial impression where to look and which kinds of problems you need to solve.&lt;/p&gt;
 &lt;/div&gt;
@@ -153,14 +163,14 @@ Clearly, we do not intend to compile the tests to native. We only want to compil
 &lt;p&gt;So, how can we split the second JVM into a test JVM and an application JVM?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I have found the following hammer-and-nails procedure (please &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;let me know&lt;/a&gt; if know a better one):&lt;/p&gt;
+&lt;p&gt;I have found the following hammer-and-nails procedure (please &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;let me know&lt;/a&gt; if you know a better one):&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;olist arabic&quot;&gt;
 &lt;ol class=&quot;arabic&quot;&gt;
 &lt;li&gt;
 &lt;p&gt;Remove the &lt;code&gt;@QuarkusTest&lt;/code&gt; annotation from all your test classes.
-Why? - because otherwise Quarkus JUnit extension would start the application in the test JVM
-and that&amp;#8217;s exactly what we&amp;#8217;d like avoid.&lt;/p&gt;
+Why? Because otherwise Quarkus JUnit extension would start the application in the test JVM
+and that&amp;#8217;s exactly what we&amp;#8217;d like to avoid.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Package your application skipping the tests&lt;/p&gt;
@@ -171,7 +181,7 @@ and that&amp;#8217;s exactly what we&amp;#8217;d like avoid.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Start your application manually using GraalVM JRE (where &lt;code&gt;native-image-agent&lt;/code&gt; is available)
+&lt;p&gt;Start your application manually using GraalVM JRE (in which &lt;code&gt;native-image-agent&lt;/code&gt; is available)
 with the agent attached and &lt;code&gt;test&lt;/code&gt; Quarkus profile activated:&lt;/p&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -217,6 +227,20 @@ target/graal-config
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Once the &lt;code&gt;native-image-agent&lt;/code&gt; has generated the configuration, you can study the content of the files
 and consider whether and how you need to translate the individual items to Quarkus &lt;code&gt;BuildItems&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;admonitionblock tip&quot;&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class=&quot;icon&quot;&gt;
+&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
+&lt;/td&gt;
+&lt;td class=&quot;content&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Check &lt;a href=&quot;https://quarkus.io/guides/writing-extensions&quot;&gt;Quarkus for extension authors&lt;/a&gt; to learn Quarkus extensions basics.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;You typically do not need to care for all configuration items
@@ -303,14 +327,18 @@ such as &lt;code&gt;quarkus-netty&lt;/code&gt;, &lt;code&gt;quarkus-jackson&lt;/
 &lt;h3 id=&quot;is_that_all&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#is_that_all&quot;&gt;&lt;/a&gt;Is that all?&lt;/h3&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Not necessarily.
+As I have mentioned above, &lt;code&gt;native-image-agent&lt;/code&gt; does not handle all aspects of the configuration.
 Running the tests in native mode may reveal more issues that may require additional &lt;code&gt;BuildItem&lt;/code&gt;s
 or even GraalVM &lt;a href=&quot;https://github.com/oracle/graal/blob/2c334c4db1ccd09b1a7ec5abdabad2e8ffe2d407/substratevm/src/com.oracle.svm.core/src/com/oracle/svm/core/annotate/TargetClass.java#L36-L70&quot;&gt;substitutions&lt;/a&gt;.
 That&amp;#8217;s already beyond the scope of this blog post where I primarily wanted to show
 how &lt;code&gt;native-image-agent&lt;/code&gt; can be leveraged when writing Quarkus extensions.&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thanks for reading, stay &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;tuned&lt;/a&gt; for more posts about Quarkus, GraalVM, Apache Camel and &lt;code&gt;mvnd&lt;/code&gt;!&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><summary type="html">Using GraalVM native-image-agent when porting a library to Quarkus I pondered a bit about how GraalVM&amp;#8217;s native-image-agent can be leveraged when writing Quarkus extensions. Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression where to look and which kinds of problems you need to solve.</summary></entry><entry><title type="html">mvnd tip: Solving common issues of parallel builds</title><link href="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Solving common issues of parallel builds" /><published>2021-01-12T00:00:00+00:00</published><updated>2021-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Solving common issues of parallel builds&lt;/h1&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><summary type="html">Using GraalVM native-image-agent when porting a library to Quarkus I pondered a bit how GraalVM&amp;#8217;s native-image-agent can be leveraged when writing Quarkus extensions. Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression where to look and which kinds of problems you need to solve.</summary></entry><entry><title type="html">mvnd tip: Solving common issues of parallel builds</title><link href="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html" rel="alternate" type="text/html" title="mvnd tip: Solving common issues of parallel builds" /><published>2021-01-12T00:00:00+00:00</published><updated>2021-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds</id><content type="html" xml:base="https://peter.palaga.org/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Solving common issues of parallel builds&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;

@@ -62,10 +62,15 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>I pondered a bit about how <a href="https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds">GraalVM&#8217;s <code>native-image-agent</code></a> can be leveraged when writing Quarkus extensions.
+<p>I pondered a bit how <a href="https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds">GraalVM&#8217;s <code>native-image-agent</code></a> can be leveraged when writing Quarkus extensions.
 Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression
 where to look and which kinds of problems you need to solve.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="anchor" href="#background"></a>Background</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Native compilation of Java using GraalVM&#8217;s <code>native-image</code> tool typically requires a lot of
 <a href="https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/">configuration</a>.
@@ -109,7 +114,7 @@ If the message does not make any sense to you, you paste it to google and you ho
 <p>Once the compilation succeeds, you start testing the native executable.
 It may fail with some <code>ClassNotFoundException</code> if you forgot to register some class for reflection
 or with a <code>NullPointerException</code> if you forgot to embed some resources to the native image.
-I may also fail with some cryptic exception that you have no clue about.
+It may also fail with some cryptic exception that you have no clue about.
 You google again and you either find a solution that works for you
 or you see only reports of frustration similar to your own.</p>
 </div>
@@ -127,6 +132,11 @@ Based on the runtime data, the agent outputs a configuration in a format accepta
 if you are unable to simulate the production load properly during the test runs,
 then the produced configuration will not be complete.
 Your native application may thus fail in production.</p>
+</div>
+<div class="paragraph">
+<p>Besides that, the agent records only the usage of some features (namely JNI, Reflection, Proxies and class path resources)
+while it does not help with configuring others, like delayed class initialization.
+So you still may have to assemble some parts of the configuration manually.</p>
 </div>
 </div>
 </div>
@@ -177,7 +187,7 @@ because some piece of <code>native-image</code> configuration is missing.</p>
 <div class="sect2">
 <h3 id="run_tests_with_native_image_agent_attached"><a class="anchor" href="#run_tests_with_native_image_agent_attached"></a>Run tests with <code>native-image-agent</code> attached</h3>
 <div class="paragraph">
-<p>If you do not know the internals of the ported library well enough <code>native-image-agent</code> may come in very handy.
+<p>If you do not know the internals of the ported library well, <code>native-image-agent</code> may come in very handy.
 Even if the configuration produced by it won&#8217;t be 100% complete and relevat,
 it may give you a good initial impression where to look and which kinds of problems you need to solve.</p>
 </div>
@@ -213,14 +223,14 @@ Clearly, we do not intend to compile the tests to native. We only want to compil
 <p>So, how can we split the second JVM into a test JVM and an application JVM?</p>
 </div>
 <div class="paragraph">
-<p>I have found the following hammer-and-nails procedure (please <a href="https://twitter.com/ppalaga">let me know</a> if know a better one):</p>
+<p>I have found the following hammer-and-nails procedure (please <a href="https://twitter.com/ppalaga">let me know</a> if you know a better one):</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Remove the <code>@QuarkusTest</code> annotation from all your test classes.
-Why? - because otherwise Quarkus JUnit extension would start the application in the test JVM
-and that&#8217;s exactly what we&#8217;d like avoid.</p>
+Why? Because otherwise Quarkus JUnit extension would start the application in the test JVM
+and that&#8217;s exactly what we&#8217;d like to avoid.</p>
 </li>
 <li>
 <p>Package your application skipping the tests</p>
@@ -231,7 +241,7 @@ and that&#8217;s exactly what we&#8217;d like avoid.</p>
 </div>
 </li>
 <li>
-<p>Start your application manually using GraalVM JRE (where <code>native-image-agent</code> is available)
+<p>Start your application manually using GraalVM JRE (in which <code>native-image-agent</code> is available)
 with the agent attached and <code>test</code> Quarkus profile activated:</p>
 <div class="listingblock">
 <div class="content">
@@ -277,6 +287,20 @@ target/graal-config
 <div class="paragraph">
 <p>Once the <code>native-image-agent</code> has generated the configuration, you can study the content of the files
 and consider whether and how you need to translate the individual items to Quarkus <code>BuildItems</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Check <a href="https://quarkus.io/guides/writing-extensions">Quarkus for extension authors</a> to learn Quarkus extensions basics.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>You typically do not need to care for all configuration items
@@ -363,10 +387,14 @@ such as <code>quarkus-netty</code>, <code>quarkus-jackson</code>, <code>quarkus-
 <h3 id="is_that_all"><a class="anchor" href="#is_that_all"></a>Is that all?</h3>
 <div class="paragraph">
 <p>Not necessarily.
+As I have mentioned above, <code>native-image-agent</code> does not handle all aspects of the configuration.
 Running the tests in native mode may reveal more issues that may require additional <code>BuildItem</code>s
 or even GraalVM <a href="https://github.com/oracle/graal/blob/2c334c4db1ccd09b1a7ec5abdabad2e8ffe2d407/substratevm/src/com.oracle.svm.core/src/com/oracle/svm/core/annotate/TargetClass.java#L36-L70">substitutions</a>.
 That&#8217;s already beyond the scope of this blog post where I primarily wanted to show
 how <code>native-image-agent</code> can be leveraged when writing Quarkus extensions.</p>
+</div>
+<div class="paragraph">
+<p>Thanks for reading, stay <a href="https://twitter.com/ppalaga">tuned</a> for more posts about Quarkus, GraalVM, Apache Camel and <code>mvnd</code>!</p>
 </div>
 </div>
 </div>

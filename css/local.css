@@ -122,6 +122,16 @@
     font-size: 93%;
 }
 
+#local-body .admonitionblock td.icon .icon-tip:before {
+    color: #cf6e0e;
+}
+#local-body .admonitionblock > table td.content {
+    color: inherit;
+}
+#local-body .admonitionblock p {
+    font-size: 90%;
+}
+
 .local-footer {
     background-color: #999999;
     color: #e7e7e7;
