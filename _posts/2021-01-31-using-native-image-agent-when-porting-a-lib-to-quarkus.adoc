@@ -5,9 +5,11 @@
 :page-tags: [quarkus]
 :sectanchors:
 
-I pondered a bit about how https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds[GraalVM's `native-image-agent`] can be leveraged when writing Quarkus extensions.
+I pondered a bit how https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#assisted-configuration-of-native-image-builds[GraalVM's `native-image-agent`] can be leveraged when writing Quarkus extensions.
 Even if the configuration produced by it won’t be 100% complete and relevant, it may give you a good initial impression
 where to look and which kinds of problems you need to solve.
+
+== Background
 
 Native compilation of Java using GraalVM's `native-image` tool typically requires a lot of
 https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/[configuration].
@@ -40,7 +42,7 @@ If the message does not make any sense to you, you paste it to google and you ho
 Once the compilation succeeds, you start testing the native executable.
 It may fail with some `ClassNotFoundException` if you forgot to register some class for reflection
 or with a `NullPointerException` if you forgot to embed some resources to the native image.
-I may also fail with some cryptic exception that you have no clue about.
+It may also fail with some cryptic exception that you have no clue about.
 You google again and you either find a solution that works for you
 or you see only reports of frustration similar to your own.
 
@@ -55,6 +57,10 @@ This sounds very promising, but of course the main caveat is that
 if you are unable to simulate the production load properly during the test runs,
 then the produced configuration will not be complete.
 Your native application may thus fail in production.
+
+Besides that, the agent records only the usage of some features (namely JNI, Reflection, Proxies and class path resources)
+while it does not help with configuring others, like delayed class initialization.
+So you still may have to assemble some parts of the configuration manually.
 
 == `native-image` vs. Quarkus
 
@@ -86,7 +92,7 @@ because some piece of `native-image` configuration is missing.
 
 === Run tests with `native-image-agent` attached
 
-If you do not know the internals of the ported library well enough `native-image-agent` may come in very handy.
+If you do not know the internals of the ported library well, `native-image-agent` may come in very handy.
 Even if the configuration produced by it won't be 100% complete and relevat,
 it may give you a good initial impression where to look and which kinds of problems you need to solve.
 
@@ -109,11 +115,11 @@ Clearly, we do not intend to compile the tests to native. We only want to compil
 
 So, how can we split the second JVM into a test JVM and an application JVM?
 
-I have found the following hammer-and-nails procedure (please https://twitter.com/ppalaga[let me know] if know a better one):
+I have found the following hammer-and-nails procedure (please https://twitter.com/ppalaga[let me know] if you know a better one):
 
 1. Remove the `@QuarkusTest` annotation from all your test classes.
-Why? - because otherwise Quarkus JUnit extension would start the application in the test JVM
-and that's exactly what we'd like avoid.
+Why? Because otherwise Quarkus JUnit extension would start the application in the test JVM
+and that's exactly what we'd like to avoid.
 
 2. Package your application skipping the tests
 +
@@ -122,7 +128,7 @@ and that's exactly what we'd like avoid.
 $ mvn clean package -DskipTests
 ----
 +
-3. Start your application manually using GraalVM JRE (where `native-image-agent` is available)
+3. Start your application manually using GraalVM JRE (in which `native-image-agent` is available)
 with the agent attached and `test` Quarkus profile activated:
 +
 [source,shell]
@@ -161,6 +167,11 @@ target/graal-config
 
 Once the `native-image-agent` has generated the configuration, you can study the content of the files
 and consider whether and how you need to translate the individual items to Quarkus `BuildItems`.
+
+[TIP]
+====
+Check https://quarkus.io/guides/writing-extensions[Quarkus for extension authors] to learn Quarkus extensions basics.
+====
 
 You typically do not need to care for all configuration items
 because some of them are already covered by some core Quarkus extension,
@@ -224,7 +235,10 @@ class AzureBuildSteps {
 === Is that all?
 
 Not necessarily.
+As I have mentioned above, `native-image-agent` does not handle all aspects of the configuration.
 Running the tests in native mode may reveal more issues that may require additional ``BuildItem``s
 or even GraalVM https://github.com/oracle/graal/blob/2c334c4db1ccd09b1a7ec5abdabad2e8ffe2d407/substratevm/src/com.oracle.svm.core/src/com/oracle/svm/core/annotate/TargetClass.java#L36-L70[substitutions].
 That's already beyond the scope of this blog post where I primarily wanted to show
 how `native-image-agent` can be leveraged when writing Quarkus extensions.
+
+Thanks for reading, stay https://twitter.com/ppalaga[tuned] for more posts about Quarkus, GraalVM, Apache Camel and `mvnd`!
