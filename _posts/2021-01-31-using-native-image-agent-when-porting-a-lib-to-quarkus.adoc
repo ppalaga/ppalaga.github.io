@@ -163,6 +163,17 @@ target/graal-config
 └── ...
 ----
 
+==== Update 2021-02-17:
+
+https://twitter.com/helpermethod/status/1362023754033987584[Oliver Weiler] proposed another approach:
+
+[quote]
+____
+You can use the Surefire JVM,
+but ignore all test-related classes by supplying an `access-filter.json` file to the `native-image-agent`.
+See https://www.graalvm.org/reference-manual/native-image/BuildConfiguration/#access-filters[Access Filters docs].
+____
+
 === Translate the generated config to Quarkus `BuildItems`
 
 Once the `native-image-agent` has generated the configuration, you can study the content of the files
