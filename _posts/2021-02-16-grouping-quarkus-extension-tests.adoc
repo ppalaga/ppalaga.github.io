@@ -1,0 +1,190 @@
+= Grouping Quarkus extension tests for faster execution
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [quarkus]
+:sectanchors:
+
+Testing is a substantial ingredient of software quality.
+Projects producing Quarkus extensions are not an exception.
+While testing on traditional JVMs is rather fast and well understood,
+testing GraalVM native executables brings new challenges, especially because it takes long:
+It is one or more minutes for common test projects that we have in https://github.com/apache/camel-quarkus[Camel Quarkus].
+Multiply it with our
+https://camel.apache.org/camel-quarkus/latest/reference/index.html[~300 extensions]
+and you end up with tens of hours for a single pass of the CI.
+Let's discuss some ways how to speed up the native testing,
+esp. by merging several test modules into a single test module.
+
+== Quarkus extension testing: An intro
+
+(Feel free to skip this if you know well how Quarkus extension tests work.)
+
+Here we primarily speak about integration tests that typically consist of a small application in `src/main`
+and a couple of tests in `src/test` that validate the behavior of the application.
+The test module is supposed to depend on the tested extension
+and the application is supposed to make use of that extension.
+As an example, look at e.g.
+the https://github.com/apache/camel-quarkus/tree/master/integration-tests/activemq[ActiveMQ test]
+in Camel Quarkus source tree.
+
+There are test classes of two kinds in `src/test/java`:
+
+1. Ending with `Test` - those are for testing in JVM mode
+2. Ending with `IT` - for testing in native mode.
+
+While the JVM tests are run in the same JVM as the application under test,
+the native tests are run in a process separate from the application.
+This is because in the latter case the application is compiled to native executable
+and that executable is run standalone (without any JVM).
+
+For this very reason, native tests must communicate with the tested application via network (or filesystem, etc.).
+In JVM tests, there are a couple of other options, like directly injecting beans via CDI.
+We avoid using this in Camel Quarkus, because our `*IT` tests inherit from their `*Test` counterparts
+so that JVM tests generally check the same functionality as native tests.
+
+As we have pointed out already,
+compiling the test application to native executable takes a substantial portion of the overall testing time.
+
+Which options are there to speed it up?
+
+== Parallelize the execution
+
+Of course Quarkus integration tests can be run in parallel on multiple worker nodes.
+It is easy to implement in environments like GitHub Actions and indeed, we are keen on
+https://github.com/apache/camel-quarkus/blob/9c381417e09c1e3e9bee574a41fcf5b3a6b99c7d/.github/workflows/ci-build.yaml#L109[utilizing] it in Camel Quarkus.
+
+The not-so-good news is that GitHub Actions
+https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration#usage-limits[limits]
+the number of concurrent jobs to 20 (in the free tier at least).
+That currently makes our pull request verification to take around two hours
+which is still outside of my comfort zone.
+
+What other optimizations can be implemented?
+
+== Incremental testing
+
+Falko Modler works on introducing
+https://github.com/gitflow-incremental-builder/gitflow-incremental-builder[Gitflow incremental builder]
+to Quarkus. While it has tremendous potential, it is still https://github.com/quarkusio/quarkus/pull/13243[work in progress].
+Let's wait and see how well it goes in Quarkus.
+
+== Grouping of extension tests
+
+This is actually the idea I wanted this blog post to be about 🙂.
+
+The core hypothesis of this approach is that the native compilation of an application
+consisting of JARs A, B and C
+generally takes less time than the sum of compilation times of two separate applications consisting of
+(1) A and B and (2) A and C respectively.
+
+Here, A is thought to be some common base that is found in both (1) and (2).
+We typically have this situation in our integration tests
+- they all contain `quarkus-core`, `camel-quarkus-core`, `quarkus-resteasy`
+(plus all their transitive dependencies)
+and last but not least all the Java runtime classes.
+
+We assume that especially for test modules, whose dependency sets differ by just a few small JARs,
+"merging" them together into a single module may save some native compilation time.
+
+We actually did this since a log time, e.g. with our AWS extensions,
+but nobody bothered to gather some real numbers to confirm or deny the hypothesis.
+
+=== What could go wrong?
+
+Before I show you the benchmarks, let's discuss what are the risks and drawbacks of test grouping.
+
+https://twitter.com/nethertron2000[James] pointed out once that "extensions may fix each other".
+If extension A forgets to register some class for reflection that extension B does register, then,
+when the two are used together in an application, B provides the necessary config and the tests pass.
+However, if A would be alone without B in a test application the tests would fail
+because the registration for reflection is missing.
+
+For this reason, hard coding multiple extensions' tests into a single test module might be risky.
+Ideally, it should be possible to have both:
+the faster grouped setup for pull request verification
+and the slower but methodologically cleaner isolated setup for proper nightly/weekly/pre-release verification.
+
+=== Semi-automatic grouping
+
+I have recently split a couple of
+https://github.com/apache/camel-quarkus/tree/master/integration-tests-aws2[AWS tests]
+properly and I have also put
+https://github.com/apache/camel-quarkus/blob/83e5c768b6196de7a7fb04990c3a40e2a22d24f7/integration-tests/aws2-grouped/pom.xml#L44[some]
+https://github.com/apache/camel-quarkus/blob/83e5c768b6196de7a7fb04990c3a40e2a22d24f7/integration-tests/aws2-grouped/pom.xml#L218-L238[tooling] in place that generates the
+grouped module semi-automatically.
+
+In that way it is easy to run the tests both in isolation and grouped whichever suits better for the given use case.
+
+And thanks to this setup, it is also quite easy to compare the duration of the grouped and isolated execution.
+
+=== Benchmarks
+
+My measurements were not perfectly scientific, because I performed just a single round and I had other programs running.
+
+My machine:
+
+* AMD Ryzen Threadripper 1920X, 12 cores @ 2162 MHz
+* 64 GB RAM
+* HDD SSD Samsung 970 EVO
+* Fedora 31
+
+Here are the numbers:
+
+image::/images/2021/2021-02-16-grouping-quarkus-extension-tests/benchmarks.png["Grouping vs. duration",alt="Grouping vs. duration"]
+
+[cols="1,1"]
+|===
+|Grouping
+|Duration (sec)
+
+|Isolated
+|620
+
+|Grouped
+|321
+|===
+
+The time difference is about 5 minutes and it might be a bit more on slowish CI worker nodes.
+That's definitely worth the effort!
+
+==== Possible next step
+
+We are planning to add more AWS tests in the near future.
+It will be interesting to see how the grouped module scales with the number of tested extensions.
+
+== Steps to reproduce
+
+[source,shell]
+----
+export GRAALVM_HOME=...
+$ $GRAALVM_HOME/bin/java -version
+openjdk version "11.0.10" 2021-01-19
+OpenJDK Runtime Environment GraalVM CE 20.3.1 (build 11.0.10+8-jvmci-20.3-b09)
+OpenJDK 64-Bit Server VM GraalVM CE 20.3.1 (build 11.0.10+8-jvmci-20.3-b09, mixed mode, sharing)
+
+# clone Camel Quarkus
+$ git clone git@github.com:apache/camel-quarkus.git
+$ cd camel-quarkus
+$ CQ_HOME=$(pwd)
+
+# This is the revision I worked with:
+$ git reset --hard 83e5c768b6196de7a7fb04990c3a40e2a22d24f7
+
+# Build the whole tree without tests
+$ mvn clean install -Dquickly
+
+# Run the isolated tests, both JVM and native
+$ cd $CQ_HOME/integration-tests-aws2
+$ mvn clean verify -Pnative
+# record the duration reported by Maven
+
+# Run the grouped tests, both JVM and native
+$ cd $CQ_HOME/integration-tests/aws2-grouped
+$ mvn clean verify -Pnative
+# record the duration reported by Maven
+----
+
+{nbsp} +
+
+Thanks for reading and stay https://twitter.com/ppalaga[tuned] for more posts about Quarkus, GraalVM, Apache Camel and `mvnd`!
