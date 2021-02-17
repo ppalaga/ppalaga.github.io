@@ -1,4 +1,270 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-02-01T11:04:00+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Using GraalVM native-image-agent when porting a library to Quarkus</title><link href="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html" rel="alternate" type="text/html" title="Using GraalVM native-image-agent when porting a library to Quarkus" /><published>2021-01-31T00:00:00+00:00</published><updated>2021-01-31T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus</id><content type="html" xml:base="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">&lt;h1&gt;Using GraalVM &lt;code&gt;native-image-agent&lt;/code&gt; when porting a library to Quarkus&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-02-17T11:48:48+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Grouping Quarkus extension tests for faster execution</title><link href="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html" rel="alternate" type="text/html" title="Grouping Quarkus extension tests for faster execution" /><published>2021-02-16T00:00:00+00:00</published><updated>2021-02-16T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests</id><content type="html" xml:base="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html">&lt;h1&gt;Grouping Quarkus extension tests for faster execution&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Testing is a substantial ingredient of software quality.
+Projects producing Quarkus extensions are not an exception.
+While testing on traditional JVMs is rather fast and well understood,
+testing GraalVM native executables brings new challenges, especially because it takes long:
+It is one or more minutes for common test projects that we have in &lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;Camel Quarkus&lt;/a&gt;.
+Multiply it with our
+&lt;a href=&quot;https://camel.apache.org/camel-quarkus/latest/reference/index.html&quot;&gt;~300 extensions&lt;/a&gt;
+and you end up with tens of hours for a single pass of the CI.
+Let&amp;#8217;s discuss some ways how to speed up the native testing,
+esp. by merging several test modules into a single test module.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;quarkus_extension_testing_an_intro&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#quarkus_extension_testing_an_intro&quot;&gt;&lt;/a&gt;Quarkus extension testing: An intro&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;(Feel free to skip this if you know well how Quarkus extension tests work.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here we primarily speak about integration tests that typically consist of a small application in &lt;code&gt;src/main&lt;/code&gt;
+and a couple of tests in &lt;code&gt;src/test&lt;/code&gt; that validate the behavior of the application.
+The test module is supposed to depend on the tested extension
+and the application is supposed to make use of that extension.
+As an example, look at e.g.
+the &lt;a href=&quot;https://github.com/apache/camel-quarkus/tree/master/integration-tests/activemq&quot;&gt;ActiveMQ test&lt;/a&gt;
+in Camel Quarkus source tree.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There are test classes of two kinds in &lt;code&gt;src/test/java&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Ending with &lt;code&gt;Test&lt;/code&gt; - those are for testing in JVM mode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ending with &lt;code&gt;IT&lt;/code&gt; - for testing in native mode.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;While the JVM tests are run in the same JVM as the application under test,
+the native tests are run in a process separate from the application.
+This is because in the latter case the application is compiled to native executable
+and that executable is run standalone (without any JVM).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For this very reason, native tests must communicate with the tested application via network (or filesystem, etc.).
+In JVM tests, there are a couple of other options, like directly injecting beans via CDI.
+We avoid using this in Camel Quarkus, because our &lt;code&gt;*IT&lt;/code&gt; tests inherit from their &lt;code&gt;*Test&lt;/code&gt; counterparts
+so that JVM tests generally check the same functionality as native tests.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As we have pointed out already,
+compiling the test application to native executable takes a substantial portion of the overall testing time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Which options are there to speed it up?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;parallelize_the_execution&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#parallelize_the_execution&quot;&gt;&lt;/a&gt;Parallelize the execution&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Of course Quarkus integration tests can be run in parallel on multiple worker nodes.
+It is easy to implement in environments like GitHub Actions and indeed, we are keen on
+&lt;a href=&quot;https://github.com/apache/camel-quarkus/blob/9c381417e09c1e3e9bee574a41fcf5b3a6b99c7d/.github/workflows/ci-build.yaml#L109&quot;&gt;utilizing&lt;/a&gt; it in Camel Quarkus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The not-so-good news is that GitHub Actions
+&lt;a href=&quot;https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration#usage-limits&quot;&gt;limits&lt;/a&gt;
+the number of concurrent jobs to 20 (in the free tier at least).
+That currently makes our pull request verification to take around two hours
+which is still outside of my comfort zone.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;What other optimizations can be implemented?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;incremental_testing&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#incremental_testing&quot;&gt;&lt;/a&gt;Incremental testing&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Falko Modler works on introducing
+&lt;a href=&quot;https://github.com/gitflow-incremental-builder/gitflow-incremental-builder&quot;&gt;Gitflow incremental builder&lt;/a&gt;
+to Quarkus. While it has tremendous potential, it is still &lt;a href=&quot;https://github.com/quarkusio/quarkus/pull/13243&quot;&gt;work in progress&lt;/a&gt;.
+Let&amp;#8217;s wait and see how well it goes in Quarkus.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;grouping_of_extension_tests&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#grouping_of_extension_tests&quot;&gt;&lt;/a&gt;Grouping of extension tests&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is actually the idea I wanted this blog post to be about 🙂.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The core hypothesis of this approach is that the native compilation of an application
+consisting of JARs A, B and C
+generally takes less time than the sum of compilation times of two separate applications consisting of
+(1) A and B and (2) A and C respectively.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here, A is thought to be some common base that is found in both (1) and (2).
+We typically have this situation in our integration tests
+- they all contain &lt;code&gt;quarkus-core&lt;/code&gt;, &lt;code&gt;camel-quarkus-core&lt;/code&gt;, &lt;code&gt;quarkus-resteasy&lt;/code&gt;
+(plus all their transitive dependencies)
+and last but not least all the Java runtime classes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We assume that especially for test modules, whose dependency sets differ by just a few small JARs,
+&quot;merging&quot; them together into a single module may save some native compilation time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We actually did this since a log time, e.g. with our AWS extensions,
+but nobody bothered to gather some real numbers to confirm or deny the hypothesis.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;what_could_go_wrong&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#what_could_go_wrong&quot;&gt;&lt;/a&gt;What could go wrong?&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Before I show you the benchmarks, let&amp;#8217;s discuss what are the risks and drawbacks of test grouping.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/nethertron2000&quot;&gt;James&lt;/a&gt; pointed out once that &quot;extensions may fix each other&quot;.
+If extension A forgets to register some class for reflection that extension B does register, then,
+when the two are used together in an application, B provides the necessary config and the tests pass.
+However, if A would be alone without B in a test application the tests would fail
+because the registration for reflection is missing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For this reason, hard coding multiple extensions' tests into a single test module might be risky.
+Ideally, it should be possible to have both:
+the faster grouped setup for pull request verification
+and the slower but methodologically cleaner isolated setup for proper nightly/weekly/pre-release verification.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;semi_automatic_grouping&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#semi_automatic_grouping&quot;&gt;&lt;/a&gt;Semi-automatic grouping&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I have recently split a couple of
+&lt;a href=&quot;https://github.com/apache/camel-quarkus/tree/master/integration-tests-aws2&quot;&gt;AWS tests&lt;/a&gt;
+properly and I have also put
+&lt;a href=&quot;https://github.com/apache/camel-quarkus/blob/83e5c768b6196de7a7fb04990c3a40e2a22d24f7/integration-tests/aws2-grouped/pom.xml#L44&quot;&gt;some&lt;/a&gt;
+&lt;a href=&quot;https://github.com/apache/camel-quarkus/blob/83e5c768b6196de7a7fb04990c3a40e2a22d24f7/integration-tests/aws2-grouped/pom.xml#L218-L238&quot;&gt;tooling&lt;/a&gt; in place that generates the
+grouped module semi-automatically.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In that way it is easy to run the tests both in isolation and grouped whichever suits better for the given use case.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And thanks to this setup, it is also quite easy to compare the duration of the grouped and isolated execution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;benchmarks&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#benchmarks&quot;&gt;&lt;/a&gt;Benchmarks&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My measurements were not perfectly scientific, because I performed just a single round and I had other programs running.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My machine:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;AMD Ryzen Threadripper 1920X, 12 cores @ 2162 MHz&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;64 GB RAM&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;HDD SSD Samsung 970 EVO&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Fedora 31&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are the numbers:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-02-16-grouping-quarkus-extension-tests/benchmarks.png&quot; alt=&quot;Grouping vs. duration&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;table class=&quot;tableblock frame-all grid-all stretch&quot;&gt;
+&lt;colgroup&gt;
+&lt;col style=&quot;width: 50%;&quot;&gt;
+&lt;col style=&quot;width: 50%;&quot;&gt;
+&lt;/colgroup&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Grouping&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Duration (sec)&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Isolated&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;620&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Grouped&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;321&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The time difference is about 5 minutes and it might be a bit more on slowish CI worker nodes.
+That&amp;#8217;s definitely worth the effort!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;possible_next_step&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#possible_next_step&quot;&gt;&lt;/a&gt;Possible next step&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We are planning to add more AWS tests in the near future.
+It will be interesting to see how the grouped module scales with the number of tested extensions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;steps_to_reproduce&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#steps_to_reproduce&quot;&gt;&lt;/a&gt;Steps to reproduce&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;export GRAALVM_HOME=...
+$ $GRAALVM_HOME/bin/java -version
+openjdk version &amp;quot;11.0.10&amp;quot; 2021-01-19
+OpenJDK Runtime Environment GraalVM CE 20.3.1 (build 11.0.10+8-jvmci-20.3-b09)
+OpenJDK 64-Bit Server VM GraalVM CE 20.3.1 (build 11.0.10+8-jvmci-20.3-b09, mixed mode, sharing)
+
+# clone Camel Quarkus
+$ git clone git@github.com:apache/camel-quarkus.git
+$ cd camel-quarkus
+$ CQ_HOME=$(pwd)
+
+# This is the revision I worked with:
+$ git reset --hard 83e5c768b6196de7a7fb04990c3a40e2a22d24f7
+
+# Build the whole tree without tests
+$ mvn clean install -Dquickly
+
+# Run the isolated tests, both JVM and native
+$ cd $CQ_HOME/integration-tests-aws2
+$ mvn clean verify -Pnative
+# record the duration reported by Maven
+
+# Run the grouped tests, both JVM and native
+$ cd $CQ_HOME/integration-tests/aws2-grouped
+$ mvn clean verify -Pnative
+# record the duration reported by Maven&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thanks for reading and stay &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;tuned&lt;/a&gt; for more posts about Quarkus, GraalVM, Apache Camel and &lt;code&gt;mvnd&lt;/code&gt;!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><summary type="html">Grouping Quarkus extension tests for faster execution Testing is a substantial ingredient of software quality. Projects producing Quarkus extensions are not an exception. While testing on traditional JVMs is rather fast and well understood, testing GraalVM native executables brings new challenges, especially because it takes long: It is one or more minutes for common test projects that we have in Camel Quarkus. Multiply it with our ~300 extensions and you end up with tens of hours for a single pass of the CI. Let&amp;#8217;s discuss some ways how to speed up the native testing, esp. by merging several test modules into a single test module.</summary></entry><entry><title type="html">Using GraalVM native-image-agent when porting a library to Quarkus</title><link href="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html" rel="alternate" type="text/html" title="Using GraalVM native-image-agent when porting a library to Quarkus" /><published>2021-01-31T00:00:00+00:00</published><updated>2021-01-31T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus</id><content type="html" xml:base="https://peter.palaga.org/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">&lt;h1&gt;Using GraalVM &lt;code&gt;native-image-agent&lt;/code&gt; when porting a library to Quarkus&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;

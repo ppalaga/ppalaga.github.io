@@ -88,6 +88,21 @@ and <a href="https://github.com/ec4j/ec4j">ec4j</a> (<a href="https://editorconf
 <hr>
 <h2>Recent posts</h2>
 <div class="local-post-list"><div class="local-list-item">
+    <h3><span class="local-subtitle">Feb 16, 2021</span><br>
+    <a href="/2021/02/16/grouping-quarkus-extension-tests.html">Grouping Quarkus extension tests for faster execution</a></h3>
+    <div class="paragraph"><p>
+Testing is a substantial ingredient of software quality.
+Projects producing Quarkus extensions are not an exception.
+While testing on traditional JVMs is rather fast and well understood,
+testing GraalVM native executables brings new challenges, especially because it takes long:
+It is one or more minutes for common test projects that we have in <a href="https://github.com/apache/camel-quarkus">Camel Quarkus</a>.
+Multiply it with our
+<a href="https://camel.apache.org/camel-quarkus/latest/reference/index.html">~300 extensions</a>
+and you end up with tens of hours for a single pass of the CI.
+Let&#8217;s discuss some ways how to speed up the native testing,
+esp. by merging several test modules into a single test module.
+<a href="/2021/02/16/grouping-quarkus-extension-tests.html">Read more...</a></p></div>
+</div><div class="local-list-item">
     <h3><span class="local-subtitle">Jan 31, 2021</span><br>
     <a href="/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">Using GraalVM <code>native-image-agent</code> when porting a library to Quarkus</a></h3>
     <div class="paragraph"><p>
@@ -103,13 +118,6 @@ In the <a href="/2021/01/11/mvnd-parallel-builds.html#smart_builder_by_default">
 <code>mvnd</code>'s <code>smart</code> builder and explained how it works. Today, I&#8217;d like discuss various issues you may hit when
 migrating from Maven <code>singlethreaded</code> builder and I&#8217;ll propose some solutions.
 <a href="/2021/01/12/mvnd-solving-common-issues-of-parallel-builds.html">Read more...</a></p></div>
-</div><div class="local-list-item">
-    <h3><span class="local-subtitle">Jan 11, 2021</span><br>
-    <a href="/2021/01/11/mvnd-parallel-builds.html"><code>mvnd</code> tip: Parallel and non-parallel builds</a></h3>
-    <div class="paragraph"><p>
-<a href="/2021/01/08/mvnd-shortcuts.html">Another</a> tip that will serve as a base for the future
-<code><a href="https://github.com/mvndaemon/mvnd">mvnd</a></code> documentation. Today about parallel and non-parallel builds.
-<a href="/2021/01/11/mvnd-parallel-builds.html">Read more...</a></p></div>
 </div><div class="paragraph">
     <p><br><a href="/blog.html">Older posts...</a><br></p>
 </div>
