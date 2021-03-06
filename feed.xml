@@ -1,4 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-02-17T13:55:37+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Grouping Quarkus extension tests for faster execution</title><link href="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html" rel="alternate" type="text/html" title="Grouping Quarkus extension tests for faster execution" /><published>2021-02-16T00:00:00+00:00</published><updated>2021-02-16T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests</id><content type="html" xml:base="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html">&lt;h1&gt;Grouping Quarkus extension tests for faster execution&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-06T20:53:54+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How to compile and install Stunt Rally on Fedora</title><link href="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html" rel="alternate" type="text/html" title="How to compile and install Stunt Rally on Fedora" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">&lt;h1&gt;How to compile and install Stunt Rally on Fedora&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-03-06-install-stunt-rally-on-fadora/stuntrally.png&quot; alt=&quot;Stunt rally&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Stunt Rally is an open source racing game, one of a few available for Linux. It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. As of writing this, there does not seem to exist an RPM package. There are &lt;a href=&quot;https://snapcraft.io/stuntrally&quot;&gt;SNAP&lt;/a&gt; and &lt;a href=&quot;https://flathub.org/apps/details/org.tuxfamily.StuntRally&quot;&gt;Flatpack&lt;/a&gt; packages which I have not tried. If you do not want those for any reason, you might find this compilation guide useful.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#prerequisites&quot;&gt;&lt;/a&gt;Prerequisites&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On Fedora 32, I had to install the following prerequisites  to be able to compile:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;sudo dnf install -y boost-devel cmake hicolor-icon-theme desktop-file-utils mygui-devel ogre-devel ois-devel enet-devel SDL2-devel libvorbis-devel libXcursor-devel bullet-devel bullet-extras-devel shiny-devel tinyxml-devel tinyxml2-devel ogre-pagedgeometry-devel dejavu-lgc-sans-fonts liberation-sans-fonts bitstream-vera-sans-fonts bitstream-vera-sans-mono-fonts openal-soft-devel cmake g++ git&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;clone_the_source_repositories&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#clone_the_source_repositories&quot;&gt;&lt;/a&gt;Clone the source repositories&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Starting from here, the steps are actually the same as on the &lt;a href=&quot;https://stuntrally.tuxfamily.org/wiki/doku.php?id=compile&quot;&gt;Stunt Rally wiki&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;git clone git://github.com/stuntrally/stuntrally.git
+cd stuntrally
+SR_HOME=&amp;quot;$(PWD)&amp;quot;
+# get the tracks
+cd data
+git clone --depth=1 git://github.com/stuntrally/tracks.git&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;compile_the_game&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#compile_the_game&quot;&gt;&lt;/a&gt;Compile the game&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;cd &amp;quot;${SR_HOME}&amp;quot;
+mkdir build
+cd build
+
+cmake ..
+make -j4        # Compile using 4 threads (change to your number of CPUs)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;play_the_game&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#play_the_game&quot;&gt;&lt;/a&gt;Play the game&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;./stuntrally&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;install_optional&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#install_optional&quot;&gt;&lt;/a&gt;Install (optional)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;sudo make install&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="games" /><summary type="html">How to compile and install Stunt Rally on Fedora Stunt Rally is an open source racing game, one of a few available for Linux. It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. As of writing this, there does not seem to exist an RPM package. There are SNAP and Flatpack packages which I have not tried. If you do not want those for any reason, you might find this compilation guide useful.</summary></entry><entry><title type="html">Grouping Quarkus extension tests for faster execution</title><link href="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html" rel="alternate" type="text/html" title="Grouping Quarkus extension tests for faster execution" /><published>2021-02-16T00:00:00+00:00</published><updated>2021-02-16T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests</id><content type="html" xml:base="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html">&lt;h1&gt;Grouping Quarkus extension tests for faster execution&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -1430,148 +1508,4 @@ dependencies.&lt;/p&gt;
 &lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; on Twitter.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</summary></entry><entry><title type="html">srcdeps, do not touch my poms!</title><link href="https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms.html" rel="alternate" type="text/html" title="srcdeps, do not touch my poms!" /><published>2018-06-05T00:00:00+00:00</published><updated>2018-06-05T00:00:00+00:00</updated><id>https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms</id><content type="html" xml:base="https://peter.palaga.org/2018/06/05/srcdeps-do-not-touch-my-poms.html">&lt;h1&gt;&lt;code&gt;srcdeps&lt;/code&gt;, do not touch my poms!&lt;/h1&gt;
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;a class=&quot;image&quot; href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;&lt;img src=&quot;/images/2018/srcdeps-logo-with-text.svg&quot; alt=&quot;srcdeps&quot; height=&quot;60&quot;&gt;&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;traditional_dependencies&quot;&gt;Traditional dependencies&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Software projects often depend on artifacts produced by other projects. Those artifacts typically contain compiled code
-and are usually available in remote repositories (Maven Central, jcenter, &amp;#8230;&amp;#8203;) on the internet. Build tools, such as
-Maven and Gradle are responsible for finding them, downloading them and adding them to the build class path of the
-dependent project.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;source_dependencies&quot;&gt;Source dependencies&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Sometimes, we find ourselves in a situation when some required binary dependency is not available in any remote
-artifact repository. But we still may have access to its sources. Building manually is often sufficient, but in case we
-need this regularly, a tool to automate the process becomes a necessity.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Such a tool would have to:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;ulist&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Check out the sources (e.g. from a git repo)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Build the artifacts locally&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Put them wherever the dependent project expects them (in case of Maven, this would be in the Local Maven Repository)&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;&lt;a href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;srcdeps&lt;/a&gt;&lt;/code&gt; is a set of tools which provide this functionality for Maven and Gradle.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;the_original_pom_destructive_mode&quot;&gt;The original &quot;pom destructive mode&quot;&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;srcdeps&lt;/code&gt; before version 3.3.0 used to work in &quot;pom destructive mode&quot;: to be able to build some dependency from
-sources, it was necessary to edit &lt;code&gt;pom.xml&lt;/code&gt; of the dependent project, e.g.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;my-artifact&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2.3-SRC-revision-&lt;strong&gt;deadbeef&lt;/strong&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;&amp;lt;!--             ⬑ a git commit ID, branch or tag  --&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I heart voices not liking this, esp. if &lt;code&gt;srcdeps&lt;/code&gt; was considered for integration testing. Therefore I added the new
-&quot;pom non-desctructive mode&quot;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;the_new_pom_non_desctructive_mode&quot;&gt;The new &quot;pom non-desctructive mode&quot;&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;In this mode, the dependency in the dependent project can stay as it is, say&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;my-artifact&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2.3-SNAPSHOT&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;To tell &lt;code&gt;srcdeps&lt;/code&gt; that this particular dependency is a source dependency, the configuration needs to be done in
-&lt;code&gt;&lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/blob/master/doc/srcdeps.yaml&quot;&gt;srcdeps.yaml&lt;/a&gt;&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;key&quot;&gt;configModelVersion&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;2.3&lt;/span&gt;&lt;/span&gt;                &lt;span class=&quot;comment&quot;&gt;# srcdeps.yaml file&lt;/span&gt;
-&lt;span class=&quot;key&quot;&gt;repositories&lt;/span&gt;:
-  &lt;span class=&quot;key&quot;&gt;org.my-group&lt;/span&gt;:
-    &lt;span class=&quot;key&quot;&gt;includes&lt;/span&gt;:
-    - &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;org.my-group&lt;/span&gt;&lt;/span&gt;
-    &lt;span class=&quot;key&quot;&gt;urls&lt;/span&gt;:
-    - &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;git:https://github.com/someorg/my-project.git&lt;/span&gt;&lt;/span&gt;
-
-    &lt;span class=&quot;key&quot;&gt;buildVersionPattern&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;.*-SNAPSHOT&lt;/span&gt;&lt;/span&gt;   &lt;span class=&quot;comment&quot;&gt;# any version matching this&lt;/span&gt;
-    &lt;span class=&quot;key&quot;&gt;buildRef&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&lt;span class=&quot;content&quot;&gt;branch-master&lt;/span&gt;&lt;/span&gt;            &lt;span class=&quot;comment&quot;&gt;# will be rebuilt using&lt;/span&gt;
-                                       &lt;span class=&quot;comment&quot;&gt;# master branch&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Here, the &lt;code&gt;buildVersionPattern&lt;/code&gt; and &lt;code&gt;buildRef&lt;/code&gt; contain the same pieces of information that we originally stored
-in the version strings of &lt;code&gt;pom.xml&lt;/code&gt; files.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;srcdeps&lt;/code&gt; is able to rebuild any dependency version from any tag, commitID or branch name configured in
-&lt;code&gt;srcdeps.yaml&lt;/code&gt;. It does not need to be a SNAPSHOT version as in the example above.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;what_if_other_builds_mess_with_my_local_maven_repository&quot;&gt;What if other builds mess with my Local Maven Repository?&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;What if I rebuild &lt;code&gt;org.my-group:my-artifact:1.2.3-SNAPSHOT&lt;/code&gt; at any random commit and install it to my Local
-Maven Repository? The above dependent project would then see an artifact it was not supposed to be built against, right?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;That&amp;#8217;s a valid concern and &lt;code&gt;srcdeps-maven&lt;/code&gt; (since 3.3.1) has a build-in mechanism to avoid such situations.
-When &lt;code&gt;srcdeps&lt;/code&gt; sees an artifact in the Local Maven Repository, that is supposed to be built from sources, it compares
-its sha1 hash against a hash it has stored itself when building it. In case of a mismatch, it simply rebuilds the
-artifact from sources and remembers the new hash.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;what_if_i_do_not_want_srcdeps_to_replace_my_local_snapshot&quot;&gt;What if I do not want &lt;code&gt;srcdeps&lt;/code&gt; to replace my local SNAPSHOT?&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can run the build with &lt;code&gt;-Dsrcdeps.skip=true&lt;/code&gt;. That turns the whole &lt;code&gt;srcdeps&lt;/code&gt; processing off.
-There is currently no way to turn &lt;code&gt;srcdeps&lt;/code&gt; off per source repository. Feel free to file an
-&lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issue&lt;/a&gt; if you need it.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Any feedback is welcome via GitHub &lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issues&lt;/a&gt; or via
-&lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; on Twitter.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps, do not touch my poms!</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</summary></entry></feed>
