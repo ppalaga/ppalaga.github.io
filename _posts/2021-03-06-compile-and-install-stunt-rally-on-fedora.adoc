@@ -1,0 +1,65 @@
+= How to compile and install Stunt Rally on Fedora
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [games]
+:page-summary: Stunt Rally is an open source racing game, one of a few available for Linux. \
+It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. \
+As of writing this, there does not seem to exist an RPM package. \
+There are https://snapcraft.io/stuntrally[SNAP] \
+and https://flathub.org/apps/details/org.tuxfamily.StuntRally[Flatpack] packages which I have not tried. \
+If you do not want those for any reason, you might find this compilation guide useful.
+:sectanchors:
+
+image::/images/2021/2021-03-06-install-stunt-rally-on-fadora/stuntrally.png["Stunt rally",alt="Stunt rally"]
+{page-summary}
+
+== Prerequisites
+
+On Fedora 32, I had to install the following prerequisites  to be able to compile:
+
+[source,shell]
+----
+sudo dnf install -y boost-devel cmake hicolor-icon-theme desktop-file-utils mygui-devel ogre-devel ois-devel enet-devel SDL2-devel libvorbis-devel libXcursor-devel bullet-devel bullet-extras-devel shiny-devel tinyxml-devel tinyxml2-devel ogre-pagedgeometry-devel dejavu-lgc-sans-fonts liberation-sans-fonts bitstream-vera-sans-fonts bitstream-vera-sans-mono-fonts openal-soft-devel cmake g++ git
+----
+
+== Clone the source repositories
+
+Starting from here, the steps are actually the same as on the https://stuntrally.tuxfamily.org/wiki/doku.php?id=compile[Stunt Rally wiki].
+
+[source,shell]
+----
+git clone git://github.com/stuntrally/stuntrally.git
+cd stuntrally
+SR_HOME="$(PWD)"
+# get the tracks
+cd data
+git clone --depth=1 git://github.com/stuntrally/tracks.git
+----
+
+== Compile the game
+
+[source,shell]
+----
+cd "${SR_HOME}"
+mkdir build
+cd build
+
+cmake ..
+make -j4        # Compile using 4 threads (change to your number of CPUs)
+----
+
+== Play the game
+
+[source,shell]
+----
+./stuntrally
+----
+
+== Install (optional)
+
+[source,shell]
+----
+sudo make install
+----
+
