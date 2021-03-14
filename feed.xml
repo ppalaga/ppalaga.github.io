@@ -1,4 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-06T20:53:54+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How to compile and install Stunt Rally on Fedora</title><link href="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html" rel="alternate" type="text/html" title="How to compile and install Stunt Rally on Fedora" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">&lt;h1&gt;How to compile and install Stunt Rally on Fedora&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-14T14:35:55+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I am giving two talks on JavaLand 2021. Both are scheduled Wednesday March 17th.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;will_my_library_or_framework_work_on_quarkus_and_graalvm&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#will_my_library_or_framework_work_on_quarkus_and_graalvm&quot;&gt;&lt;/a&gt;Will my library or framework work on Quarkus (and GraalVM)?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;09:00 - 09:40 in Schauspielhaus&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ll link the slides here shortly before the talk.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s unveil the magic behind Quarkus!
+Quarkus makes fast boot times and low memory consumption of Java applications possible thanks to a technique called Compile time boot.
+Quarkus extensions are its main building blocks.
+They optimize applications by doing as much work as possible at compile time instead of repeating it on each boot.
+This may include tasks like parsing configuration files, annotation lookups, building framework metamodel, etc.
+We will explain how Quarkus extensions work by writing one from scratch.
+You will be guided through several typical problems and their solutions that occur when porting libraries and frameworks to Quarkus and GraalVM.
+The talk is aimed at potential authors and contributors of Quarkus extensions as well as everybody curious about Quarkus internals.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;integrating_systems_in_the_age_of_quarkus_knative_and_kafka&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#integrating_systems_in_the_age_of_quarkus_knative_and_kafka&quot;&gt;&lt;/a&gt;Integrating systems in the age of Quarkus, Knative and Kafka&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;17:00 - 17:40 in Quantum&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I&amp;#8217;ll link the slides here shortly before the talk.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
+Let&amp;#8217;s check how the humpy ungulate adapts to the newest changes in the environment!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Apache Camel integrations written on top of Quarkus start in a matter of milliseconds and consume just a few tens of megabytes of RAM.
+We will explain the technology and show a live demo including the famous Quarkus dev mode.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then you will learn how the outstanding integration capabilities of Apache Camel enrich the serverless architectures based on Knative.
+We will touch topics like auto-scaling and scaling to zero as well as content based routing of cloud events.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Finally, we will introduce the youngest member of the Camel family: the Camel Kafka Connector.
+It brings the possibility to scalably and reliably stream data between Apache Kafka and the 300+ kinds of systems supported by Apache Camel.
+We will clarify the underlying concepts and show how to use it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><category term="camel" /><summary type="html">My talks on JavaLand 2021 I am giving two talks on JavaLand 2021. Both are scheduled Wednesday March 17th.</summary></entry><entry><title type="html">How to compile and install Stunt Rally on Fedora</title><link href="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html" rel="alternate" type="text/html" title="How to compile and install Stunt Rally on Fedora" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">&lt;h1&gt;How to compile and install Stunt Rally on Fedora&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
@@ -1455,57 +1511,4 @@ mvn deploy -Prelease -DskipTests -rf :the-module-where-it-broke&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">Resuming large Maven releases I happen to have released large Maven projects with hundreds of modules many times in the past and I am doing it right now as well for Camel Quarkus. The current Camel Quarkus 1.0.0-CR3 release comprises 694 Maven modules. That&amp;#8217;s rather big.</summary></entry><entry><title type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</title><link href="https://peter.palaga.org/2018/10/21/srcdeps.masterConfig.html" rel="alternate" type="text/html" title="srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file" /><published>2018-10-21T00:00:00+00:00</published><updated>2018-10-21T00:00:00+00:00</updated><id>https://peter.palaga.org/2018/10/21/srcdeps.masterConfig</id><content type="html" xml:base="https://peter.palaga.org/2018/10/21/srcdeps.masterConfig.html">&lt;h1&gt;&lt;code&gt;srcdeps.masterConfig&lt;/code&gt; - build direct and transitive dependencies with a single &lt;code&gt;srcdeps.yaml&lt;/code&gt; file&lt;/h1&gt;
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;a class=&quot;image&quot; href=&quot;https://github.com/srcdeps/srcdeps&quot;&gt;&lt;img src=&quot;/images/2018/srcdeps-logo-with-text.svg&quot; alt=&quot;srcdeps&quot; height=&quot;60&quot;&gt;&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Before &lt;code&gt;srcdeps-maven&lt;/code&gt; 3.4.0 and &lt;code&gt;srcdeps.yaml&lt;/code&gt; model version 2.4, building of dependencies from source &quot;on the
-fly&quot; worked only for direct dependencies. If &lt;code&gt;my-project&lt;/code&gt; depended on &lt;code&gt;dependency-1&lt;/code&gt;, I could declare &lt;code&gt;dependency-1&lt;/code&gt;
-as a source dependency in &lt;code&gt;srcdeps.yaml&lt;/code&gt; of &lt;code&gt;my-project&lt;/code&gt;. But if I also wanted a specific unreleased commit of
-&lt;code&gt;dependency-2&lt;/code&gt;, which &lt;code&gt;dependency-1&lt;/code&gt; depends on (and needs to be built and run against), I had no other option than
-fork &lt;code&gt;dependency-1&lt;/code&gt; and add &lt;code&gt;srcdeps.yaml&lt;/code&gt; with &lt;code&gt;dependency-2&lt;/code&gt; there.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The new &lt;code&gt;srcdeps.masterConfig&lt;/code&gt; feature allows you to avoid the intermediary &lt;code&gt;srcdeps.yaml&lt;/code&gt; files. Now you can declare
-&lt;code&gt;dependency-2&lt;/code&gt; in the &lt;code&gt;srcdeps.yaml&lt;/code&gt; file of &lt;code&gt;my-project&lt;/code&gt; and you do not need to fork &lt;code&gt;dependency-1&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;how_it_works&quot;&gt;How it works&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;srcdeps.yaml&lt;/code&gt; configuration model version 2.4 introduces a new boolean attribute &lt;code&gt;forwardAsMasterConfig&lt;/code&gt;. If it
-is &lt;code&gt;true&lt;/code&gt;, the URI of the current &lt;code&gt;srcdeps.yaml&lt;/code&gt; file will be forwarded as a system property &lt;code&gt;srcdeps.masterConfig&lt;/code&gt; to
-every dependency builder. The dependency builder picks &lt;code&gt;srcdeps.yaml&lt;/code&gt; from the URI, uses it during its own build and
-forwards it to every dependency build it triggers itself.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;With &lt;code&gt;forwardAsMasterConfig: true&lt;/code&gt; the dependency also does not need to have &lt;code&gt;srcdeps-maven-local-repository&lt;/code&gt; declared
-in its &lt;code&gt;.mvn/extensions.xml&lt;/code&gt;. After checking out the sources of the dependency, &lt;code&gt;srcdeps-maven&lt;/code&gt; auto-creates (or
-upgrades) the &lt;code&gt;.mvn/extensions.xml&lt;/code&gt; file as necessary.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;forwardAsMasterConfig&lt;/code&gt; attribute is optional and the default value is &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;srcdeps.masterConfig&lt;/code&gt; is not supported by our experimental Gradle builder. You can still have direct Gradle
-dependencies but builds those will not forward the master &lt;code&gt;srcdeps.yaml&lt;/code&gt; to the eventual builds of their own
-dependencies.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Any feedback is welcome via GitHub &lt;a href=&quot;https://github.com/srcdeps/srcdeps-core/issues&quot;&gt;issues&lt;/a&gt; or via
-&lt;a href=&quot;https://twitter.com/ppalaga&quot;&gt;@ppalaga&lt;/a&gt; on Twitter.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">srcdeps.masterConfig - build direct and transitive dependencies with a single srcdeps.yaml file</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><summary type="html">Resuming large Maven releases I happen to have released large Maven projects with hundreds of modules many times in the past and I am doing it right now as well for Camel Quarkus. The current Camel Quarkus 1.0.0-CR3 release comprises 694 Maven modules. That&amp;#8217;s rather big.</summary></entry></feed>

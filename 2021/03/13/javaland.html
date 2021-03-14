@@ -1,0 +1,198 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My talks on JavaLand 2021 - Peter Palaga</title>
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body id="local-body">
+
+<!-- Nav Bar -->
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+    </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
+</nav>
+</div>
+<!-- End Nav -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div id="local-content" class="large-12 columns" role="content">
+
+        <h3><span class="local-subtitle">Mar 13, 2021</span></h3>
+<h1>My talks on JavaLand 2021</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I am giving two talks on JavaLand 2021. Both are scheduled Wednesday March 17th.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="will_my_library_or_framework_work_on_quarkus_and_graalvm"><a class="anchor" href="#will_my_library_or_framework_work_on_quarkus_and_graalvm"></a>Will my library or framework work on Quarkus (and GraalVM)?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>09:00 - 09:40 in Schauspielhaus</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ll link the slides here shortly before the talk.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s unveil the magic behind Quarkus!
+Quarkus makes fast boot times and low memory consumption of Java applications possible thanks to a technique called Compile time boot.
+Quarkus extensions are its main building blocks.
+They optimize applications by doing as much work as possible at compile time instead of repeating it on each boot.
+This may include tasks like parsing configuration files, annotation lookups, building framework metamodel, etc.
+We will explain how Quarkus extensions work by writing one from scratch.
+You will be guided through several typical problems and their solutions that occur when porting libraries and frameworks to Quarkus and GraalVM.
+The talk is aimed at potential authors and contributors of Quarkus extensions as well as everybody curious about Quarkus internals.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integrating_systems_in_the_age_of_quarkus_knative_and_kafka"><a class="anchor" href="#integrating_systems_in_the_age_of_quarkus_knative_and_kafka"></a>Integrating systems in the age of Quarkus, Knative and Kafka</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>17:00 - 17:40 in Quantum</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ll link the slides here shortly before the talk.</p>
+</div>
+<div class="paragraph">
+<p>Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
+Let&#8217;s check how the humpy ungulate adapts to the newest changes in the environment!</p>
+</div>
+<div class="paragraph">
+<p>Apache Camel integrations written on top of Quarkus start in a matter of milliseconds and consume just a few tens of megabytes of RAM.
+We will explain the technology and show a live demo including the famous Quarkus dev mode.</p>
+</div>
+<div class="paragraph">
+<p>Then you will learn how the outstanding integration capabilities of Apache Camel enrich the serverless architectures based on Knative.
+We will touch topics like auto-scaling and scaling to zero as well as content based routing of cloud events.</p>
+</div>
+<div class="paragraph">
+<p>Finally, we will introduce the youngest member of the Camel family: the Camel Kafka Connector.
+It brings the possibility to scalably and reliably stream data between Apache Kafka and the 300+ kinds of systems supported by Apache Camel.
+We will clarify the underlying concepts and show how to use it.</p>
+</div>
+</div>
+</div>
+
+<a href="https://github.com/ppalaga/ppalaga.github.io/edit/master/_posts/2021-03-13-javaland.adoc" target="_blank">Edit this post</a>
+
+
+
+
+    
+        
+    
+        
+            
+                
+                    
+                
+            
+                
+                    
+
+                        
+<hr>
+<h3>Related posts</h3>
+<div class="local-post-list">
+                        
+
+                        
+    <div class="local-list-item">
+        <h4><span class="local-subtitle">Feb 16, 2021</span><br>
+        <a href="/2021/02/16/grouping-quarkus-extension-tests.html">Grouping Quarkus extension tests for faster execution</a></h4>
+    </div>
+                    
+                
+            
+                
+                    
+
+                        
+
+                        
+    <div class="local-list-item">
+        <h4><span class="local-subtitle">Jan 31, 2021</span><br>
+        <a href="/2021/01/31/using-native-image-agent-when-porting-a-lib-to-quarkus.html">Using GraalVM <code>native-image-agent</code> when porting a library to Quarkus</a></h4>
+    </div>
+                    
+                
+            
+        
+    
+        
+    
+        
+    
+
+
+</div>
+
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+
+
+
+
+    </div>
+</div>
+<footer class="local-footer">
+    <div class="row">
+        <div class="small-12 small-centered columns text-center">
+            Copyright © Peter Palaga 2021&nbsp;&nbsp;•&nbsp;&nbsp;Header background by <a href="https://www.facebook.com/steve.cord.56" target="_blank">Steve Cord</a>
+        </div>
+    </div>
+</footer>
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>
