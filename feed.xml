@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-14T14:38:46+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-14T15:01:17+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I am giving two talks on JavaLand 2021. Both are scheduled Wednesday March 17th.&lt;/p&gt;
+&lt;p&gt;I am giving two talks on &lt;a href=&quot;https://www.javaland.eu/de/home/&quot;&gt;JavaLand 2021&lt;/a&gt;.
+One is Quarkus deep dive for Extension authors
+and the second one is about integrating systems with Apache Camel on Quarkus, Knative and Kafka Connect.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -10,13 +12,13 @@
 &lt;h2 id=&quot;will_my_library_or_framework_work_on_quarkus_and_graalvm&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#will_my_library_or_framework_work_on_quarkus_and_graalvm&quot;&gt;&lt;/a&gt;Will my library or framework work on Quarkus (and GraalVM)?&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;09:00 - 09:40 in Schauspielhaus &lt;a href=&quot;https://programm.javaland.eu/2021/#/scheduledEvent/606575&quot;&gt;see JavaLand Schedule&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Wednesday March 17th 09:00 - 09:40 in Schauspielhaus, see &lt;a href=&quot;https://programm.javaland.eu/2021/#/scheduledEvent/606575&quot;&gt;JavaLand Schedule&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I&amp;#8217;ll link the slides here shortly before the talk.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Let&amp;#8217;s unveil the magic behind Quarkus!
+&lt;p&gt;Abstract: Let&amp;#8217;s unveil the magic behind Quarkus!
 Quarkus makes fast boot times and low memory consumption of Java applications possible thanks to a technique called Compile time boot.
 Quarkus extensions are its main building blocks.
 They optimize applications by doing as much work as possible at compile time instead of repeating it on each boot.
@@ -31,13 +33,13 @@ The talk is aimed at potential authors and contributors of Quarkus extensions as
 &lt;h2 id=&quot;integrating_systems_in_the_age_of_quarkus_knative_and_kafka&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#integrating_systems_in_the_age_of_quarkus_knative_and_kafka&quot;&gt;&lt;/a&gt;Integrating systems in the age of Quarkus, Knative and Kafka&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;17:00 - 17:40 in Quantum &lt;a href=&quot;https://programm.javaland.eu/2021/#/scheduledEvent/606579&quot;&gt;see JavaLand Schedule&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Wednesday March 17th 17:00 - 17:40 in Quantum, see &lt;a href=&quot;https://programm.javaland.eu/2021/#/scheduledEvent/606579&quot;&gt;JavaLand Schedule&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I&amp;#8217;ll link the slides here shortly before the talk.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
+&lt;p&gt;Abstract: Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
 Let&amp;#8217;s check how the humpy ungulate adapts to the newest changes in the environment!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -53,8 +55,14 @@ We will touch topics like auto-scaling and scaling to zero as well as content ba
 It brings the possibility to scalably and reliably stream data between Apache Kafka and the 300+ kinds of systems supported by Apache Camel.
 We will clarify the underlying concepts and show how to use it.&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&amp;#160;&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><category term="camel" /><summary type="html">My talks on JavaLand 2021 I am giving two talks on JavaLand 2021. Both are scheduled Wednesday March 17th.</summary></entry><entry><title type="html">How to compile and install Stunt Rally on Fedora</title><link href="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html" rel="alternate" type="text/html" title="How to compile and install Stunt Rally on Fedora" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">&lt;h1&gt;How to compile and install Stunt Rally on Fedora&lt;/h1&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I am looking forward to see you there!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="quarkus" /><category term="camel" /><summary type="html">My talks on JavaLand 2021 I am giving two talks on JavaLand 2021. One is Quarkus deep dive for Extension authors and the second one is about integrating systems with Apache Camel on Quarkus, Knative and Kafka Connect.</summary></entry><entry><title type="html">How to compile and install Stunt Rally on Fedora</title><link href="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html" rel="alternate" type="text/html" title="How to compile and install Stunt Rally on Fedora" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">&lt;h1&gt;How to compile and install Stunt Rally on Fedora&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
