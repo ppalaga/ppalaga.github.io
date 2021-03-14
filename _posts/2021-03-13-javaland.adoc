@@ -1,0 +1,48 @@
+= My talks on JavaLand 2021
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [quarkus,camel]
+:sectanchors:
+
+I am giving two talks on https://www.javaland.eu/de/home/[JavaLand 2021].
+One is Quarkus deep dive for Extension authors
+and the second one is about integrating systems with Apache Camel on Quarkus, Knative and Kafka Connect.
+
+== Will my library or framework work on Quarkus (and GraalVM)?
+
+Wednesday March 17th 09:00 - 09:40 in Schauspielhaus, see https://programm.javaland.eu/2021/#/scheduledEvent/606575[JavaLand Schedule]
+
+I'll link the slides here shortly before the talk.
+
+Abstract: Let's unveil the magic behind Quarkus!
+Quarkus makes fast boot times and low memory consumption of Java applications possible thanks to a technique called Compile time boot.
+Quarkus extensions are its main building blocks.
+They optimize applications by doing as much work as possible at compile time instead of repeating it on each boot.
+This may include tasks like parsing configuration files, annotation lookups, building framework metamodel, etc.
+We will explain how Quarkus extensions work by writing one from scratch.
+You will be guided through several typical problems and their solutions that occur when porting libraries and frameworks to Quarkus and GraalVM.
+The talk is aimed at potential authors and contributors of Quarkus extensions as well as everybody curious about Quarkus internals.
+
+== Integrating systems in the age of Quarkus, Knative and Kafka
+
+Wednesday March 17th 17:00 - 17:40 in Quantum, see https://programm.javaland.eu/2021/#/scheduledEvent/606579[JavaLand Schedule]
+
+I'll link the slides here shortly before the talk.
+
+Abstract: Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
+Let's check how the humpy ungulate adapts to the newest changes in the environment!
+
+Apache Camel integrations written on top of Quarkus start in a matter of milliseconds and consume just a few tens of megabytes of RAM.
+We will explain the technology and show a live demo including the famous Quarkus dev mode.
+
+Then you will learn how the outstanding integration capabilities of Apache Camel enrich the serverless architectures based on Knative.
+We will touch topics like auto-scaling and scaling to zero as well as content based routing of cloud events.
+
+Finally, we will introduce the youngest member of the Camel family: the Camel Kafka Connector.
+It brings the possibility to scalably and reliably stream data between Apache Kafka and the 300+ kinds of systems supported by Apache Camel.
+We will clarify the underlying concepts and show how to use it.
+
+{nbsp} +
+
+I am looking forward to see you there!

@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   style="fill:none;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
+   height="123.80878"
+   width="297.5015"
+   sodipodi:docname="compiled-to-clinit.svg"
+   id="svg234"
+   stroke-miterlimit="10"
+   viewBox="0 0 297.5015 123.80878"
+   version="1.1">
+  <metadata
+     id="metadata240">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs238">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Sstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill-rule:evenodd;stroke:#fffa01;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path951" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow2Lstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lstart">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(1.1,0,0,1.1,1.1,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path957" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow2Sstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Sstart">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(0.3,0,0,0.3,-0.69,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path969" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Mstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path945" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path939" />
+    </marker>
+    <defs
+       id="defs48">
+      <filter
+         id="shadowFilter-g473d69ed28_0_216.3"
+         filterUnits="userSpaceOnUse">
+        <feGaussianBlur
+           in="SourceAlpha"
+           stdDeviation="4.888889"
+           result="blur"
+           id="feGaussianBlur35" />
+        <feComponentTransfer
+           style="color-interpolation-filters:sRGB"
+           in="blur"
+           id="feComponentTransfer45">
+          <feFuncR
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncR37" />
+          <feFuncG
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncG39" />
+          <feFuncB
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncB41" />
+          <feFuncA
+             type="linear"
+             slope="0.498"
+             intercept="0"
+             id="feFuncA43" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+    <defs
+       id="defs81">
+      <filter
+         id="shadowFilter-g473d69ed28_0_216.5"
+         filterUnits="userSpaceOnUse">
+        <feGaussianBlur
+           in="SourceAlpha"
+           stdDeviation="4.888889"
+           result="blur"
+           id="feGaussianBlur68" />
+        <feComponentTransfer
+           style="color-interpolation-filters:sRGB"
+           in="blur"
+           id="feComponentTransfer78">
+          <feFuncR
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncR70" />
+          <feFuncG
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncG72" />
+          <feFuncB
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncB74" />
+          <feFuncA
+             type="linear"
+             slope="0.498"
+             intercept="0"
+             id="feFuncA76" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+    <defs
+       id="defs114">
+      <filter
+         id="shadowFilter-g473d69ed28_0_216.7"
+         filterUnits="userSpaceOnUse">
+        <feGaussianBlur
+           in="SourceAlpha"
+           stdDeviation="4.888889"
+           result="blur"
+           id="feGaussianBlur101" />
+        <feComponentTransfer
+           style="color-interpolation-filters:sRGB"
+           in="blur"
+           id="feComponentTransfer111">
+          <feFuncR
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncR103" />
+          <feFuncG
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncG105" />
+          <feFuncB
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncB107" />
+          <feFuncA
+             type="linear"
+             slope="0.498"
+             intercept="0"
+             id="feFuncA109" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+    <defs
+       id="defs147">
+      <filter
+         id="shadowFilter-g473d69ed28_0_216.9"
+         filterUnits="userSpaceOnUse">
+        <feGaussianBlur
+           in="SourceAlpha"
+           stdDeviation="4.888889"
+           result="blur"
+           id="feGaussianBlur134" />
+        <feComponentTransfer
+           style="color-interpolation-filters:sRGB"
+           in="blur"
+           id="feComponentTransfer144">
+          <feFuncR
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncR136" />
+          <feFuncG
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncG138" />
+          <feFuncB
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncB140" />
+          <feFuncA
+             type="linear"
+             slope="0.498"
+             intercept="0"
+             id="feFuncA142" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+    <defs
+       id="defs180">
+      <filter
+         id="shadowFilter-g473d69ed28_0_216.11"
+         filterUnits="userSpaceOnUse">
+        <feGaussianBlur
+           in="SourceAlpha"
+           stdDeviation="4.888889"
+           result="blur"
+           id="feGaussianBlur167" />
+        <feComponentTransfer
+           style="color-interpolation-filters:sRGB"
+           in="blur"
+           id="feComponentTransfer177">
+          <feFuncR
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncR169" />
+          <feFuncG
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncG171" />
+          <feFuncB
+             type="linear"
+             slope="0"
+             intercept="0.0"
+             id="feFuncB173" />
+          <feFuncA
+             type="linear"
+             slope="0.498"
+             intercept="0"
+             id="feFuncA175" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+    <defs
+       id="defs88">
+      <linearGradient
+         y2="55.317997"
+         x2="8.6118212"
+         y1="47.728054"
+         x1="8.6118479"
+         spreadMethod="pad"
+         gradientTransform="scale(7.5899408)"
+         gradientUnits="userSpaceOnUse"
+         id="g473d69ed28_0_216.6">
+        <stop
+           id="stop83"
+           stop-color="#3c8fd6"
+           offset="0.0" />
+        <stop
+           id="stop85"
+           stop-color="#225d8f"
+           offset="1.0" />
+      </linearGradient>
+    </defs>
+    <defs
+       id="defs187">
+      <linearGradient
+         y2="55.317997"
+         x2="46.684231"
+         y1="47.728054"
+         x1="46.684258"
+         spreadMethod="pad"
+         gradientTransform="scale(7.5899408)"
+         gradientUnits="userSpaceOnUse"
+         id="g473d69ed28_0_216.12">
+        <stop
+           id="stop182"
+           stop-color="#3c8fd6"
+           offset="0.0" />
+        <stop
+           id="stop184"
+           stop-color="#225d8f"
+           offset="1.0" />
+      </linearGradient>
+    </defs>
+    <defs
+       id="defs121">
+      <linearGradient
+         y2="55.317997"
+         x2="84.756638"
+         y1="47.728054"
+         x1="84.75666"
+         spreadMethod="pad"
+         gradientTransform="scale(7.5899408)"
+         gradientUnits="userSpaceOnUse"
+         id="g473d69ed28_0_216.8">
+        <stop
+           id="stop116"
+           stop-color="#3c8fd6"
+           offset="0.0" />
+        <stop
+           id="stop118"
+           stop-color="#225d8f"
+           offset="1.0" />
+      </linearGradient>
+    </defs>
+    <defs
+       id="defs154">
+      <linearGradient
+         y2="41.030975"
+         x2="46.684231"
+         y1="33.441036"
+         x1="46.684258"
+         spreadMethod="pad"
+         gradientTransform="scale(7.5899408)"
+         gradientUnits="userSpaceOnUse"
+         id="g473d69ed28_0_216.10">
+        <stop
+           id="stop149"
+           stop-color="#3c8fd6"
+           offset="0.0" />
+        <stop
+           id="stop151"
+           stop-color="#225d8f"
+           offset="1.0" />
+      </linearGradient>
+    </defs>
+    <defs
+       id="defs55">
+      <linearGradient
+         y2="26.743958"
+         x2="46.684223"
+         y1="19.154016"
+         x1="46.68425"
+         spreadMethod="pad"
+         gradientTransform="scale(7.5899422)"
+         gradientUnits="userSpaceOnUse"
+         id="g473d69ed28_0_216.4">
+        <stop
+           id="stop50"
+           stop-color="#3072aa"
+           offset="0.0" />
+        <stop
+           id="stop52"
+           stop-color="#153855"
+           offset="1.0" />
+      </linearGradient>
+    </defs>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Sstart-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart">
+      <path
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill-rule:evenodd;stroke:#fffa01;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path951-0"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Sstart-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart">
+      <path
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill-rule:evenodd;stroke:#fffa01;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path951-8"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Sstart-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Sstart">
+      <path
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         style="fill-rule:evenodd;stroke:#fffa01;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path951-83"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     inkscape:snap-text-baseline="true"
+     inkscape:current-layer="svg234"
+     inkscape:window-maximized="1"
+     inkscape:window-y="0"
+     inkscape:window-x="82"
+     inkscape:cy="69.673245"
+     inkscape:cx="149.25361"
+     inkscape:zoom="1.35"
+     fit-margin-right="10"
+     fit-margin-bottom="10"
+     fit-margin-left="10"
+     fit-margin-top="10"
+     inkscape:pagecheckerboard="true"
+     showgrid="false"
+     id="namedview236"
+     inkscape:window-height="1055"
+     inkscape:window-width="1838"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <clipPath
+     id="g473d69ed28_0_216.0">
+    <path
+       style="clip-rule:nonzero"
+       inkscape:connector-curvature="0"
+       id="path2"
+       d="M 0,0 H 960 V 540 H 0 Z" />
+  </clipPath>
+  <text
+     transform="rotate(0.29489866)"
+     id="text925"
+     y="28.933161"
+     x="99.385674"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:'Segoe Print';-inkscape-font-specification:'Segoe Print, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#fffa01;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
+       y="28.933161"
+       x="99.385674"
+       id="tspan1346"
+       sodipodi:role="line">Compiled to </tspan><tspan
+       id="tspan960"
+       y="58.933163"
+       x="99.385674"
+       sodipodi:role="line">&lt;clinit&gt; method</tspan></text>
+  <path
+     sodipodi:nodetypes="cc"
+     inkscape:connector-curvature="0"
+     id="path937"
+     d="M 52.739758,110.66019 95.591824,60.947085"
+     style="fill:none;stroke:#fffa01;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Sstart)" />
+  <path
+     sodipodi:nodetypes="cc"
+     inkscape:connector-curvature="0"
+     id="path937-8"
+     d="M 54.400009,26.957411 92.066887,25.762822"
+     style="fill:none;stroke:#fffa01;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Sstart-8)" />
+</svg>
