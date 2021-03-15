@@ -1,5 +1,17 @@
 [
     {
+        "slidesUri": "/presentations/210317-camel/index.html",
+        "title": "Integrating systems in the age of Quarkus, Knative and Kafka Connect",
+        "eventName": "JavaLand",
+        "date": "2021-03-17"
+    },
+    {
+        "slidesUri": "presentations/210317-quarkus-for-extension-authors/index.html",
+        "title": "Will my lib or framework work on Quarkus (and GraalVM)?",
+        "eventName": "JavaLand",
+        "date": "2021-03-17"
+    },
+    {
         "slidesUri": "/presentations/210118-quarkus-for-extension-authors/index.html",
         "eventName": "Red Hat Integration monthly meeting",
         "title": "Quarkus: Deep dive for extension developers",
