@@ -477,8 +477,29 @@ body {
   position: absolute;
   top: 0.12em; }
 
-.reveal ul li.no-bullet::before {
-  content: none; }
+.reveal .no-bullet li::before {
+  content: none;
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal .bullet li::before {
+  color: #66544c;
+  content: '\2022';
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal .bullet li li::before {
+  color: #66544c;
+  content: '\25AA';
+  font-size: 0.9em;
+  left: -0.6em;
+  position: absolute;
+  top: 0.12em;
+}
 
 .reveal ul.numbered ol {
   display: list-item; }

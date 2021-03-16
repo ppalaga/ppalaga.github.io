@@ -9,12 +9,12 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    style="fill:none;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
-   height="576.77576"
-   width="753.92377"
-   sodipodi:docname="jvm-graalvm-targets.svg"
+   height="576.7757"
+   width="777.77051"
+   sodipodi:docname="quarkus-workflow-augmentation.svg"
    id="svg234"
    stroke-miterlimit="10"
-   viewBox="0 0 753.92377 576.77576"
+   viewBox="0 0 777.77051 576.7757"
    version="1.1">
   <metadata
      id="metadata240">
@@ -324,7 +324,7 @@
   <sodipodi:namedview
      inkscape:document-rotation="0"
      inkscape:snap-text-baseline="true"
-     inkscape:current-layer="svg234"
+     inkscape:current-layer="layer2"
      inkscape:window-maximized="1"
      inkscape:window-y="0"
      inkscape:window-x="82"
@@ -604,4 +604,34 @@
        y="215.60376"
        x="373.53119"
        sodipodi:role="line">(augmentation)</tspan></text>
+  <g
+     style="display:inline;opacity:1"
+     inkscape:label="Focus quarkus augmentation"
+     id="layer1"
+     inkscape:groupmode="layer">
+    <rect
+       rx="16.761049"
+       ry="16.761049"
+       y="113.13708"
+       x="237.79739"
+       height="131.99327"
+       width="268.17679"
+       id="rect1222"
+       style="fill:none;fill-rule:evenodd;stroke:#ff0202;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <g
+     style="display:none"
+     inkscape:label="Focus native compilation"
+     id="layer2"
+     inkscape:groupmode="layer">
+    <rect
+       rx="16.761049"
+       style="display:inline;opacity:1;fill:none;fill-rule:evenodd;stroke:#ff0202;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1222-0"
+       width="229.41692"
+       height="96.37603"
+       x="536.35358"
+       y="367.69553"
+       ry="16.761049" />
+  </g>
 </svg>
