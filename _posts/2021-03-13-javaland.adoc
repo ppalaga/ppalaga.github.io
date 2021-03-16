@@ -13,7 +13,7 @@ and the second one is about integrating systems with Apache Camel on Quarkus, Kn
 
 Wednesday March 17th 09:00 - 09:40 in Schauspielhaus, see https://programm.javaland.eu/2021/#/scheduledEvent/606575[JavaLand Schedule]
 
-I'll link the slides here shortly before the talk.
+https://peter.palaga.org/presentations/210317-quarkus-for-extension-authors/index.html[Slides]
 
 Abstract: Let's unveil the magic behind Quarkus!
 Quarkus makes fast boot times and low memory consumption of Java applications possible thanks to a technique called Compile time boot.
@@ -28,7 +28,7 @@ The talk is aimed at potential authors and contributors of Quarkus extensions as
 
 Wednesday March 17th 17:00 - 17:40 in Quantum, see https://programm.javaland.eu/2021/#/scheduledEvent/606579[JavaLand Schedule]
 
-I'll link the slides here shortly before the talk.
+https://peter.palaga.org/presentations/210317-camel/index.html[Slides]
 
 Abstract: Apache Camel has been the Swiss knife of integrating heterogeneous systems for more than a decade.
 Let's check how the humpy ungulate adapts to the newest changes in the environment!
