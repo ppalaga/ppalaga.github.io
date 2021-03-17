@@ -376,15 +376,13 @@ my-app started in <mark class="fragment" data-fragment-index="7">&lt;20 ms</mark
                         <h2>Quarkus Extensions</h2>
                     </section>
                     <section>
-                        <h2>Quarkus extensions</h2>
+                        <h2>Quarkus extension</h2>
                         <br>
                         <ul>
-                            <li class="fragment">Units of Quarkus distribution
-                                <ul><li>Maven deps of user apps</li></ul>
+                            <li>Unit of Quarkus distribution
+                                <ul><li>A Maven dep of a user app</li></ul>
                             </li>
-                            <li class="fragment">Configure, boot and integrate a lib/framework/aspect</li>
-                            <li class="fragment">Shrink and speedup the app code</li>
-                            <li class="fragment">Make it fit for the GraalVM</li>
+                            <li>Focus on some specific lib/framework/aspect</li>
                         </ul>
                     </section>
                     <section id="deployment-runtime-modules">
@@ -475,18 +473,18 @@ class MyExtRecorder {
                     </section>
                     <section id="show-me-something-useful" data-state="no-footer" data-background-image="images/extensions-show-me-something-useful.jpg"></section>
                     <section id="how-about-annotation-lookups" data-state="no-footer" data-background-image="images/extensions-annotation-lookups.jpg"></section>
-                    <section id="jandex">
-                        <h2>Jandex</h2>
-                        <p class="fragment">A Java annotation indexer <br>and offline reflection library.</p>
-                        <p class="fragment"><br>Used by <code>@BuildSteps</code> <br>to inspect the application code</p>
-                        <small><br><a href="https://github.com/wildfly/jandex">https://github.com/wildfly/jandex</a></small>
-                    </section>
                     <section id="jandex-example">
                         <h3>A common <code>@BuildStep</code>:<br>&nbsp</h3>
                         <ol>
-                            <li class="fragment">Find classes having some annotation<br>&nbsp</li>
-                            <li class="fragment">Register them for reflection</li>
+                            <li>Find classes having some annotation<br>&nbsp</li>
+                            <li>Register them for reflection</li>
                         </ol>
+                    </section>
+                    <section id="jandex">
+                        <h2>Jandex</h2>
+                        <p>A Java annotation indexer <br>and offline reflection library.</p>
+                        <p><br>Used by <code>@BuildSteps</code> <br>to inspect the application code</p>
+                        <small><br><a href="https://github.com/wildfly/jandex">https://github.com/wildfly/jandex</a></small>
                     </section>
                     <section id="jandex-in-action">
                         <pre style="width: 110%; margin: 0px;"><code class="hljs java" style="max-height: none" data-noescape data-trim>class JacksonProcessor {
@@ -624,16 +622,16 @@ public class MpMetricsRecorder {
                     </section>
                     <section id="common-build-items">
                         <h2>Mostly used <code>BuildItems</code></h2>
-                        <ul class="check" style="font-size: 28px">
-                            <li class="fragment fade-in-then-semi-out"><code>ReflectiveClassBuildItem</code>
+                        <ul class="no-bullet" style="font-size: 28px">
+                            <li><code>ReflectiveClassBuildItem</code>
                                 <br>&nbsp;&nbsp;&nbsp;register classes for reflection in the native mode</li>
-                            <li class="fragment fade-in-then-semi-out"><code>AdditionalBeanBuildItem</code>, <code>BeanDefiningAnnotationBuildItem</code>
+                            <li><code>AdditionalBeanBuildItem</code>, <code>BeanDefiningAnnotationBuildItem</code>
                                 <br>&nbsp;&nbsp;&nbsp;bean classes the CDI container should analyze</li>
-                            <li class="fragment fade-in-then-semi-out"><code>ExtensionSslNativeSupportBuildItem</code>
+                            <li><code>ExtensionSslNativeSupportBuildItem</code>
                                 <br>&nbsp;&nbsp;&nbsp;turn on SSL in the native mode</li>
-                            <li class="fragment fade-in-then-semi-out"><code>CombinedIndexBuildItem</code>, <code>ApplicationIndexBuildItem</code>
+                            <li><code>CombinedIndexBuildItem</code>, <code>ApplicationIndexBuildItem</code>
                                 <br>&nbsp;&nbsp;&nbsp;offline reflection and annotation index (Jandex)</li>
-                            <li class="fragment fade-in-then-semi-out"><code>NativeImageResourceBuildItem</code>
+                            <li><code>NativeImageResourceBuildItem</code>
                                 <br>&nbsp;&nbsp;&nbsp;src/main/resources and resources from JARs not included by default in the native image</li>
                         </ul>
                         <p><small>List of <a href="https://quarkus.io/guides/all-builditems" target="_blank">BuildItems provided by Quarkus</a></small></p>

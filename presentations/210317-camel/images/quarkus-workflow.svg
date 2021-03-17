@@ -40,7 +40,7 @@
        inkscape:stockid="Arrow1Mend">
       <path
          transform="scale(0.4) rotate(180) translate(10,0)"
-         style="fill-rule:evenodd;stroke:#dcdcdf;stroke-width:1pt;stroke-opacity:0.941176;fill:#dcdcdf;fill-opacity:0.941176"
+         style="fill-rule:evenodd;stroke:#93939c;stroke-width:1pt;stroke-opacity:1;fill:#93939c;fill-opacity:1"
          d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
          id="path959" />
     </marker>
@@ -427,7 +427,7 @@
       <path
          id="path959-6"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#dcdcdf;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:1pt;stroke-opacity:0.941176"
+         style="fill:#93939c;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
     </marker>
     <marker
@@ -440,7 +440,7 @@
        inkscape:stockid="Arrow1Mend">
       <path
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         style="fill:#dcdcdf;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:1pt;stroke-opacity:0.941176"
+         style="fill:#93939c;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path959-6-5" />
     </marker>
@@ -455,7 +455,7 @@
       <path
          id="path959-6-5-9"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#dcdcdf;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:1pt;stroke-opacity:0.941176"
+         style="fill:#93939c;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:1pt;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
     </marker>
     <marker
@@ -468,7 +468,7 @@
        inkscape:stockid="Arrow1Mend">
       <path
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         style="fill:#dcdcdf;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:1pt;stroke-opacity:0.941176"
+         style="fill:#93939c;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path959-6-7" />
     </marker>
@@ -488,7 +488,7 @@
     </marker>
   </defs>
   <sodipodi:namedview
-     pagecolor="#323232"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1"
      objecttolerance="10"
@@ -506,8 +506,8 @@
      fit-margin-bottom="10"
      fit-margin-right="10"
      inkscape:zoom="1.35"
-     inkscape:cx="327.15867"
-     inkscape:cy="290.29464"
+     inkscape:cx="327.25428"
+     inkscape:cy="290.41689"
      inkscape:window-x="82"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -525,21 +525,21 @@
   <path
      id="path948"
      d="m 373.88467,75.61499 v 40.85505"
-     style="fill:#dcdcdf;fill-opacity:0.941176;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176;marker-end:url(#Arrow1Mend)" />
+     style="fill:none;fill-opacity:1;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)" />
   <path
-     style="fill:#dcdcdf;fill-opacity:0.941176;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176;marker-end:url(#Arrow1Mend-3)"
+     style="fill:none;fill-opacity:1;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3)"
      d="m 373.67421,231.82323 v 40.85505"
      id="path948-7" />
   <path
-     style="fill:none;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176;marker-end:url(#Arrow1Mend-3-3-2)"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3-3-2)"
      d="m 463.92593,335.87571 c 34.39267,3.51249 77.68383,11.85777 124.43494,9.33325 12.67704,8.5866 26.59182,21.85892 48.15765,44.85513"
      id="path948-7-6-1"
      sodipodi:nodetypes="ccc" />
   <path
      sodipodi:nodetypes="cc"
      id="path948-7-60"
-     d="M 451.11111,226.24609 C 498.37196,252.6867 560.5279,293.4359 588.36087,345.20896"
-     style="fill:none;fill-opacity:0.941176;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176" />
+     d="m 488.88889,234.39424 c 44.29788,33.10727 67.93531,59.7824 99.47198,110.81472"
+     style="fill:none;fill-opacity:1;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;line-height:1.25;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#e76f00;fill-opacity:1;stroke:none;stroke-width:1.03529"
@@ -566,12 +566,12 @@
      transform="scale(1.0352867,0.96591601)"><tspan
        sodipodi:role="line"
        id="tspan920"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:34.5093px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:4px;writing-mode:lr-tb;text-anchor:start;fill:#74aff0;fill-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.5093px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:4px;writing-mode:lr-tb;text-anchor:start;fill:#74aff0;fill-opacity:1"
        x="270.73978"
        y="164.55093">QUARKUS</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;line-height:1.25;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#dcdcdf;fill-opacity:0.941176;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;line-height:1.25;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-linecap:square;stroke-miterlimit:10;"
      x="375.18027"
      y="309.7941"
      id="text901-7-5"><tspan
@@ -579,20 +579,20 @@
        id="tspan1339"
        x="375.18027"
        y="309.7941"
-       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#dcdcdf;fill-opacity:0.941176">Enhanced</tspan><tspan
+       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;">Enhanced</tspan><tspan
        id="tspan946"
        sodipodi:role="line"
        x="375.18027"
        y="346.46075"
-       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#dcdcdf;fill-opacity:0.941176">application</tspan><tspan
+       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;">application</tspan><tspan
        sodipodi:role="line"
        x="375.18027"
        y="383.12744"
-       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#dcdcdf;fill-opacity:0.941176"
+       style="font-size:29.3333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;"
        id="tspan945">bytecode</tspan></text>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;line-height:1;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#dcdcdf;fill-opacity:0.941176;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;line-height:1;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-linecap:square;stroke-miterlimit:10;"
      x="656.7818"
      y="533.11688"
      id="text901-7-1"><tspan
@@ -724,7 +724,7 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:34.5093px;line-height:0.85;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fefefe;fill-opacity:1;stroke:none"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:34.5093px;line-height:0.85;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
      x="373.53119"
      y="186.27086"
      id="text924"><tspan
@@ -732,11 +732,11 @@
        id="tspan922"
        x="373.53119"
        y="186.27086"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:24px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fefefe;fill-opacity:1">Maven/Gradle plugin</tspan><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1">Maven/Gradle plugin</tspan><tspan
        sodipodi:role="line"
        x="373.53119"
        y="215.60376"
-       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:18.6667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fefefe;fill-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:18.6667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1"
        id="tspan941">(augmentation)</tspan></text>
   <g
      inkscape:groupmode="layer"
@@ -757,7 +757,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Focus native compilation"
-     style="display:inline">
+     style="display:none">
     <rect
        ry="16.761049"
        y="367.69553"
@@ -772,9 +772,19 @@
      sodipodi:nodetypes="cc"
      id="path948-7-6"
      d="M 285.92593,335.87571 C 228.99244,338.45625 180.90945,357.405 137.77778,385.61965"
-     style="fill:none;fill-opacity:0.941176;fill-rule:evenodd;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176;marker-end:url(#Arrow1Mend-3-3)" />
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3-3)" />
   <path
      id="path948-7-0"
      d="m 656.2963,448.24609 v 40.85505"
-     style="fill:#dcdcdf;fill-opacity:0.941176;stroke:#dcdcdf;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:0.941176;marker-end:url(#Arrow1Mend-3-2)" />
+     style="fill:none;fill-opacity:1;stroke:#93939c;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-3-2)" />
+  <text
+     id="text3465"
+     y="171.11111"
+     x="591.11108"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:Judson;-inkscape-font-specification:Judson;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
+       y="171.11111"
+       x="591.11108"
+       id="tspan3463"
+       sodipodi:role="line"></tspan></text>
 </svg>
