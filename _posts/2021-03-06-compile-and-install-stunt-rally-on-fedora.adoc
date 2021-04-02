@@ -37,6 +37,14 @@ cd data
 git clone --depth=1 git://github.com/stuntrally/tracks.git
 ----
 
+== Enable the master server compilation target (optional)
+
+If you want to play in multiplayer mode,
+having your own master server makes joining the game easier than direct connect.
+Direct connect works too, but master server saves you some typing and clicking.
+
+To enable the master server compilation target, add `-DBUILD_MASTER_SERVER=ON` to the `cmake` command below
+
 == Compile the game
 
 [source,shell]
@@ -45,15 +53,8 @@ cd "${SR_HOME}"
 mkdir build
 cd build
 
-cmake ..
+cmake -DBUILD_MASTER_SERVER=ON ..
 make -j4        # Compile using 4 threads (change to your number of CPUs)
-----
-
-== Play the game
-
-[source,shell]
-----
-./stuntrally
 ----
 
 == Install (optional)
@@ -63,3 +64,96 @@ make -j4        # Compile using 4 threads (change to your number of CPUs)
 sudo make install
 ----
 
+== Play the game (single player)
+
+[source,shell]
+----
+${SR_HOME}/stuntrally
+----
+
+== Play multiplayer
+
+=== Server
+
+On the machine that will fulfill the server role, create a script like the following and name it e.g. `sr.sh`
+
+[source,shell]
+----
+#!/bin/bash
+set -x
+set -e
+
+# change to where you have the stuntrally and sr-masterserver binaries
+SR_HOME=path/to/build
+
+cd "${SR_HOME}"
+
+# start the server
+
+./sr-masterserver -p 4242 -V &
+
+# start the game
+./stuntrally
+
+# kill the server after exiting the game
+killall sr-masterserver
+----
+
+Then open the ports
+
+[source,shell]
+----
+firewall-cmd --add-port=4242/udp --permanent
+firewall-cmd --add-port=4243/udp --permanent
+----
+
+Start the game and master server using the `sr.sh` script
+
+[source,shell]
+----
+sr.sh
+----
+
+In the game, go to Multiplayer > Settings
+
+image::/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png["Multiplayer > Settings",alt="Multiplayer > Settings"]
+
+1. Leave Local port unchanged
+
+2. Change the Master server IP to an address or hostname of the current machine your clients can access
+
+3. Change the Port to 4242
+
+Switch to Server tab and click Create game
+
+image::/images/2021/2021-03-06-install-stunt-rally-on-fadora/create-game.png["Create game",alt="Create game"]
+
+
+=== Clients
+
+Start the game as usual
+
+[source,shell]
+----
+${SR_HOME}/stuntrally
+----
+
+Go to Multiplayer > Settings and perform the same changes as on the server
+
+image::/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png["Multiplayer > Settings",alt="Multiplayer > Settings"]
+
+1. Leave Local port unchanged
+
+2. Change the Master server IP to an address or hostname of the current machine your clients can access
+
+3. Change the Port to 4242
+
+Switch to Server tab and click Get/refresh list. The game created on the server should appear in the list.
+
+image::/images/2021/2021-03-06-install-stunt-rally-on-fadora/refresh-list.png["Get/refresh list",alt="Get/refresh list"]
+
+Select the game and click Join game below.
+
+After that, the client should be visible in the list of players in the Game tab.
+
+Once all clients click the green Ready button, the game can be started on the server by pressing the green Start button.
