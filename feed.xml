@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-03-17T20:33:38+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2021-04-02T13:17:54+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -107,6 +107,19 @@ git clone --depth=1 git://github.com/stuntrally/tracks.git&lt;/code&gt;&lt;/pre&
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;enable_the_master_server_compilation_target_optional&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#enable_the_master_server_compilation_target_optional&quot;&gt;&lt;/a&gt;Enable the master server compilation target (optional)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If you want to play in multiplayer mode,
+having your own master server makes joining the game easier than direct connect.
+Direct connect works too, but master server saves you some typing and clicking.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To enable the master server compilation target, add &lt;code&gt;-DBUILD_MASTER_SERVER=ON&lt;/code&gt; to the &lt;code&gt;cmake&lt;/code&gt; command below&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
 &lt;h2 id=&quot;compile_the_game&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#compile_the_game&quot;&gt;&lt;/a&gt;Compile the game&lt;/h2&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
@@ -115,18 +128,8 @@ git clone --depth=1 git://github.com/stuntrally/tracks.git&lt;/code&gt;&lt;/pre&
 mkdir build
 cd build
 
-cmake ..
+cmake -DBUILD_MASTER_SERVER=ON ..
 make -j4        # Compile using 4 threads (change to your number of CPUs)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;play_the_game&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#play_the_game&quot;&gt;&lt;/a&gt;Play the game&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;./stuntrally&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -137,6 +140,144 @@ make -j4        # Compile using 4 threads (change to your number of CPUs)&lt;/co
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
 &lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;sudo make install&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;play_the_game_single_player&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#play_the_game_single_player&quot;&gt;&lt;/a&gt;Play the game (single player)&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;${SR_HOME}/stuntrally&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;play_multiplayer&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#play_multiplayer&quot;&gt;&lt;/a&gt;Play multiplayer&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;server&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#server&quot;&gt;&lt;/a&gt;Server&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;On the machine that will fulfill the server role, create a script like the following and name it e.g. &lt;code&gt;sr.sh&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;#!/bin/bash
+set -x
+set -e
+
+# change to where you have the stuntrally and sr-masterserver binaries
+SR_HOME=path/to/build
+
+cd &amp;quot;${SR_HOME}&amp;quot;
+
+# start the server
+
+./sr-masterserver -p 4242 -V &amp;amp;
+
+# start the game
+./stuntrally
+
+# kill the server after exiting the game
+killall sr-masterserver&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then open the ports&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;firewall-cmd --add-port=4242/udp --permanent
+firewall-cmd --add-port=4243/udp --permanent&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Start the game and master server using the &lt;code&gt;sr.sh&lt;/code&gt; script&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;sr.sh&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the game, go to Multiplayer &amp;gt; Settings&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png&quot; alt=&quot;Multiplayer &amp;gt; Settings&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Leave Local port unchanged&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change the Master server IP to an address or hostname of the current machine your clients can access&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change the Port to 4242&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Switch to Server tab and click Create game&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-03-06-install-stunt-rally-on-fadora/create-game.png&quot; alt=&quot;Create game&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;clients&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#clients&quot;&gt;&lt;/a&gt;Clients&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Start the game as usual&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;${SR_HOME}/stuntrally&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Go to Multiplayer &amp;gt; Settings and perform the same changes as on the server&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png&quot; alt=&quot;Multiplayer &amp;gt; Settings&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Leave Local port unchanged&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change the Master server IP to an address or hostname of the current machine your clients can access&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change the Port to 4242&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Switch to Server tab and click Get/refresh list. The game created on the server should appear in the list.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2021/2021-03-06-install-stunt-rally-on-fadora/refresh-list.png&quot; alt=&quot;Get/refresh list&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Select the game and click Join game below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;After that, the client should be visible in the list of players in the Game tab.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once all clients click the green Ready button, the game can be started on the server by pressing the green Start button.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

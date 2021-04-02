@@ -103,6 +103,19 @@ git clone --depth=1 git://github.com/stuntrally/tracks.git</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="enable_the_master_server_compilation_target_optional"><a class="anchor" href="#enable_the_master_server_compilation_target_optional"></a>Enable the master server compilation target (optional)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to play in multiplayer mode,
+having your own master server makes joining the game easier than direct connect.
+Direct connect works too, but master server saves you some typing and clicking.</p>
+</div>
+<div class="paragraph">
+<p>To enable the master server compilation target, add <code>-DBUILD_MASTER_SERVER=ON</code> to the <code>cmake</code> command below</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="compile_the_game"><a class="anchor" href="#compile_the_game"></a>Compile the game</h2>
 <div class="sectionbody">
 <div class="listingblock">
@@ -111,18 +124,8 @@ git clone --depth=1 git://github.com/stuntrally/tracks.git</code></pre>
 mkdir build
 cd build
 
-cmake ..
+cmake -DBUILD_MASTER_SERVER=ON ..
 make -j4        # Compile using 4 threads (change to your number of CPUs)</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="play_the_game"><a class="anchor" href="#play_the_game"></a>Play the game</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">./stuntrally</code></pre>
 </div>
 </div>
 </div>
@@ -133,6 +136,144 @@ make -j4        # Compile using 4 threads (change to your number of CPUs)</code>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="shell">sudo make install</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="play_the_game_single_player"><a class="anchor" href="#play_the_game_single_player"></a>Play the game (single player)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">${SR_HOME}/stuntrally</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="play_multiplayer"><a class="anchor" href="#play_multiplayer"></a>Play multiplayer</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="server"><a class="anchor" href="#server"></a>Server</h3>
+<div class="paragraph">
+<p>On the machine that will fulfill the server role, create a script like the following and name it e.g. <code>sr.sh</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">#!/bin/bash
+set -x
+set -e
+
+# change to where you have the stuntrally and sr-masterserver binaries
+SR_HOME=path/to/build
+
+cd &quot;${SR_HOME}&quot;
+
+# start the server
+
+./sr-masterserver -p 4242 -V &amp;
+
+# start the game
+./stuntrally
+
+# kill the server after exiting the game
+killall sr-masterserver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then open the ports</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">firewall-cmd --add-port=4242/udp --permanent
+firewall-cmd --add-port=4243/udp --permanent</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Start the game and master server using the <code>sr.sh</code> script</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">sr.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the game, go to Multiplayer &gt; Settings</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png" alt="Multiplayer &gt; Settings">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Leave Local port unchanged</p>
+</li>
+<li>
+<p>Change the Master server IP to an address or hostname of the current machine your clients can access</p>
+</li>
+<li>
+<p>Change the Port to 4242</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Switch to Server tab and click Create game</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/2021-03-06-install-stunt-rally-on-fadora/create-game.png" alt="Create game">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="clients"><a class="anchor" href="#clients"></a>Clients</h3>
+<div class="paragraph">
+<p>Start the game as usual</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">${SR_HOME}/stuntrally</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Go to Multiplayer &gt; Settings and perform the same changes as on the server</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/2021-03-06-install-stunt-rally-on-fadora/multiplayer-settings.png" alt="Multiplayer &gt; Settings">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Leave Local port unchanged</p>
+</li>
+<li>
+<p>Change the Master server IP to an address or hostname of the current machine your clients can access</p>
+</li>
+<li>
+<p>Change the Port to 4242</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Switch to Server tab and click Get/refresh list. The game created on the server should appear in the list.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2021/2021-03-06-install-stunt-rally-on-fadora/refresh-list.png" alt="Get/refresh list">
+</div>
+</div>
+<div class="paragraph">
+<p>Select the game and click Join game below.</p>
+</div>
+<div class="paragraph">
+<p>After that, the client should be visible in the list of players in the Game tab.</p>
+</div>
+<div class="paragraph">
+<p>Once all clients click the green Ready button, the game can be started on the server by pressing the green Start button.</p>
 </div>
 </div>
 </div>
