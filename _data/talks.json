@@ -1,5 +1,11 @@
 [
     {
+        "slidesUri": "/presentations/210407-quarkus-insights-how-to-write-quarkus-extensions/index.html",
+        "title": "Writing Quarkus extensions",
+        "eventName": "Quarkus Insights",
+        "date": "2021-04-07"
+    },
+    {
         "slidesUri": "/presentations/210317-camel/index.html",
         "title": "Integrating systems in the age of Quarkus, Knative and Kafka Connect",
         "eventName": "JavaLand",
