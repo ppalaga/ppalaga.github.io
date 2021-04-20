@@ -1,0 +1,288 @@
+= Integrating systems with Camel Quarkus TP1
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [quarkus,camel]
+:sectanchors:
+
+Apache Camel has been a massively successful project integrating heterogeneous systems for more than a decade.
+Let's check how well it can run on Quarkus!
+
+You certainly know the situation where you have two systems that were not designed to communicate with each other
+but you still need to make them exchange some data.
+That's exactly the kind of situations where Camel and its integration pipelines can help very well.
+
+image::/presentations/210317-camel/images/system1-system2.svg
+
+Traditionally, Camel integrations used to be deployed on various Java platforms, such as Spring Boot, Karaf and JBoss EAP.
+With work done in the Camel Quarkus community project, it is now possible to run the itegrations on Quarkus.
+The main benefit is that they start faster and consume less RAM.
+But that's not all.
+There are also developer productivity benefits brought by the famous Quarkus dev mode.
+Quarkus container first ethos is not to forget too.
+
+Let's go through all these parts and explain them in more detail on an example.
+
+Let's say that we need to process some CSV files stored in a local directory by some external system.
+Those files contain book records consisting of a book title, author name and a genre.
+We want to split the records into separate CSV files by genre and store them on a remote SFTP server.
+
+== Define Camel routes
+
+To accomplish what we need, we define a couple of Camel routes.
+(The source code of the example is available
+https://github.com/jboss-fuse/camel-quarkus-examples/tree/camel-quarkus-examples-1.6.0-product/file-bindy-ftp[on GitHub]).
+
+The first route is ancillary, to simulate the external system that produces the CSV files containing the book data:
+
+[source,java]
+----
+import org.apache.camel.Exchange;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.BindyType;
+import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
+
+public class Routes extends RouteBuilder {
+
+    @Override
+    public void configure() throws Exception {
+        // Route 1: Generate some book objects with random data
+        from("timer:generateBooks?period={{timer.period}}&delay={{timer.delay}}")
+                .log("Generating randomized books CSV data")
+                .process("bookGenerator")
+                // Marshal each book to CSV format
+                .marshal().bindy(BindyType.Csv, Book.class)
+                // Write CSV data to file
+                .to("file:{{csv.location}}");
+
+        // More route definitions come here...
+
+    }
+}
+----
+
+The second route is parsing the discovered CSV files into a list of Java POJOs using Camel Bindy.
+That list is split into individual Book objects via `split(body())`
+and passed to another Camel endpoint called `direct:aggregateBooks`:
+
+[source,java]
+----
+        ...
+
+        // Route 2: Consume book CSV files
+        from("file:{{csv.location}}?delay=1000")
+                .log("Reading books CSV data from ${header.CamelFileName}")
+                .unmarshal().bindy(BindyType.Csv, Book.class)
+                .split(body())
+                .to("direct:aggregateBooks");
+
+        // More route definitions come here...
+----
+
+The third route picks the `Book` objects produced by the previous route, does the aggregation
+(producing a ist of ``Book``s per genre) and passes them to the last route.
+
+[source,java]
+----
+        ...
+
+        // Route 3: Aggregate books based on their genre
+        from("direct:aggregateBooks")
+                .setHeader("BookGenre", simple("${body.genre}"))
+                .aggregate(simple("${body.genre}"), new GroupedBodyAggregationStrategy()).completionInterval(5000)
+                .log("Processed ${header.CamelAggregatedSize} books for genre '${header.BookGenre}'")
+                .to("seda:processed");
+
+        // One more route definition comes here...
+----
+
+The fourth route serializes aggregated lists of ``Book``s back to CSV and stores them on a remote SFTP server.
+
+[source,java]
+----
+        ...
+
+        // Route 4: Marshal books back to CSV format
+        from("seda:processed")
+                .marshal().bindy(BindyType.Csv, Book.class)
+                .setHeader(Exchange.FILE_NAME, simple("books-${header.BookGenre}-${exchangeId}.csv"))
+                // Send aggregated book genre CSV files to an FTP host
+                .to("sftp://{{ftp.username}}@{{ftp.host}}:{{ftp.port}}/uploads/books?password={{ftp.password}}")
+                .log("Uploaded ${header.CamelFileName}");
+----
+
+== `pom.xml`
+
+To run these routes on Quarkus, we need a Maven project depending on the Camel Quarkus extensions
+supporting the Camel components we utilize in those routes.
+We import `org.apache.camel.quarkus:camel-quarkus-bom` to manage the versions of the dependencies we use.
+
+[source,xml]
+----
+<project>
+    ...
+
+    <properties>
+        <camel-quarkus.version>1.6.0.fuse-jdk11-800006-redhat-00001</camel-quarkus.version>
+        <quarkus.version>1.11.6.Final-redhat-00001</quarkus.version>
+        ...
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Import BOM -->
+            <dependency>
+                <groupId>org.apache.camel.quarkus</groupId>
+                <artifactId>camel-quarkus-bom</artifactId>
+                <version>${camel-quarkus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-bean</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-bindy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-direct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-file</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-ftp</artifactId>
+        </dependency>
+
+        ...
+
+    </dependencies>
+
+    ...
+</project>
+----
+
+== Runtime prerequisites
+
+To run the example, we need an SFTP server. For testing, you can use a Docker container as follows:
+
+[source,shell]
+----
+docker run -ti --rm -p 2222:2222 \
+    -e PASSWORD_ACCESS=true \
+    -e USER_NAME=ftpuser \
+    -e USER_PASSWORD=ftppassword \
+    -e DOCKER_MODS=linuxserver/mods:openssh-server-openssh-client \
+    linuxserver/openssh-server
+----
+
+== Quarkus `dev` mode
+
+Having all that in place, we can build the project and start Quarkus in the `dev` mode:
+
+[source,shell]
+----
+$ mvn clean compile quarkus:dev
+----
+
+This lets the Quarkus tooling watch for changes in your workspace and recompile and redeploy the application upon any change.
+
+TIP: Please refer to the Development mode section of
+https://camel.apache.org/camel-quarkus/latest/first-steps.html#_development_mode[Camel Quarkus User guide] for more details.
+
+You should start to see some log messages appearing on the console, like the following:
+
+[source,shell]
+----
+[route1] (Camel (camel-1) thread #3 - timer://generateBooks) Generating randomized books CSV data
+[route2] (Camel (camel-1) thread #1 - file:///tmp/books) Reading books CSV data from 89A0EE24CB03A69-0000000000000000
+[route3] (Camel (camel-1) thread #0 - AggregateTimeoutChecker) Processed 34 books for genre 'Action'
+[route3] (Camel (camel-1) thread #0 - AggregateTimeoutChecker) Processed 31 books for genre 'Crime'
+[route3] (Camel (camel-1) thread #0 - AggregateTimeoutChecker) Processed 35 books for genre 'Horror'
+----
+
+You may want to change something in `Routes.java` and see that the application gets live-reloaded after saving the file.
+
+=== Package and run the application
+
+Once you are done with developing you may want to package and run the application.
+
+[source,shell]
+----
+$ mvn clean package -DskipTests
+$ java -jar target/*-runner.jar
+----
+
+==== Deploying to OpenShift
+
+To deploy the application to OpenShift run the following command.
+
+[source,shell]
+----
+$ mvn clean package -DskipTests -Dquarkus.kubernetes.deploy=true
+----
+
+Check that the pods are running
+
+[source,shell]
+----
+$ oc get pods
+
+NAME                                                     READY     STATUS    RESTARTS   AGE
+camel-quarkus-examples-file-bindy-ftp-5d48f4d85c-sjl8k   1/1       Running   0          21s
+ssh-server-deployment-5c667bccfc-52xfz                   1/1       Running   0          21s
+----
+
+... and tail the application logs:
+
+[source,shell]
+----
+$ oc logs -f camel-quarkus-examples-file-bindy-ftp-5d48f4d85c-sjl8k
+----
+
+You should see similar messages like in `dev` mode.
+
+== About Camel Quarkus TP1
+
+Camel Quarkus is available as a Technology Preview (TP) component in Red
+Hat Integration (RHI) 2021.Q2. Technology Preview features provide early
+access to upcoming product innovations, enabling you to test
+functionality and provide feedback during the development process.
+As we move towards GA later this year, each TP release will focus on key use cases.
+
+The following Quarkus extensions are included in this TP:
+
+* `camel-quarkus-bean`
+* `camel-quarkus-bindy`
+* `camel-quarkus-core`
+* `camel-quarkus-direct`
+* `camel-quarkus-file`
+* `camel-quarkus-ftp`
+* `camel-quarkus-log`
+* `camel-quarkus-main`
+* `camel-quarkus-microprofile-health`
+* `camel-quarkus-mock`
+* `camel-quarkus-seda`
+* `camel-quarkus-timer`
+
+These extensions are supported in JVM mode only.
+
+Note that more Camel Quarkus extensions are provided by
+https://camel.apache.org/camel-quarkus/latest/reference/index.html[Apache
+Camel] community and that those can be combined with with the extensions
+provided by Red Hat Integration.
+
+For more details, please refer to
+https://access.redhat.com/documentation/en-us/red_hat_integration/2021.q2/html/release_notes_for_red_hat_integration_2021.q2/camel-quarkus-relnotes_integration[RHI
+2021.Q2 Release notes].
+
+Your feedback is welcome via https://access.redhat.com/support[Red Hat Support Portal].
