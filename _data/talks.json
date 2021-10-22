@@ -1,5 +1,11 @@
 [
     {
+        "slidesUri": "/presentations/211021-baselone-maven-my-life-is-short/index.html",
+        "title": "Maven, my life is short!",
+        "eventName": "BaselOne",
+        "date": "2021-10-21"
+    },
+    {
         "slidesUri": "/presentations/210407-quarkus-insights-how-to-write-quarkus-extensions/index.html",
         "title": "Writing Quarkus extensions",
         "eventName": "Quarkus Insights",
