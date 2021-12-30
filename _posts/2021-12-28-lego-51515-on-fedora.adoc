@@ -1,0 +1,221 @@
+= Lego 51515 on Fedora
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [lego,mindstorms,51515,python]
+:page-summary: How to program LEGO 51515 alias Robot Inventor in Python on Fedora
+:sectanchors:
+
+My 13 years old son Vítek just got https://www.lego.com/en-us/product/robot-inventor-51515[LEGO 51515 (a.k.a. Robot Inventor)] for Christmas.
+He assessed the Scratch programming in the Android app as "limiting" after playing with it for a couple of hours and he uttered a wish to try Python.
+Unfortunately, Lego does not provide any tools for Linux, the the main OS used within our family.
+So we started to look for workarounds.
+
+All steps mentioned here were done on Fedora 34.
+
+First we tried https://github.com/smr99/lego-hub-tk[LEGO Hub Toolkit] by Steven M. Robbins which worked for us only through USB but not via Bluetooth.
+
+Peter Staev's https://github.com/PeterStaev/lego-spikeprime-mindstorms-vscode[LEGO SPIKE Prime / MINDSTORMS Robot Inventor VS Code Extension] offered the best experience so far.
+
+== How to install LEGO SPIKE Prime / MINDSTORMS Robot Inventor VS Code Extension
+
+Of course you need VS Code first.
+
+=== Install VS Code
+
+If you want the newest version, getting the 64 bit `.tar.gz` flavor from https://code.visualstudio.com/download#[VS Code downloads page] might be the safest choice.
+
+Unpack it, once you have downloaded it to `~/Downloads`:
+
+[source,shell]
+----
+$ cd ~/bin
+$ tar xfz ~/Downloads/code-stable-x64-*.tar.gz
+----
+
+Add the `code` executable to `PATH` environment variable so that you can open any folder using `code .`
+
+Open the `~/.bashrc` file with `kwrite` or any other text editor
+
+[source,shell]
+----
+$ kwrite ~/.bashrc
+----
+
+and add the following line somewhere around the beginning of the file
+
+[source,shell]
+----
+export PATH="$HOME/bin/VSCode-linux-x64/bin:$PATH"
+----
+
+Save and close the `~/.bashrc` file.
+
+Then create a new directory for your Python experiments and open VS Code in that directory:
+
+[source,shell]
+----
+$ mkdir -p ~/code/python
+$ cd ~/code/python
+$ code .
+----
+
+=== Install the LEGO SPIKE Prime / MINDSTORMS Robot Inventor Extension
+
+In VS Code, open the Extensions view by hitting `CTRL+SHIFT+x`.
+Then type `lego spike` in the search field, select the found `LEGO SPIKE Prime / MINDSTORMS Robot Inventor Extension`
+and click the blue `Install` button to install it.
+
+
+=== Connect via USB
+
+First let's try connecting via USB.
+
+For this to work on my Fedora 34, I had to add the current user to dialout group.
+Otherwise I was getting the `Permission denied: '/dev/ttyACM0'` error when connecting.
+
+[source,shell]
+----
+$ sudo usermod -aG dialout $USER
+----
+
+You'll possibly need to restart VS Code or even re-login for the new group membership to get effective.
+
+Then you can connect the USB cable - one end to the Lego HUB and the other end to your computer.
+
+At the bottom of the VS Code window, click the blue `LEGO Hub: Disconnected` area
+
+image::/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-disconnected.png["LEGO Hub: Disconnected"]
+
+This should let you select the device you want to connect:
+
+image::/images/2022/2021-12-28-lego-51515-on-fedora/select-device.png["Select device"]
+
+Select `/dev/ttyACM0` for USB.
+
+Once the connection succeeds, a couple of new buttons should appear at the top of the VS Code window:
+
+image::/images/2022/2021-12-28-lego-51515-on-fedora/extension-buttons.png["Lego Hub Extension buttons"]
+
+These allow you to
+
+* Start an already uploaded program
+* Stop the currently running program
+* Upload the current file (in VS Code) to the Hub
+* Show the Hub's terminal where you can i.a. see the error messages if something goes wrong with your little program
+
+=== Hello world!
+
+Let's try to write some simple program to make sure that the connection really works.
+
+Create a new file named `test.py` in the `~/code/python` folder and paste the following into the editor:
+
+[source,python]
+----
+# LEGO type:standard slot:5 autostart
+import hub
+hub.sound.beep(800, 2000, 0)
+----
+
+The first line is specific to the extension and its meaning is documented in the https://marketplace.visualstudio.com/items?itemName=PeterStaev.lego-spikeprime-mindstorms-vscode#automatic-uploadstart-of-a-python-file[extension's README].
+
+Once you have saved the file, you can hit the ⭮ button to upload and autostart it to the hub.
+
+You should hear a two seconds beep if everything works correctly.
+
+=== Bluetooth
+
+To test the Bluetooth connection, first disconnect the USB by clicking the blue `LEGO Hub: Connected` area at the bottom of the VS Code window. Then unplug the USB cable.
+
+Make sure Bluetooth is on on your PC e.g. by clicking the Blueman applet icon in the system tray.
+If it shows an option "Turn Bluetooth Off", then your Bluetooth is apparently on :-)
+
+image::/images/2022/2021-12-28-lego-51515-on-fedora/blueman-bt-on.png["Bluetooth is on"]
+
+Then pair the hub:
+
+* Click the Blueman applet icon in the system tray and click "Devices"
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/blueman-applet-devices.png["Blueman -> Devices"]
++
+* Make sure the Lego Hub is on and press the Bluetooth button on the Hub.
+  The Bluetooth button on the Hub should start flashing blue and you should hear some beeping.
+* Then start scanning for BT devices by pressing "Search" in the Blueman Devices window
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/blueman-devices-search.png["Blueman Devices -> Search"]
++
+* After a while a device named "LEGO Hub <Mac address>" should appear in the list of devices:
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-found.png["Lego hub found"]
++
+* Open its context menu by right-clicking it and click "Pair"
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/bt-pair-device.png["Pair the device"]
+
+==== Initial serial connection
+
+Once the device is paired, create a an initial serial connection with the device using Blueman that we will disconnect right away.
+I am not quite sure why this is necessary.
+I guess it creates the `/dev/rfcomm0` device that persists after disconnecting and which the VS Code extension is not able to do itself for some reason.
+
+* Right-click the Hub in Devices window and click "Connect to: Serial Port"
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/bt-serial-port.png["Connect to serial port"]
++
+* Once the connection succeeds the Bluetooth button on the Hub should stop flashing and should start shining blue without interruptions.
+* Make sure the the `rfcomm` device was created:
++
+[source,shell]
+----
+$ ps -Af | grep /dev/rfcom
+ppalaga     4852    3657  0 14:27 ?        00:00:00 /usr/bin/python3 /usr/libexec/blueman-rfcomm-watcher /dev/rfcomm0
+----
++
+* Note the index of the device - it is `rfcomm0` in our case, but it could be `rfcomm1` or something else in your case.
+* Disconnect the serial port via Blueman applet menu:
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/disconnect-serial-port.png["Disconnect the serial connection"]
+
+These initial serial connection steps need to be performed after every restart of the computer.
+
+==== Connect via Bluetooth from VS Code
+
+* Get back to VS Code and click the blue `LEGO Hub: Disconnected` area
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-disconnected.png["LEGO Hub: Disconnected"]
++
+* This should let you select the device to connect to.
+* If you are lucky, you see `/dev/rfcomm0` with the exact index returned by `ps -Af | grep /dev/rfcomm` above.
+* If your device is not there in the list, just type it manually.
++
+image::/images/2022/2021-12-28-lego-51515-on-fedora/select-rfcomm0.png["Select /dev/rfcomm0"]
+* After that, the connection should succeed and the Bluetooth button on the Hub should start shining blue.
+
+==== Upload and run a test program
+
+To test, whether it works, you can do some change in the `test.py` program, e.g. prolong the duration of the beep from `2000` to `5000` milliseconds:
+
+[source,python]
+----
+# LEGO type:standard slot:5 autostart
+import hub
+hub.sound.beep(800, 5000, 0)
+----
+
+After saving the file, you can hit the ⭮ button to upload and autostart it to the Hub.
+
+You should hear a five seconds beep if everything works correctly.
+
+That's it for making the Hub work on Fedora. I hope I was able to save you some time.
+
+I am looking forward to your feedback via https://twitter.com/ppalaga[Twitter]!
+
+== Further reading
+
+For the actual programming you may find the following resources helpful:
+
+* LEGO Hub Python programming API:
+** https://lego.github.io/MINDSTORMS-Robot-Inventor-hub-API/
+** https://github.com/sanjayseshan/spikeprime-vscode/wiki/Hub-Programming-API
+** https://antonsmindstorms.com/2021/01/14/advanced-undocumented-python-in-spike-prime-and-mindstorms-hubs/
+* FAQ and sample projects: https://github.com/maarten-pennings/Lego-Mindstorms/tree/main/ms4
