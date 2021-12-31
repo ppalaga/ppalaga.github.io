@@ -1,0 +1,484 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego 51515 on Fedora - Peter Palaga</title>
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body id="local-body">
+
+<!-- Nav Bar -->
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+    </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
+</nav>
+</div>
+<!-- End Nav -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div id="local-content" class="large-12 columns" role="content">
+
+        <h3><span class="local-subtitle">Dec 28, 2021</span></h3>
+<h1>Lego 51515 on Fedora</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>My 13 years old son Vítek just got <a href="https://www.lego.com/en-us/product/robot-inventor-51515">LEGO 51515 (a.k.a. Robot Inventor)</a> for Christmas.
+He assessed the Scratch programming in the Android app as "limiting" after playing with it for a couple of hours and he uttered a wish to try Python.
+Unfortunately, Lego does not provide any tools for Linux, the the main OS used within our family.
+So we started to look for workarounds.</p>
+</div>
+<div class="paragraph">
+<p>All steps mentioned here were done on Fedora 34.</p>
+</div>
+<div class="paragraph">
+<p>First we tried <a href="https://github.com/smr99/lego-hub-tk">LEGO Hub Toolkit</a> by Steven M. Robbins which worked for us only through USB but not via Bluetooth.</p>
+</div>
+<div class="paragraph">
+<p>Peter Staev&#8217;s <a href="https://github.com/PeterStaev/lego-spikeprime-mindstorms-vscode">LEGO SPIKE Prime / MINDSTORMS Robot Inventor VS Code Extension</a> offered the best experience so far.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how_to_install_lego_spike_prime_mindstorms_robot_inventor_vs_code_extension"><a class="anchor" href="#how_to_install_lego_spike_prime_mindstorms_robot_inventor_vs_code_extension"></a>How to install LEGO SPIKE Prime / MINDSTORMS Robot Inventor VS Code Extension</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Of course you need VS Code first.</p>
+</div>
+<div class="sect2">
+<h3 id="install_vs_code"><a class="anchor" href="#install_vs_code"></a>Install VS Code</h3>
+<div class="paragraph">
+<p>If you want the newest version, getting the 64 bit <code>.tar.gz</code> flavor from <a href="https://code.visualstudio.com/download#">VS Code downloads page</a> might be the safest choice.</p>
+</div>
+<div class="paragraph">
+<p>Unpack it, once you have downloaded it to <code>~/Downloads</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ cd ~/bin
+$ tar xfz ~/Downloads/code-stable-x64-*.tar.gz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the <code>code</code> executable to <code>PATH</code> environment variable so that you can open any folder using <code>code .</code></p>
+</div>
+<div class="paragraph">
+<p>Open the <code>~/.bashrc</code> file with <code>kwrite</code> or any other text editor</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ kwrite ~/.bashrc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and add the following line somewhere around the beginning of the file</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">export PATH=&quot;$HOME/bin/VSCode-linux-x64/bin:$PATH&quot;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Save and close the <code>~/.bashrc</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Then create a new directory for your Python experiments and open VS Code in that directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ mkdir -p ~/code/python
+$ cd ~/code/python
+$ code .</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="install_the_lego_spike_prime_mindstorms_robot_inventor_extension"><a class="anchor" href="#install_the_lego_spike_prime_mindstorms_robot_inventor_extension"></a>Install the LEGO SPIKE Prime / MINDSTORMS Robot Inventor Extension</h3>
+<div class="paragraph">
+<p>In VS Code, open the Extensions view by hitting <code>CTRL+SHIFT+x</code>.
+Then type <code>lego spike</code> in the search field, select the found <code>LEGO SPIKE Prime / MINDSTORMS Robot Inventor Extension</code>
+and click the blue <code>Install</code> button to install it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="connect_via_usb"><a class="anchor" href="#connect_via_usb"></a>Connect via USB</h3>
+<div class="paragraph">
+<p>First let&#8217;s try connecting via USB.</p>
+</div>
+<div class="paragraph">
+<p>For this to work on my Fedora 34, I had to add the current user to dialout group.
+Otherwise I was getting the <code>Permission denied: '/dev/ttyACM0'</code> error when connecting.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ sudo usermod -aG dialout $USER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll possibly need to restart VS Code or even re-login for the new group membership to get effective.</p>
+</div>
+<div class="paragraph">
+<p>Then you can connect the USB cable - one end to the Lego HUB and the other end to your computer.</p>
+</div>
+<div class="paragraph">
+<p>At the bottom of the VS Code window, click the blue <code>LEGO Hub: Disconnected</code> area</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-disconnected.png" alt="LEGO Hub: Disconnected">
+</div>
+</div>
+<div class="paragraph">
+<p>This should let you select the device you want to connect:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/select-device.png" alt="Select device">
+</div>
+</div>
+<div class="paragraph">
+<p>Select <code>/dev/ttyACM0</code> for USB.</p>
+</div>
+<div class="paragraph">
+<p>Once the connection succeeds, a couple of new buttons should appear at the top of the VS Code window:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/extension-buttons.png" alt="Lego Hub Extension buttons">
+</div>
+</div>
+<div class="paragraph">
+<p>These allow you to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Start an already uploaded program</p>
+</li>
+<li>
+<p>Stop the currently running program</p>
+</li>
+<li>
+<p>Upload the current file (in VS Code) to the Hub</p>
+</li>
+<li>
+<p>Show the Hub&#8217;s terminal where you can i.a. see the error messages if something goes wrong with your little program</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hello_world"><a class="anchor" href="#hello_world"></a>Hello world!</h3>
+<div class="paragraph">
+<p>Let&#8217;s try to write some simple program to make sure that the connection really works.</p>
+</div>
+<div class="paragraph">
+<p>Create a new file named <code>test.py</code> in the <code>~/code/python</code> folder and paste the following into the editor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="comment"># LEGO type:standard slot:5 autostart</span>
+<span class="keyword">import</span> <span class="include">hub</span>
+hub.sound.beep(<span class="integer">800</span>, <span class="integer">2000</span>, <span class="integer">0</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first line is specific to the extension and its meaning is documented in the <a href="https://marketplace.visualstudio.com/items?itemName=PeterStaev.lego-spikeprime-mindstorms-vscode#automatic-uploadstart-of-a-python-file">extension&#8217;s README</a>.</p>
+</div>
+<div class="paragraph">
+<p>Once you have saved the file, you can hit the ⭮ button to upload and autostart it to the hub.</p>
+</div>
+<div class="paragraph">
+<p>You should hear a two seconds beep if everything works correctly.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bluetooth"><a class="anchor" href="#bluetooth"></a>Bluetooth</h3>
+<div class="paragraph">
+<p>To test the Bluetooth connection, first disconnect the USB by clicking the blue <code>LEGO Hub: Connected</code> area at the bottom of the VS Code window. Then unplug the USB cable.</p>
+</div>
+<div class="paragraph">
+<p>Make sure Bluetooth is on on your PC e.g. by clicking the Blueman applet icon in the system tray.
+If it shows an option "Turn Bluetooth Off", then your Bluetooth is apparently on :-)</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/blueman-bt-on.png" alt="Bluetooth is on">
+</div>
+</div>
+<div class="paragraph">
+<p>Then pair the hub:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Click the Blueman applet icon in the system tray and click "Devices"</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/blueman-applet-devices.png" alt="Blueman &#8594; Devices">
+</div>
+</div>
+</li>
+<li>
+<p>Make sure the Lego Hub is on and press the Bluetooth button on the Hub.
+The Bluetooth button on the Hub should start flashing blue and you should hear some beeping.</p>
+</li>
+<li>
+<p>Then start scanning for BT devices by pressing "Search" in the Blueman Devices window</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/blueman-devices-search.png" alt="Blueman Devices &#8594; Search">
+</div>
+</div>
+</li>
+<li>
+<p>After a while a device named "LEGO Hub &lt;Mac address&gt;" should appear in the list of devices:</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-found.png" alt="Lego hub found">
+</div>
+</div>
+</li>
+<li>
+<p>Open its context menu by right-clicking it and click "Pair"</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/bt-pair-device.png" alt="Pair the device">
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="initial_serial_connection"><a class="anchor" href="#initial_serial_connection"></a>Initial serial connection</h4>
+<div class="paragraph">
+<p>Once the device is paired, create a an initial serial connection with the device using Blueman that we will disconnect right away.
+I am not quite sure why this is necessary.
+I guess it creates the <code>/dev/rfcomm0</code> device that persists after disconnecting and which the VS Code extension is not able to do itself for some reason.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Right-click the Hub in Devices window and click "Connect to: Serial Port"</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/bt-serial-port.png" alt="Connect to serial port">
+</div>
+</div>
+</li>
+<li>
+<p>Once the connection succeeds the Bluetooth button on the Hub should stop flashing and should start shining blue without interruptions.</p>
+</li>
+<li>
+<p>Make sure the the <code>rfcomm</code> device was created:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="shell">$ ps -Af | grep /dev/rfcom
+ppalaga     4852    3657  0 14:27 ?        00:00:00 /usr/bin/python3 /usr/libexec/blueman-rfcomm-watcher /dev/rfcomm0</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Note the index of the device - it is <code>rfcomm0</code> in our case, but it could be <code>rfcomm1</code> or something else in your case.</p>
+</li>
+<li>
+<p>Disconnect the serial port via Blueman applet menu:</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/disconnect-serial-port.png" alt="Disconnect the serial connection">
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These initial serial connection steps need to be performed after every restart of the computer.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="connect_via_bluetooth_from_vs_code"><a class="anchor" href="#connect_via_bluetooth_from_vs_code"></a>Connect via Bluetooth from VS Code</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Get back to VS Code and click the blue <code>LEGO Hub: Disconnected</code> area</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/lego-hub-disconnected.png" alt="LEGO Hub: Disconnected">
+</div>
+</div>
+</li>
+<li>
+<p>This should let you select the device to connect to.</p>
+</li>
+<li>
+<p>If you are lucky, you see <code>/dev/rfcomm0</code> with the exact index returned by <code>ps -Af | grep /dev/rfcomm</code> above.</p>
+</li>
+<li>
+<p>If your device is not there in the list, just type it manually.</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2022/2021-12-28-lego-51515-on-fedora/select-rfcomm0.png" alt="Select /dev/rfcomm0">
+</div>
+</div>
+</li>
+<li>
+<p>After that, the connection should succeed and the Bluetooth button on the Hub should start shining blue.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="upload_and_run_a_test_program"><a class="anchor" href="#upload_and_run_a_test_program"></a>Upload and run a test program</h4>
+<div class="paragraph">
+<p>To test, whether it works, you can do some change in the <code>test.py</code> program, e.g. prolong the duration of the beep from <code>2000</code> to <code>5000</code> milliseconds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="comment"># LEGO type:standard slot:5 autostart</span>
+<span class="keyword">import</span> <span class="include">hub</span>
+hub.sound.beep(<span class="integer">800</span>, <span class="integer">5000</span>, <span class="integer">0</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After saving the file, you can hit the ⭮ button to upload and autostart it to the Hub.</p>
+</div>
+<div class="paragraph">
+<p>You should hear a five seconds beep if everything works correctly.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it for making the Hub work on Fedora. I hope I was able to save you some time.</p>
+</div>
+<div class="paragraph">
+<p>I am looking forward to your feedback via <a href="https://twitter.com/ppalaga">Twitter</a>!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="further_reading"><a class="anchor" href="#further_reading"></a>Further reading</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the actual programming you may find the following resources helpful:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>LEGO Hub Python programming API:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://lego.github.io/MINDSTORMS-Robot-Inventor-hub-API/" class="bare">https://lego.github.io/MINDSTORMS-Robot-Inventor-hub-API/</a></p>
+</li>
+<li>
+<p><a href="https://github.com/sanjayseshan/spikeprime-vscode/wiki/Hub-Programming-API" class="bare">https://github.com/sanjayseshan/spikeprime-vscode/wiki/Hub-Programming-API</a></p>
+</li>
+<li>
+<p><a href="https://antonsmindstorms.com/2021/01/14/advanced-undocumented-python-in-spike-prime-and-mindstorms-hubs/" class="bare">https://antonsmindstorms.com/2021/01/14/advanced-undocumented-python-in-spike-prime-and-mindstorms-hubs/</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>FAQ and sample projects: <a href="https://github.com/maarten-pennings/Lego-Mindstorms/tree/main/ms4" class="bare">https://github.com/maarten-pennings/Lego-Mindstorms/tree/main/ms4</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<a href="https://github.com/ppalaga/ppalaga.github.io/edit/master/_posts/2021-12-28-lego-51515-on-fedora.adoc" target="_blank">Edit this post</a>
+
+
+
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                
+                    
+                
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+
+
+
+
+    </div>
+</div>
+<footer class="local-footer">
+    <div class="row">
+        <div class="small-12 small-centered columns text-center">
+            Copyright © Peter Palaga 2021&nbsp;&nbsp;•&nbsp;&nbsp;Header background by <a href="https://www.facebook.com/steve.cord.56" target="_blank">Steve Cord</a>
+        </div>
+    </div>
+</footer>
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>
