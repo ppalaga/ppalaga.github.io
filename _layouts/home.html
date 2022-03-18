@@ -14,15 +14,19 @@ and <a href="https://github.com/ec4j/ec4j">ec4j</a> (<a href="https://editorconf
 </p>
 </div>
 
-
 <hr>
-<h2>Recent talks</h2>
+<h2>Recent and upcoming talks</h2>
 <div class="local-post-list">
-{%- for talk in site.data.talks limit:3 -%}
+{%- assign talksCount = 0 -%}
+{%- assign talksCountWithSlides = 0 -%}
+{%- for talk in site.data.talks -%}
+{%- assign talksCount = talksCount | plus: 1 -%}
 <div class="local-list-item">
-    <h3><span class="local-subtitle">{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a></span><br>
-    <a href="{{ talk.slidesUri }}" target="_blank">{{ talk.title }}</a></h3>
+    <h3><span class="local-subtitle">{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}{%- if talk.slidesUri != null -%}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a>{%- endif -%}</span><br>
+    {%- if talk.slidesUri != null -%}<a href="{{ talk.slidesUri }}" target="_blank">{%- endif -%}{{ talk.title }}{%- if talk.slidesUri != null -%}</a>{%- endif -%}</h3>
 </div>
+{%- if talk.slidesUri != null -%}{%- assign talksCountWithSlides = talksCountWithSlides | plus: 1 -%}{%- endif -%}
+{%- if talksCount >= 3 and talksCountWithSlides >= 1 or talksCountWithSlides >= 3 -%}{%- break -%}{%- endif -%}
 {%- endfor -%}
     <a href="/talks.html">Older talks...</a>
 </div>

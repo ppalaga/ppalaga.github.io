@@ -1,5 +1,30 @@
 [
     {
+        "title": "Will my library or framework work on Quarkus (and GraalVM)?",
+        "eventName": "Voxxed Days Trieste",
+        "date": "2022-06-09"
+    },
+    {
+        "title": "Will my library or framework work on Quarkus (and GraalVM)?",
+        "eventName": "Voxxed Days Zürich",
+        "date": "2022-05-17"
+    },
+    {
+        "title": "Integrating systems in the age of Quarkus, serverless and Kafka",
+        "eventName": "Devoxx UK",
+        "date": "2022-05-12"
+    },
+    {
+        "title": "Maven, my life is short!",
+        "eventName": "JUG Zürich",
+        "date": "2022-03-28"
+    },
+    {
+        "title": "Maven, my life is short!",
+        "eventName": "JUG Luzern",
+        "date": "2022-03-24"
+    },
+    {
         "slidesUri": "/presentations/211021-baselone-maven-my-life-is-short/index.html",
         "title": "Maven, my life is short!",
         "eventName": "BaselOne",

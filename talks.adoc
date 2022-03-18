@@ -6,4 +6,4 @@ layout: talks
 :page-title: Talks
 :icons: font
 
-Conferences and Java User Groups (JUGs) I spoke on
+Conferences and Java User Groups (JUGs) I spoke or plan to speak on
