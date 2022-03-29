@@ -15,11 +15,13 @@
         "date": "2022-05-12"
     },
     {
+        "slidesUri": "/presentations/220328-maven-jug-luzern-and-zurich/index.html",
         "title": "Maven, my life is short!",
         "eventName": "JUG Zürich",
         "date": "2022-03-28"
     },
     {
+        "slidesUri": "/presentations/220328-maven-jug-luzern-and-zurich/index.html",
         "title": "Maven, my life is short!",
         "eventName": "JUG Luzern",
         "date": "2022-03-24"
