@@ -1,0 +1,921 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Maven, my life is short!</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/camel.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <!-- <div class="conf-banner">
+                <img src="images/" alt="" style="position: absolute;bottom: 0;">
+            </div> -->
+            <div id="footer" class="footer">
+                <img src="images/apache-maven-logo.svg" class="left"><a href="https://twitter.com/ppalaga">@ppalaga</a><img src="images/mvnd-logo-wide.svg" class="right">
+            </div>
+            <div class="slides">
+                <section id="intro">
+                    <!--<section id="sponsors" data-background-image="images/BaselOne21.png" data-state="no-footer">
+                    </section>-->
+                    <section id="cover" data-state="no-footer">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <h1>Maven</h1>
+                        <h3>my life is short!</h3>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>Peter Palaga</p>
+                        <p><small><a href="https://twitter.com/ppalaga">@ppalaga</a></small></p>
+                    </section>
+                    <section id="about-me">
+                        <h2>About me</h2>
+                        <p>&nbsp;</p>
+                        <img src="images/red-hat-integration-logo.svg" style="height: 2em;">
+                        <img src="css/theme/camel-assets/images/camel.svg" style="height: 2em; margin-left: 2em; ">
+                        <aside class="notes">
+                            <p>RH Integration:</p>
+                            <ul>
+                                <li>Fuse</li>
+                                <li>3scale API Management</li>
+                                <li>AMQ</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section id="projects-i-build-often">
+                        <h4>Projects I build often</h4>
+                        <p>&nbsp;</p>
+                        <table>
+                            <tr>
+                                <td></td>
+                                <td style="text-align: right; font-weight: 400; font-size: 30px; vertical-align: middle;">Lines of Java Code<sup>1</sup></td>
+                                <td style="text-align: right; font-weight: 400; font-size: 30px; vertical-align: middle;">Maven modules<sup>2</sup></td>
+                                <td style="text-align: right; font-weight: 400; font-size: 30px; vertical-align: middle;"><code>mvn clean install<br>-DskipTests</code></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://github.com/apache/camel-quarkus">Camel&nbsp;Quarkus</a></td>
+                                <td style="text-align: right;">93K</td>
+                                <td style="text-align: right;">1371</td>
+                                <td style="text-align: right;">23.5 min</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://github.com/apache/camel">Camel</a></td>
+                                <td style="text-align: right;">1609K</td>
+                                <td style="text-align: right;">612</td>
+                                <td style="text-align: right;">32.6 min</td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://github.com/quarkusio/quarkus">Quarkus</a></td>
+                                <td style="text-align: right;">594K</td>
+                                <td style="text-align: right;">1161</td>
+                                <td style="text-align: right;">11.1 min</td>
+                            </tr>
+                        </table>
+                        <p>&nbsp;</p>
+                        <p style="text-align: left; line-height: 0.9em;">
+                            <small><sup>1)</sup> <code>cloc --include-lang=Java .</code></small>
+                            <br>
+                            <small><sup>2)</sup> <code>mvn clean && find . -type f -name 'pom.xml' | wc -l</code></small>
+                        </p>
+                    </section>
+                    <section id="wait-for-maven" data-background-image="images/waiting-for-a-maven-build.jpg" data-state="no-footer">
+                        <div style="position: absolute; float: left; margin-left: -100px; margin-top: 0px;">
+                            <h2 style="color: #fff; font-weight: bold; text-align: left; font-size: 80px;">Waiting<br>for<br> a<br> Maven<br> build...</h2>
+                            <small style="color: #fff; font-size: 0.3em;">Image from <a href="https://imgflip.com/memetemplate/123293403/Skull-waiting-for-reply">imgflip</a></small>
+                        </div>
+                    </section>
+                    <section id="agenda">
+                        <h2>Agenda</h2>
+                        <ul>
+                            <li>Skipping mojos</li>
+                            <li><code>mvnd</code> a.k.a. Maven Daemon</li>
+                            <li>Vertical scaling</li>
+                            <li>Incrememental builds with GIB</li>
+                        </ul>
+                    </section>
+                </section>
+                <section id="skip-mojos">
+                    <section id="why-skip-mojos">
+                        <p><code>-DskipTests</code></p>
+                    </section>
+                    <section id="why-skip-mojos">
+                        <h2>Why to skip mojos?</h2>
+                        <ul>
+                            <li>After pulling from team git repository</li>
+                            <li>Source tree in a clean state</li>
+                            <li>Checked by the team CI</li>
+                            <li>Tests, and various source checks can be skipped</li>
+                        </ul>
+                    </section>
+                    <section id="more-candidates-for-skipping-1">
+                        <h3>Find candidates for skipping (1/3)</h3>
+                        <p><code><a href="https://github.com/khmarbaise/maven-buildtime-profiler">maven-buildtime-profiler</a></code></p>
+                        <ul>
+                            <li>A Maven extension</li>
+                            <li>Outputs per-mojo per-module exec. times</li>
+                            <li>Exec. times not summed up per mojo across modules - limited usefulness</li>
+                            <li>An <a href="images/maven-buildtime-profiler-report.txt">example</a></li>
+                        </ul>
+                    </section>
+                    <section id="more-candidates-for-skipping-2">
+                        <h3>Find candidates for skipping (2/3)</h3>
+                        <p><code><a href="https://scans.gradle.com/#maven">Gradle build scans for Maven</a></code></p>
+                        <ul>
+                            <li>A Maven extension</li>
+                            <li>Allows sorting by execution time</li>
+                            <li>An <a href="https://scans.gradle.com/s/yf2ws35ebhq4a/timeline?sort=longest">example</a></li>
+                        </ul>
+                    </section>
+                    <section id="more-candidates-for-skipping-3">
+                        <h3>Find candidates for skipping (3/3)</h3>
+                        <p><code><a href="https://github.com/jvm-profiling-tools/async-profiler">async-profiler</a></code> or any other Java profiler</p>
+                        <ul>
+                            <li><code>export MAVEN_OPTS="-agentpath:/path/to/libasyncProfiler.so=start, event=cpu,file=mvn-profile.html"</code></li>
+                            <li>Outputs a <a href="https://www.brendangregg.com/flamegraphs.html">flame graph</a></li>
+                            <li>Summed mojo execution times are easy to see</li>
+                        </ul>
+                    </section>
+                    <section id="flame-graph">
+                        <img src="images/async-profiler-mvn-clean-install-DskipTests.png">
+                        <small><code>mvn clean install  -DskipTests -Dformatter.skip -Dimpsort.skip ...<br># in Camel Quarkus</code></small>
+                    </section>
+                    <section id="conventional-skipping">
+                        <h3>All possible skips for this project</h3>
+                        <pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs shell" data-noescape data-trim>$ mvn clean install \
+    -DskipTests \
+    -Dformatter.skip \
+    -Dimpsort.skip \
+    -Denforcer.skip \
+    -Dcamel-quarkus.update-extension-doc-page.skip \
+    -Dskip.installyarn \
+    -Dskip.yarn \
+    -Dlicense.skip \
+    -Dquarkus.build.skip
+    -Dgmaven.execute.skip # underway https://github.com/groovy/gmaven/pull/27
+...
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  <mark class="fragment">04:34</mark> min  # <mark class="fragment">down from 23:27</mark> min by mvn clean install -DskipTests
+    </code></pre>
+                        <img class="fragment" alt="Can we do better?" src="images/can-we-do-better.png" style="float: left; position: absolute; bottom: -100px;margin-left: 100px; z-index: 20">
+                    </section>
+                    <section id="conventional-skipping-2">
+                        <pre style="width: 100%; margin: 0px 0px 20px 0px; font-size: 0.4em"><code class="hljs java">public class SomeMojo extends AbstractMojo {
+
+    @Parameter(property = "some.skip", defaultValue = "false")
+    boolean skip;
+
+    @Override
+    public void execute() {
+        if (skip) {
+            getLog().info("Skipping as requested by the user");
+            return;
+        }
+        ...
+    }
+}</code></pre>
+                        <div class="fragment" style="float: left; position: absolute; top: 176px;margin-left: 200px; z-index: 20; background-color: #ffffff;">
+                                                      ← What happens before?
+                        </div>
+                        <ul>
+                            <li class="fragment">Resolve and download plugin dependencies</li>
+                            <li class="fragment">Setup a classloader, load the necessary classes</li>
+                            <li class="fragment">Instantiate the Mojo</li>
+                            <li class="fragment">Inject fields (potentially expensive objects)</li>
+                            <li class="fragment">Call <code>Mojo.execute()</code></li>
+                        </ul>
+                        <div class="fragment" style="float: left; position: absolute; bottom: 100px; margin-left: 100px; z-index: 20; font-size: 50px; font-weight: bold; background-color: #ffFFFFcc; padding: 20px; color: #ff0000;">How can we avoid all of this?</div>
+                    </section>
+                    <section id="remove-plugins-from-the-execution-plan">
+                        <h2>Remove plugins<br><small>from Maven execution plan</small><br>altogether</h2>
+                    </section>
+                    <section id="hide-plugins-in-a-profile">
+                        <pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs xml" style="max-height: unset;" data-noescape data-trim>&lt;project&gt;
+    ...                      &lt;!-- Proper skipping --&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            <mark class="fragment fade-in-then-out" data-fragment-index="1">&lt;!-- Only plugins essential for the fast build --&gt;</mark>
+            &lt;plugin&gt;&lt;artifactId&gt;maven-compile-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+            &lt;plugin&gt;&lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+            &lt;plugin&gt;&lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+            ...
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+<span class="fragment" data-fragment-index="2">    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;full&lt;/id&gt;
+            &lt;activation&gt;
+                &lt;property&gt;
+                    &lt;name&gt;!quickly&lt;/name&gt;<mark class="fragment fade-in-then-out" data-fragment-index="4">&lt;!-- Active by default unless -Dquickly is passed --&gt;</mark>
+                &lt;/property&gt;
+            &lt;/activation&gt;
+            &lt;build&gt;
+                &lt;plugins&gt;
+                    <mark class="fragment fade-in-then-out" data-fragment-index="3">&lt;!-- All other plugins --&gt;</mark>
+                    &lt;plugin&gt;&lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+                    &lt;plugin&gt;&lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+                    &lt;plugin&gt;&lt;artifactId&gt;maven-failsafe-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+                    &lt;plugin&gt;&lt;artifactId&gt;groovy-maven-plugin&lt;/artifactId&gt;&lt;/plugin&gt;
+                    ...
+                &lt;/plugins&gt;
+            &lt;/build&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;</span>
+&lt;/project&gt;</code></pre>
+                    </section>
+                    <section id="mvn-clean-install-quickly">
+                        <p>&nbsp;</p>
+                        <pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs shell" data-noescape data-trim>$ mvn clean install -Dquickly
+...
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  <mark class="fragment">04:01 min</mark>  # <mark class="fragment">down from 04:34</mark> min by
+                               #
+                               #   mvn clean install -DskipTests -Dformatter.skip ...
+                               #
+</code></pre>
+                        <p>&nbsp;</p>
+                        <img class="fragment" alt="Can we do better?" src="images/can-we-do-even-better.png" style="float: left; position: absolute; bottom: -100px;margin-left: 100px; z-index: 20">
+                    </section>
+                </section>
+                <section id="mvnd">
+                    <section id="java-is-fast" data-state="no-footer" data-background-image="images/warmed-up.jpg">
+                        <div style="position: absolute; left: -0em; top: 0em; color: #fff;">
+                            <p style="font-size: 3em; font-weight: bold;">Java is fast *</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <small style="font-size: 0.5em;">* When warmed up</small>
+                        </div>
+                    </section>
+                    <section id="java-warm-up-costs">
+                        <h2>Java Warmup costs</h2>
+                        <ul>
+                            <li>JVM boot</li>
+                            <li>JIT (Just in Time) compilation</li>
+                        </ul>
+                    </section>
+                    <section id="mvn-start-better-measure">
+                        <h2>Cost of starting Maven</h2>
+                        <p>Measurable through a simple experiment:</p>
+                        <pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs java" data-noescape data-trim>package org.apache.maven;
+public class DefaultMaven implements Maven {
+    ...
+    private MavenExecutionResult doExecute( MavenExecutionRequest request ) {
+        <span class="fragment" data-fragment-index="2">System.out.println("End of Maven init: " + System.currentTimeMillis());</span>
+        request.setStartTime( new Date() ); <span class="fragment" data-fragment-index="1">// Maven measures from here</span>
+    }
+    ...
+}</code></pre>
+&nbsp;
+                        <pre class="fragment" style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs shell" data-noescape data-trim>$ <span class="fragment">echo $(($(date +%s%N)/1000000)) && mvn clean install -Dquickly</span>
+<span class="fragment">1634117024986</span>
+<span class="fragment">...
+End of Maven init: 1634117025765</span>
+<span class="fragment">$ echo "$((1634117025765-1634117024986))"</span>
+<span class="fragment"><mark class="fragment">779</mark> # Maven start time in milliseconds</span></code></pre>
+                    </section>
+                    <section id="cost-of-jit">
+                        <h2>Cost of JIT compilation</h2>
+                        <img src="images/java-gc-jit.png">
+                        <small><code>mvn clean install  -DskipTests -Dformatter.skip -Dimpsort.skip ...<br># in Camel Quarkus</code></small>
+                    </section>
+                    <section id="daemon">
+                        <h2>Eliminate JVM warm up</h2>
+                        <ul>
+                            <li>Have a long living Java process, a.k.a. daemon</li>
+                            <li>Pass build requests through a socket</li>
+                            <li>Like Gradle daemon, but for Maven</li>
+                        </ul>
+                    </section>
+                    <section id="mvnd-intro">
+                        <p><img src="images/mvnd-logo.svg" style="width: 100px; vertical-align: middle; margin-bottom: 10px;"> - the Maven Daemon</p>
+                        <p style="font-size: 1.5rem;"><a href="https://github.com/apache/maven-mvnd" target="_blank">https://github.com/apache/maven-mvnd</a></p>
+                        <ul>
+                            <li>Started by <a href="https://twitter.com/gnodet">Guillaume Nodet</a> in 2019</li>
+                            <li>24 releases since then</li>
+                            <li>Donated to the ASF Maven Project in December 2021</li>
+                        </ul>
+                        <p><a href="https://twitter.com/mvndaemon" rel="nofollow"><img src="https://camo.githubusercontent.com/eca91a719d9b5623bbf24a22ddc4ade4170bf95daf20921f561d1140887db9c1/68747470733a2f2f696d672e736869656c64732e696f2f747769747465722f75726c2f68747470732f747769747465722e636f6d2f6d766e6461656d6f6e2e7376673f7374796c653d736f6369616c266c6162656c3d466f6c6c6f772532302534306d766e6461656d6f6e" alt="Twitter" data-canonical-src="https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&amp;label=Follow%20%40mvndaemon" style="max-width:100%;"></a></p>
+                    </section>
+                    <section id="mvnd-install">
+                        <p><code>mvnd</code> - how to install</p>
+                        <ul>
+                            <li><a href="https://github.com/mvndaemon/mvnd/releases">ZIP file</a></li>
+                            <li><a href="https://sdkman.io/sdks#mvnd">SDKMAN!</a></li>
+                            <li><a href="https://brew.sh/">Homebrew</a></li>
+                            <li><a href="https://www.macports.org/">MacPorts</a></li>
+                            <li><a href="https://community.chocolatey.org/packages/mvndaemon/">Chocolatey</a></li>
+                            <li><a href="http://asdf-vm.com/">ASDF</a></li>
+                        </ul>
+                    </section>
+                    <section id="mvnd-overview">
+                        <h2>Maven Daemon overview</h2>
+                        <table class="plaintable">
+                            <tr>
+                                <td><p><code>mvnd</code> - the client</p>
+                                    <ul class="fragment" style="font-size: 30px;">
+                                        <li>GraalVM native executable</li>
+                                        <li>Looks up a running daemon
+                                            <ul style="font-size: 20px;"><li>Or starts a new one</li></ul>
+                                        </li>
+                                        <li>Sends a build request via socket</li>
+                                        <li>Receives events from the daemon</li>
+                                        <li>Displays the progress</li>
+                                    </ul>
+                                </td>
+                                <td style="padding-left: 0px; width: 100px; text-align: center;"><p>⇄&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>
+                                <td style="padding-left: 0px;"><p>Daemon</p>
+                                    <ul class="fragment" style="font-size: 30px;">
+                                        <li>Long running Java process</li>
+                                        <li>Embeds a specific Maven version
+                                            <ul style="font-size: 20px;"><li>Does not use any local Maven installation</li></ul>
+                                        </li>
+                                        <li>Receives build requests</li>
+                                        <li>Caches plugin class loaders</li>
+                                        <li>Exits after a configurable period of time</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="mvnd-speed-gains">
+                        <h3><code>mvnd</code> speed gains</h3>
+                        <table class="plaintable" style="font-size: 25px;">
+                            <tr>
+                                <td rowspan="2">A build with</td>
+                                <td rowspan="2"><strong>Many modules</strong><br><small>(relatively independent)<br>
+                                    <code style="white-space: nowrap;">cd camel-quarkus && \<br>&nbsp;&nbsp;&nbsp;mvn[d] clean install -Dquickly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></small>
+                                </td>
+                                <td rowspan="2" style="padding-left: 0px; width: 100px; text-align: center;">&nbsp;&nbsp;&nbsp;</td>
+                                <td class="fragment" data-fragment-index="4" colspan="2"><strong>Single module</strong><br><small>&nbsp;<br>
+                                    <code style="white-space: nowrap;">cd camel-quarkus/extensions-core/core/deployment && \<br>&nbsp;&nbsp;&nbsp;mvn[d] clean install \</code></small></td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="5"><small><code style="white-space: nowrap;">&nbsp;&nbsp;&nbsp;-DskipTests&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></small></td>
+                                <td class="fragment" data-fragment-index="6"><small><code style="white-space: nowrap;">&nbsp;&nbsp;&nbsp;-Dtest=CamelBeansUnremovableTest</code></small></td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="1"><code>mvn</code>&nbsp;baseline<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></td>
+                                <td class="fragment" data-fragment-index="1" style="padding-left: 30px;">4:01 min</td>
+                                <td>
+                                </td>
+                                <td class="fragment" data-fragment-index="5" style="padding-left: 30px;">10.11 sec</td>
+                                <td class="fragment" data-fragment-index="6" style="padding-left: 30px;">12.79 sec</td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="2"><code>mvnd</code> 1st</td>
+                                <td class="fragment" data-fragment-index="2" style="padding-left: 30px;">1:19 (3x)</td>
+                                <td>
+                                </td>
+                                <td class="fragment" data-fragment-index="5" style="padding-left: 30px;">9.15 (1.1x)</td>
+                                <td class="fragment" data-fragment-index="6" style="padding-left: 30px;">11.82 (1.1x)</td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="2"><code>mvnd</code> 2nd</td>
+                                <td class="fragment" data-fragment-index="2" style="padding-left: 30px;">1:04 (3.8x)</td>
+                                <td>
+                                </td>
+                                <td class="fragment" data-fragment-index="5" style="padding-left: 30px;">2.37 (4.3x)</td>
+                                <td class="fragment" data-fragment-index="6" style="padding-left: 30px;">5.26 (2.4x)</td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="2"><code>mvnd</code> 3rd</td>
+                                <td class="fragment" data-fragment-index="2" style="padding-left: 30px;">1:01 (4x)</td>
+                                <td>
+                                </td>
+                                <td class="fragment" data-fragment-index="5" style="padding-left: 30px;">1.19 (5.3x)</td>
+                                <td class="fragment" data-fragment-index="6" style="padding-left: 30px;">4.86 (2.6x)</td>
+                            </tr>
+                            <tr>
+                                <td class="fragment" data-fragment-index="3" style="padding-top: 30px;">Gains through</td>
+                                <td class="fragment" data-fragment-index="3" style="padding-top: 30px;">
+                                    <ul class="check" style="font-size: 30px;">
+                                        <li>Class loader caching
+                                            <ul style="font-size: 25px;">
+                                                <li>No repeated JIT</li>
+                                                <li>Faster JIT-compiled code</li>
+                                            </ul>
+                                        </li>
+                                        <li>Parallel execution</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                </td>
+                                <td class="fragment check" data-fragment-index="7" colspan="2" style="padding-top: 30px; padding-left: 30px;">
+                                    <ul class="check" style="font-size: 30px;">
+                                        <li>No JVM boot cost</li>
+                                        <li>Class loader caching</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="parallel-builds">
+                        <h3><code>mvnd</code> - Parallel builds</h3>
+                        <ul>
+                            <li>Default number of threads: <code style="font-size: 25px;">&nbsp;&nbsp;&nbsp;Runtime.getRuntime().availableProcessors() - 1</code></li>
+                            <li><code>-T&lt;n&gt;</code> or <code>-T&lt;n&gt;C</code> supported like with stock Maven</li>
+                        </ul>
+                    </section>
+                    <section id="maven-builder">
+                        <h3>Maven <code>builder</code></h3>
+                        <ul>
+                            <li>Pluggable <code>builder</code> since Maven 3.2.1</li>
+                            <li>A strategy for scheduling and building modules</li>
+                            <li><code>singlethreaded</code> (default)</li>
+                            <li><code>multithreaded</code> (with -T)</li>
+                        </ul>
+                    </section>
+                    <section id="smart-builder">
+                        <h3><code>mvnd</code> - Smart builder</h3>
+                        <ul>
+                            <li>Custom <code>builder</code> provided by <code>mvnd</code></li>
+                            <li>Based on <a href="http://takari.io/book/30-team-maven.html#takari-smart-builder">Takari Smart Builder</a></li>
+                        </ul>
+                        <img src="/images/smart-builder-scheduler.png" style="height: 400px;">
+                        <aside class="notes">
+The standard multi-threaded scheduler is using a rather naive and simple approach of using dependency-depth information in the project. It builds everything at a given dependency-depth before continuing to the next level.
+The Takari Smart Builder is using a more advanced approach of dependency-path information. Projects are aggressively built along a dependency-path in topological order as upstream dependencies have been satisfied.
+                        </aside>
+                    </section>
+                    <section id="hidden-deps">
+                        <small>Issues of parallel builds</small>
+                        <h2>Hidden dependencies</h2>
+
+                        <ul style="font-size: 30px;">
+                            <li>
+                                <pre style="width: 500px; margin-left: 30px; font-size: 23px; float: right; "><code class="hljs shell" data-noescape data-trim>    A
+   / \     Maven module dependencies
+  B   C    (Lower depends on upper)
+   \ /
+    D
+</code></pre>
+                               No issues with serial builder</li>
+                            <li>Possible issues with a parallel builder:
+                                <ul>
+                                    <li><code>C</code> could be reading a file in <code>B</code>'s <code>target</code> folder</li>
+                                    <li><code>C</code>'s test could dynamically read an artifact produced by <code>B</code> from the local Maven repository</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="fragment">Simple remedy: <code>-1/--serial</code><br>to force the serial builder</p>
+                        <div class="fragment" style="position: absolute; background-color: #fff; bottom: 0px; width: 100%; margin: 35px;">Better remedy:<br>Make the dependency explicit</div>
+                    </section>
+                    <section id="make-hidden-deps-explicit">
+                        <h3>Make hidden dependencies explicit</h3>
+<pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs xml" style="max-height: unset;"><dependency>                                    <!-- Add this in C -->
+    <groupId>org.my-group</groupId>
+    <artifactId>B</artifactId>
+    <version>${project.version}</version>
+    <type>pom</type>
+    <scope>test</scope>
+    <exclusions>
+        <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency></code></pre>
+<p>This won't add any real dependency to <code>C</code> but it will guarantee that <code>B</code> is fully built before <code>C</code></p>
+                    </section>
+                    <section id="concurrent-local-repo">
+                        <small>Issues of parallel builds</small>
+                        <h2>Local repository access</h2>
+                        <ul>
+                            <li>Two modules may download the same artifact concurrently</li>
+                            <li>Solved in <code>mvnd</code> 0.7.1</li>
+                        </ul>
+                    </section>
+                    <section id="broken-plugins">
+                        <small>Issues of parallel builds</small>
+                        <h2>Broken plugins</h2>
+                        <p>Plugins may do nasty things</p>
+                        <ul>
+                            <li>Mutable global state</li>
+                            <li>Race conditions</li>
+                        </ul>
+                        <p class="fragment"><code>-1/--serial</code> may help</p>
+                        <p class="fragment">Better: Report/fix the issue in the given plugin</p>
+                    </section>
+                    <section id="mvnd-drawbacks">
+                        <h2><code>mvnd</code> drawbacks</h2>
+                        <ul class="fragment" style="font-size: 30px;">
+                            <li>Blocks a few gigs of RAM (configurable)</li>
+                            <li>Better not on the CI</li>
+                            <li>Windows issues and testing catching up gradualy</li>
+                            <li>Class loader caching may have issues in some situations</li>
+                        </ul>
+                    </section>
+                    <section id="mvnd-help">
+                        <h3><code>mvnd --help</code></h3>
+                        <pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs shell" style="max-height: 500px;">$ mvnd --help
+
+usage: mvnd [options] [&lt;goal(s)>] [&lt;phase(s)>]
+
+Options:
+ -am,--also-make                        If project list is specified, also build projects
+                                        required by the list
+ -amd,--also-make-dependents            If project list is specified, also build projects
+                                        that depend on projects on the list
+ -B,--batch-mode                        Run in non-interactive (batch) mode (disables output
+                                        color)
+ -b,--builder &lt;arg>                     The id of the build strategy to use
+ -C,--strict-checksums                  Fail the build if checksums don't match
+ -c,--lax-checksums                     Warn if checksums don't match
+    --color &lt;arg>                       Defines the color mode of the output. Supported are
+                                        'auto', 'always', 'never'.
+ -cpu,--check-plugin-updates            Ineffective, only kept for backward compatibility
+ -D,--define &lt;arg>                      Define a system property
+ -e,--errors                            Produce execution error messages
+ -emp,--encrypt-master-password &lt;arg>   Encrypt master security password
+ -ep,--encrypt-password &lt;arg>           Encrypt server password
+ -f,--file &lt;arg>                        Force the use of an alternate POM file (or directory
+                                        with pom.xml)
+ -fae,--fail-at-end                     Only fail the build afterwards; allow all
+                                        non-impacted builds to continue
+ -ff,--fail-fast                        Stop at first failure in reactorized builds
+ -fn,--fail-never                       NEVER fail the build, regardless of project result
+ -gs,--global-settings &lt;arg>            Alternate path for the global settings file
+ -gt,--global-toolchains &lt;arg>          Alternate path for the global toolchains file
+ -h,--help                              Display help information
+ -l,--log-file &lt;arg>                    Log file where all build output will go (disables
+                                        output color)
+ -llr,--legacy-local-repository         Use Maven 2 Legacy Local Repository behaviour, ie no
+                                        use of _remote.repositories. Can also be activated
+                                        by using -Dmaven.legacyLocalRepo=true
+ -N,--non-recursive                     Do not recurse into sub-projects
+ -npr,--no-plugin-registry              Ineffective, only kept for backward compatibility
+ -npu,--no-plugin-updates               Ineffective, only kept for backward compatibility
+ -nsu,--no-snapshot-updates             Suppress SNAPSHOT updates
+ -ntp,--no-transfer-progress            Do not display transfer progress when downloading or
+                                        uploading
+ -o,--offline                           Work offline
+ -P,--activate-profiles &lt;arg>           Comma-delimited list of profiles to activate
+ -pl,--projects &lt;arg>                   Comma-delimited list of specified reactor projects
+                                        to build instead of all projects. A project can be
+                                        specified by [groupId]:artifactId or by its relative
+                                        path
+ -q,--quiet                             Quiet output - only show errors
+ -r,--resume                            Resume reactor from the last failed project, using
+                                        the resume.properties file in the build directory
+    --raw-streams                       Do not decorate output and error streams
+ -rf,--resume-from &lt;arg>                Resume reactor from specified project
+ -s,--settings &lt;arg>                    Alternate path for the user settings file
+ -t,--toolchains &lt;arg>                  Alternate path for the user toolchains file
+ -T,--threads &lt;arg>                     Thread count, for instance 2.0C where C is core
+                                        multiplied
+ -U,--update-snapshots                  Forces a check for missing releases and updated
+                                        snapshots on remote repositories
+ -up,--update-plugins                   Ineffective, only kept for backward compatibility
+ -v,--version                           Display version information
+ -V,--show-version                      Display version information WITHOUT stopping build
+ -X,--debug                             Produce execution debug output
+
+mvnd specific options:
+ --completion &lt;string>                  Print the completion for the given shell to stdout.
+                                        Only --completion bash is supported at this time.
+ --purge                                Delete log files under the mvnd.registry directory
+                                        that are older than mvnd.logPurgePeriod
+ --status                               Prints the status of daemon instances registered in
+                                        the registry specified by mvnd.registry
+ --stop                                 Stop all daemon instances registered in the
+                                        registry specified by mvnd.registry
+ -Djava.home=&lt;path>                     Java home for starting the daemon
+                                        Env. variable: JAVA_HOME
+ -Djdk.java.options=&lt;string>            The JDK_JAVA_OPTIONS option
+                                        Default:
+                                        Env. variable: JDK_JAVA_OPTIONS
+ -Dmaven.multiModuleProjectDirectory=&lt;path> The root directory of the current multi module
+                                        Maven project
+ -Dmaven.repo.local=&lt;path>              The path to the Maven local repository
+ -Dmaven.settings=&lt;path>;-s,--settings &lt;path> The location of the maven settings file
+ -Dmvnd.buildTime=&lt;boolean>             Log mojos execution time at the end of the build.
+ -Dmvnd.builder=&lt;string>;-b,--builder &lt;string> The builder implementation the daemon should
+                                        use
+                                        Default: smart
+ -Dmvnd.daemonStorage=&lt;path>            The directory under which the daemon stores its
+                                        registry, log files, etc. Default:
+                                        ${user.home}/.m2/mvnd
+ -Dmvnd.debug=&lt;boolean>                 If true, the daemon will be launched in debug mode
+                                        with the following JVM argument:
+                                        -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000;
+                                        otherwise the debug argument is not passed to the
+                                        daemon.
+                                        Default: false
+ -Dmvnd.duplicateDaemonGracePeriod=&lt;duration> Period after which idle duplicate daemons
+                                        will be shut down. Duplicate daemons are daemons
+                                        with the same set of discriminating start
+                                        parameters.
+                                        Default: 10 seconds
+ -Dmvnd.enableAssertions=&lt;boolean>      If true, the -ea option will be passed to the
+                                        daemon; otherwise the -ea option is not passed to
+                                        the daemon.
+                                        Default: false
+ -Dmvnd.expirationCheckDelay=&lt;duration> The daemon will check this often whether it should
+                                        exit.
+                                        Default: 10 seconds
+ -Dmvnd.home=&lt;path>                     The daemon installation directory. The client
+                                        normally sets this according to where its mvnd
+                                        executable is located
+                                        Env. variable: MVND_HOME
+ -Dmvnd.idleTimeout=&lt;duration>          A time period after which an unused daemon will
+                                        terminate by itself.
+                                        Default: 3 hours
+ -Dmvnd.jvmArgs=&lt;string>                Additional JVM args to pass to the daemon
+ -Dmvnd.keepAlive=&lt;duration>            If the daemon does not send any message to the
+                                        client in this period of time, send a keep-alive
+                                        message so that the client knows that the daemon
+                                        is still alive.
+                                        Default: 100 ms
+ -Dmvnd.logPurgePeriod=&lt;duration>       Daemon log files older than this value will be
+                                        removed automatically.
+                                        Default: 7 days
+ -Dmvnd.logback=&lt;path>                  The location of the Logback configuration file the
+                                        daemon should use to configure its logging.
+ -Dmvnd.maxHeapSize=&lt;memory_size>       The -Xmx value to pass to the daemon
+                                        Default: 2G
+ -Dmvnd.maxLostKeepAlive=&lt;integer>      The maximum number of keep alive messages that can
+                                        be missed by the client before the client
+                                        considers the daemon to be dead.
+                                        Default: 30
+ -Dmvnd.minHeapSize=&lt;memory_size>       The -Xms value to pass to the daemon
+                                        Default: 128M
+ -Dmvnd.minThreads=&lt;integer>            The minimum number of threads to use when
+                                        constructing the default -T parameter for the
+                                        daemon. This value is ignored if the user passes
+                                        -T, --threads or -Dmvnd.threads on the command
+                                        line or if he sets mvnd.threads in
+                                        ~/.m2/mvnd.properties.
+                                        Default: 1
+ -Dmvnd.noBuffering=&lt;boolean>           If true the log messages are displayed continuously
+                                        like with stock Maven; otherwise buffer the
+                                        messages and output at the end of the build,
+                                        grouped by module. Passing -B or --batch-mode on
+                                        the command line enables this too for the given
+                                        build.
+                                        Default: false
+ -Dmvnd.noDaemon=&lt;boolean>              If true, the client and daemon will run in the same
+                                        JVM that exits when the build is finished;
+                                        otherwise the client starts/connects to a long
+                                        living daemon process. This option is only
+                                        available with non-native clients and is useful
+                                        mostly for debugging.
+                                        Default: false
+                                        Env. variable: MVND_NO_DAEMON
+ -Dmvnd.pluginRealmEvictPattern=&lt;string> Regexp pattern that will force eviction of the
+                                        plugin realms if one of its dependencies matches.
+                                        Default:
+ -Dmvnd.propertiesPath=&lt;path>           The location of the user supplied mvnd.properties
+                                        file.
+                                        Env. variable: MVND_PROPERTIES_PATH
+ -Dmvnd.registry=&lt;path>                 The path to the daemon registry. Default:
+                                        ${mvnd.daemonStorage}/registry.bin
+ -Dmvnd.rollingWindowSize=&lt;integer>     The number of log lines to display for each Maven
+                                        module that is built in parallel. The value can be
+                                        increased or decreased by pressing + or - key
+                                        during the build respectively. This option has no
+                                        effect with -Dmvnd.noBuffering=true, -B or
+                                        --batch-mode.
+                                        Default: 0
+ -Dmvnd.serial;-1,--serial              Use one thread, no log buffering and the default
+                                        project builder to behave like a standard maven
+                                        Default: false
+ -Dmvnd.socketFamily=&lt;string>           Socket family to use
+                                        Default: inet
+ -Dmvnd.syncContextFactory=&lt;boolean>    The SyncContextFactory to use (can be either 'noop'
+                                        or 'ipc' for a server-wide factory).
+                                        Default: noop
+ -Dmvnd.threads=&lt;string>;-T,--threads &lt;string> The number of threads to pass to the daemon;
+                                        same syntax as Maven's -T/--threads option.
+ -Dstyle.color=&lt;string>;--color &lt;string> Whether the output should be styled using ANSI
+                                        color codes; possible values: auto, always, never
+                                        Default: auto
+ -Duser.dir=&lt;path>                      The current working directory
+ -Duser.home=&lt;path>                     The user home directory
+
+mvnd value types:
+ boolean                                true or false; empty string is also interpreted as
+                                        true - so -Dmvnd.noBuffering is equivalent to
+                                        -Dmvnd.noBuffering=true
+ duration                               An unlabeled whole number of milliseconds or a
+                                        whole number followed by an optional space and a
+                                        unit which may be one of the following (in EBNF
+                                        notation): d[ay[s]], h[our[s]], m[in[ute[s]]],
+                                        s[ec[ond[s]]] or m[illi]s[ec[ond[s]]]. Examples: 7
+                                        days, 7days, 7d, 100 milliseconds, 100 millis,
+                                        100ms, 100
+ integer                                A whole number
+ memory_size                            An amount of memory as accepted by the -Xm* family
+                                        of HotSpot JVM options. Examples: 1024m, 2g, 5G
+ path                                   A local file system path
+ string                                 A string
+</code></pre>
+                    </section>
+                    <section id="mvnd-ui">
+                        <h2><code>mvnd</code> UI</h2>
+                        <p><code>+/-</code> - reveal/hide rolling log lines for the individual builder threads</p>
+                        <p><code>CTRL+B</code> - toggle between threaded and rolling views</p>
+                    </section>
+                </section>
+                <section id="vertical-scaling">
+                    <section id="vertical-scaling-1">
+                        <h2>Vertical scaling</h2>
+                    </section>
+                    <section id="vertical-scaling-1">
+                        <h3>Laptop vs. desktop</h3>
+                        <table class="plaintable" style="font-size: 25px;">
+                            <tr>
+                                <td >A build with</td>
+                                <td colspan="3"><strong>Many modules</strong> (relatively independent)<br>
+                                    <small><code style="white-space: nowrap;">cd camel-quarkus && mvn[d] clean install -Dquickly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Machine</td>
+                                <td >Lenovo ThinkPad P1 Gen 3<br>Core i7 10850H<br>12 cores<br>2.7 GHz<br>(baseline)</td>
+                                <td><code>&nbsp;&nbsp;&nbsp;</code></td>
+                                <td class="fragment" data-fragment-index="1">Self made desktop<br>AMD Ryzen Threadripper 1920X<br>12 cores, 24 threads<br>3.5 GHz (1.3x)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 20px;"><code>mvn</code><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></td>
+                                <td style="padding-top: 20px;">4:01 min</td>
+                                <td></td>
+                                <td class="fragment" data-fragment-index="5" style="padding-top: 20px;">3:42 min (1.1x)</td>
+                            </tr>
+                            <tr>
+                                <td ><code>mvnd</code> 1st</td>
+                                <td >1:19</td>
+                                <td></td>
+                                <td class="fragment" data-fragment-index="5">0:55 (1.4x)</td>
+                            </tr>
+                            <tr>
+                                <td ><code>mvnd</code> 2nd</td>
+                                <td >1:04</td>
+                                <td></td>
+                                <td class="fragment" data-fragment-index="5">0:42 (1.5x)</td>
+                            </tr>
+                            <tr>
+                                <td ><code>mvnd</code> 3rd</td>
+                                <td >1:01</td>
+                                <td></td>
+                                <td class="fragment" data-fragment-index="5">0:40 (1.5x)</td>
+                            </tr>
+                        </table>
+                        <img class="fragment" alt="Can we do better?" src="images/costs.png" style="float: left; position: absolute; bottom: -100px;margin-left: 100px; z-index: 20">
+                    </section>
+                    <section id="vertical-scaling-costs">
+                        <h3>Costs of vertical scaling</h3>
+                        <table class="plaintable" style="font-size: 25px;">
+                            <tr>
+                                <td>Machine</td>
+                                <td >Lenovo ThinkPad P1 Gen 3<br>Core i7 10850H<br>12 cores<br>2.7 GHz</td>
+                                <td><code>&nbsp;&nbsp;&nbsp;</code></td>
+                                <td>Self made desktop<br>AMD Ryzen Threadripper 1920X<br>12 cores, 24 threads<br>3.5 GHz (1.3x)</td>
+                            </tr>
+                            <tr class="fragment"  data-fragment-index="1">
+                                <td style="padding-top: 20px;">Purchase price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></td>
+                                <td style="padding-top: 20px;"><a href="https://geizhals.de/lenovo-thinkpad-p1-g3-20th000nge-a2369307.html">2630,- €</a><br><small>(Oct. 2021)</small></td>
+                                <td></td>
+                                <td style="padding-top: 20px;">~1300 €<br><small>(Feb. 2020, w/out 🖥️ ⌨️ 🖱️)</small></td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="2">
+                                <td>Power suply unit</td>
+                                <td>135 W</td>
+                                <td></td>
+                                <td>650 W</td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="2">
+                                <td>Idle</td>
+                                <td>~18 W*</td>
+                                <td></td>
+                                <td>~60 W*</td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="2">
+                                <td>Max</td>
+                                <td>129 W*</td>
+                                <td></td>
+                                <td>278 W*</td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="2">
+                                <td>2h work session<br><small>(builds, web browsing)</small></td>
+                                <td >0.06 kWh*</td>
+                                <td></td>
+                                <td>0.21 KWh*</td>
+                            </tr>
+                            <tr class="fragment" data-fragment-index="3">
+                                <td>€/year (0.3 €/kWh)</td>
+                                <td>23 €</td>
+                                <td></td>
+                                <td>80 €</td>
+                            </tr>
+                        </table>
+                        <p class="fragment" data-fragment-index="2" style="font-size: 20px;"><br>*) Measured with a budget power meter from a hobby market</p>
+                    </section>
+                </section>
+                <section id="gib">
+                    <section id="gib-1">
+                        <p>Incremental builds with</p>
+                        <h2>Gitflow Incremental Builder</h2>
+                        <p>(GIB)</p>
+                    </section>
+                    <section id="gib-2">
+                        <h2>What is GIB?</h2>
+                        <p><small><a href="https://github.com/gitflow-incremental-builder/gitflow-incremental-builder">https://github.com/gitflow-incremental-builder/gitflow-incremental-builder</a></small></p>
+                        <ul>
+                            <li>A maven extension</li>
+                            <li>Compares the current topic branch with the reference branch
+                                <ul style="font-size: 25px;">
+                                    <li>typically <code>origin/main</code> or <code>origin/master</code></li>
+                                </ul>
+                            </li>
+                            <li>Build/test only the modules impacted by the change</li>
+                        </ul>
+                    </section>
+                    <section id="gib-in-quarkus">
+                        <h2>GIB in Quarkus</h2>
+                        <p><small><a href="https://github.com/quarkusio/quarkus/blob/main/.github/workflows/ci-actions-incremental.yml">https://github.com/quarkusio/quarkus/blob/main/.github/workflows/ci-actions-incremental.yml</a></small></p>
+                        <p style="font-size: 35px;">Multiple steps to be able run tests on multiple nodes in parallel:</p>
+                        <ul style="font-size: 30px;">
+                            <li>Build the whole tree w/out tests and identify impacted modules</li>
+                            <li>Calculate test jobs</li>
+                            <li>Run test jobs in parallel</li>
+                        </ul>
+                        <p style="font-size: 30px;">Compare the number of tests and execution times per <a href="https://github.com/quarkusio/quarkus/actions/workflows/ci-actions-incremental.yml">pull request</a></p>
+                    </section>
+                </section>
+                <section id="wrap-up">
+                    <section id="wrap-up-1">
+                        <h2>Wrap up</h2>
+                        <p>Techniques to speed up Maven builds</p>
+                        <ul class="check">
+                            <li>Skip unessential mojos</li>
+                            <li>Maven daemon to keep the building JVM warm</li>
+                            <li>Larger machine</li>
+                            <li>Incremental builds with GIB</li>
+                        </ul>
+                    </section>
+                    <section id="links">
+                        <h2>Links</h2>
+                        <ul class="check">
+                            <li><a href="https://github.com/mvndaemon/mvnd">https://github.com/mvndaemon/mvnd</a></li>
+                            <li><a href="https://peter.palaga.org/blog.html">https://peter.palaga.org/blog.html</a></li>
+                            <li><a href="https://github.com/gitflow-incremental-builder/gitflow-incremental-builder">https://github.com/gitflow-incremental-builder/gitflow-incremental-builder</a></li>
+                        </ul>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                progress: true,
+                history: true,
+                controls: false,
+                margin: 0.01,
+                transition: 'none', // none/fade/slide/convex/concave/zoom
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                ]
+            });
+            Reveal.configure({
+                pdfSeparateFragments: false,
+                keyboard: {
+                    // Make stock laser pointers work
+                    39: 'next', // Right Arrow
+                    37: 'prev',  // Left Arrow
+                    // ... and map the navigation methods to numpad numbers so that there is a proper way to navigate properly
+                    98: 'down', // numpad 2
+                    100: 'left', // numpad 4
+                    102: 'right', // numpad 6
+                    104: 'up' // numpad 8
+                }
+              });
+            Reveal.addEventListener('slidechanged', adjustFooterAndConfBannerVisibility);
+            Reveal.addEventListener('ready', adjustFooterAndConfBannerVisibility);
+        </script>
+    </body>
+</html>
