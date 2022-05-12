@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   style="fill:none;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
+   height="520.29633"
+   width="1424.5925"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="camel-as-knative-event-source.svg"
+   id="svg109"
+   stroke-miterlimit="10"
+   viewBox="0 0 1424.5925 520.29633"
+   version="1.1">
+  <metadata
+     id="metadata115">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs113">
+    <clipPath
+       id="g5eaaacc56d_0_2434.2">
+      <path
+         style="clip-rule:evenodd"
+         inkscape:connector-curvature="0"
+         id="path44"
+         d="M 0,0 H 512 V 512 H 0 Z" />
+    </clipPath>
+    <clipPath
+       id="g5eaaacc56d_0_2434.1">
+      <path
+         style="clip-rule:evenodd"
+         inkscape:connector-curvature="0"
+         id="path17"
+         d="M 0,0.23606557 H 306 V 71.771086 H 0 Z" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     fit-margin-bottom="0"
+     fit-margin-right="0"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     inkscape:current-layer="svg109"
+     inkscape:window-maximized="1"
+     inkscape:window-y="0"
+     inkscape:window-x="82"
+     inkscape:cy="224.62074"
+     inkscape:cx="630.97709"
+     inkscape:zoom="0.59662135"
+     inkscape:pagecheckerboard="true"
+     showgrid="false"
+     id="namedview111"
+     inkscape:window-height="1055"
+     inkscape:window-width="1838"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <clipPath
+     id="g5eaaacc56d_0_2434.0">
+    <path
+       style="clip-rule:nonzero"
+       inkscape:connector-curvature="0"
+       id="path2"
+       d="M 0,0 H 1536 V 864 H 0 Z" />
+  </clipPath>
+  <path
+     d="M 0,0 H 1424.5926 V 520.2963 H 0 Z"
+     id="path5"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;fill-rule:evenodd;stroke-width:1" />
+  <path
+     d="M 701.14116,25.1362 V 515.68735"
+     id="path28"
+     inkscape:connector-curvature="0"
+     style="fill:#000000;fill-opacity:0;fill-rule:evenodd" />
+  <path
+     d="M 701.14116,25.1362 V 515.68735"
+     id="path30"
+     inkscape:connector-curvature="0"
+     style="fill-rule:evenodd;stroke:#595959;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:4, 3" />
+  <path
+     d="M 611.64982,114.774 H 766.32694 V 68.85274 l 91.84253,91.84253 -91.84253,91.8425 V 206.61653 H 611.64982 Z"
+     id="path32"
+     inkscape:connector-curvature="0"
+     style="fill:#3d85c6;fill-rule:evenodd" />
+  <path
+     d="M 611.64982,114.774 H 766.32694 V 68.85274 l 91.84253,91.84253 -91.84253,91.8425 V 206.61653 H 611.64982 Z"
+     id="path34"
+     inkscape:connector-curvature="0"
+     style="fill-rule:evenodd;stroke:#595959;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round" />
+  <path
+     d="m 895.87449,117.63382 h 453.31621 l 15.7988,15.79874 v 78.99182 H 895.87448 Z"
+     id="path36"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;fill-rule:evenodd" />
+  <path
+     d="m 895.87449,117.63382 h 453.31621 l 15.7988,15.79874 v 78.99182 H 895.87448 Z"
+     id="path38"
+     inkscape:connector-curvature="0"
+     style="fill-rule:evenodd;stroke:#595959;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round" />
+  <path
+     d="m 917.2036,148.98923 h 45.50966 V 194.4989 H 917.2036 Z"
+     id="path42"
+     inkscape:connector-curvature="0"
+     style="fill:#000000;fill-opacity:0;fill-rule:evenodd" />
+  <path
+     d="M 25.5296,80.51932 H 565.9391 V 244.14139 H 25.5296 Z"
+     id="path51"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;fill-rule:evenodd" />
+  <path
+     d="M 25.5296,80.51932 H 565.9391 V 244.14139 H 25.5296 Z"
+     id="path53"
+     inkscape:connector-curvature="0"
+     style="fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;fill:#ffffd7;fill-opacity:1" />
+  <path
+     d="m 70.55376,390.8333 h 450.36218 v 78.20477 H 70.55376 Z"
+     id="path65"
+     inkscape:connector-curvature="0"
+     style="fill:#000000;fill-opacity:0;fill-rule:evenodd" />
+  <text
+     id="text982"
+     y="176.98923"
+     x="917.20361"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:Judson;-inkscape-font-specification:Judson;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
+       y="176.98923"
+       x="917.20361"
+       id="tspan980"
+       sodipodi:role="line">Knative Event Source</tspan></text>
+  <text
+     id="text853"
+     y="362.74246"
+     x="65.368095"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;line-height:1.25;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+     xml:space="preserve"><tspan
+       y="362.74246"
+       x="65.368095"
+       id="tspan851"
+       sodipodi:role="line">kamel run routes.groovy</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;line-height:1.25;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-linecap:square;stroke-miterlimit:10"
+     x="34.79562"
+     y="115.85667"
+     id="text853-8"><tspan
+       style="font-size:29.3333px"
+       sodipodi:role="line"
+       id="tspan851-3"
+       x="34.79562"
+       y="115.85667">from(&quot;aws2-kinesis:my-stream&quot;)</tspan><tspan
+       style="font-size:29.3333px"
+       id="tspan873"
+       sodipodi:role="line"
+       x="34.79562"
+       y="152.52333">  .to(&quot;knative:channel/b&quot;)</tspan></text>
+</svg>

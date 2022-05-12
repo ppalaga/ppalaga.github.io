@@ -10,6 +10,7 @@
         "date": "2022-05-17"
     },
     {
+        "slidesUri": "/presentations/220511-devoxx-uk-camel/index.html",
         "title": "Integrating systems in the age of Quarkus, serverless and Kafka",
         "eventName": "Devoxx UK",
         "date": "2022-05-12"
