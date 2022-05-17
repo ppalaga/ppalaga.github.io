@@ -5,6 +5,7 @@
         "date": "2022-06-09"
     },
     {
+        "slidesUri": "/presentations/220517-voxxed-zurich-quarkus/index.html",
         "title": "Will my library or framework work on Quarkus (and GraalVM)?",
         "eventName": "Voxxed Days Zürich",
         "date": "2022-05-17"
