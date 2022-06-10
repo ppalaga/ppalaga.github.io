@@ -1,8 +1,9 @@
 [
     {
+        "slidesUri": "/presentations/220610-voxxed-trieste/index.html",
         "title": "Will my library or framework work on Quarkus (and GraalVM)?",
         "eventName": "Voxxed Days Trieste",
-        "date": "2022-06-09"
+        "date": "2022-06-10"
     },
     {
         "slidesUri": "/presentations/220517-voxxed-zurich-quarkus/index.html",
