@@ -1,7 +1,13 @@
+image:/images/peter-at-voxxed-trieste.jpg[Peter Palaga on Voxxed Days Trieste,float="right"]
+
+{nbsp}
+
 = About me
 :showtitle:
 :page-title: About me
 :icons: font
+
+{nbsp}
 
 I am a software engineer at https://www.redhat.com/en/products/integration[Red Hat Integration], working mostly on
 https://github.com/apache/camel-quarkus[Apache Camel Quarkus].
