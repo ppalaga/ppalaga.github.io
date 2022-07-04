@@ -22,7 +22,7 @@ and <a href="https://github.com/ec4j/ec4j">ec4j</a> (<a href="https://editorconf
 {%- for talk in site.data.talks -%}
 {%- assign talksCount = talksCount | plus: 1 -%}
 <div class="local-list-item">
-    <h3><span class="local-subtitle">{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{{ talk.eventName }}{%- if talk.slidesUri != null -%}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a>{%- endif -%}</span><br>
+    <h3><span class="local-subtitle">{{ talk.date | date: site.date_format }}&nbsp;&nbsp;•&nbsp;&nbsp;{%- if talk.eventUri != null -%}<a href="{{ talk.eventUri }}" target="_blank">{%- endif -%}{{ talk.eventName }}{%- if talk.eventUri != null -%}</a>{%- endif -%}{%- if talk.slidesUri != null -%}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.slidesUri }}" target="_blank">Slides</a>{%- endif -%}{%- if talk.videoUri != null -%}&nbsp;&nbsp;•&nbsp;&nbsp;<a href="{{ talk.videoUri }}" target="_blank">Video</a>{%- endif -%}</span><br>
     {%- if talk.slidesUri != null -%}<a href="{{ talk.slidesUri }}" target="_blank">{%- endif -%}{{ talk.title }}{%- if talk.slidesUri != null -%}</a>{%- endif -%}</h3>
 </div>
 {%- if talk.slidesUri != null -%}{%- assign talksCountWithSlides = talksCountWithSlides | plus: 1 -%}{%- endif -%}

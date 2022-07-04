@@ -1,6 +1,13 @@
 [
     {
+        "title": "Integrating systems with Camel Quarkus (workshop)",
+        "eventName": "BaselOne",
+        "eventUri": "https://baselone.ch/speech.html?id=08CA4481-7EBE-44BF-B88E-5FEA9519FB18",
+        "date": "2022-10-20"
+    },
+    {
         "slidesUri": "/presentations/220610-voxxed-trieste/index.html",
+        "videoUri": "https://www.youtube.com/watch?v=n9R92IjRqpk",
         "title": "Will my library or framework work on Quarkus (and GraalVM)?",
         "eventName": "Voxxed Days Trieste",
         "date": "2022-06-10"
