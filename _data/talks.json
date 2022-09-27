@@ -6,6 +6,18 @@
         "date": "2022-10-20"
     },
     {
+        "title": "Maven, my life is short!",
+        "eventName": "Devoxx Belgium",
+        "eventUri": "https://devoxx.be/talk/?id=16755",
+        "date": "2022-10-10"
+    },
+    {
+        "slidesUri": "/presentations/220927-sbb-dev-day-camel/index.html",
+        "title": "Integrating systems in the age of Quarkus, serverless and Kafka",
+        "eventName": "SBB Dev Day",
+        "date": "2022-09-27"
+    },
+    {
         "slidesUri": "/presentations/220610-voxxed-trieste/index.html",
         "videoUri": "https://www.youtube.com/watch?v=n9R92IjRqpk",
         "title": "Will my library or framework work on Quarkus (and GraalVM)?",
