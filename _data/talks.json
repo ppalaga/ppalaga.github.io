@@ -6,6 +6,7 @@
         "date": "2022-10-20"
     },
     {
+        "slidesUri": "/presentations/221010-maven-my-life-is-short/index.html",
         "title": "Maven, my life is short!",
         "eventName": "Devoxx Belgium",
         "eventUri": "https://devoxx.be/talk/?id=16755",
