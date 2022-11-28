@@ -13,7 +13,7 @@
     {
         "title": "Episode #110: Quarkiverse Extension Spotlight of Apache Camel",
         "eventName": "Quarkus Insights",
-        "eventUri": "https://www.youtube.com/watch?v=stBjGMu73B0",
+        "videoUri": "https://www.youtube.com/watch?v=stBjGMu73B0",
         "slidesUri": "/presentations/221128-camel-on-quarkus-insights/index.html",
         "date": "2022-11-28"
     },
