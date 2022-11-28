@@ -1,0 +1,371 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Apache Camel at Quarkus Insights</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/camel.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <!-- <div class="conf-banner">
+                <img src="images/" alt="" style="position: absolute;bottom: 0;">
+            </div> -->
+            <div id="footer" class="footer">
+                <img src="css/theme/camel-assets/images/camel.svg" class="left"><a href="https://twitter.com/davsclaus">@davsclaus@twitter</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://mastodon.social/@zbendhiba">@zbendhiba@mastodon.social</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://mastodon.social/@ppalaga">@ppalaga@mastodon.social</a><img src="images/quarkus-logo.svg" class="right">
+            </div>
+            <div class="slides">
+                <section id="intro">
+                    <!--<section id="print-cover">
+                        <p>The original reveal.js version of these slides looks a bit better than this PDF export:</p>
+                        <p><a href="https://peter.palaga.org/presentations/210317-camel/index.html#/">https://peter.palaga.org/presentations/210317-camel/index.html#/</a></p>
+                    </section>-->
+                    <section data-state="no-footer" id="cover" data-background-image="images/Desert_Camels_Silhouette_461244.jpg">
+                        <img data-src="css/theme/camel-assets/images/camel.svg" alt="Apache Camel" class="plain" style="width: 9em">
+                        <br><br>
+                        <h5>at</h5>
+                        <h4>Quarkus Insights</h5>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p style="width: 95%; text-align: right; font-size: 24px; color: #d8a03f; ">
+                            Claus Ibsen<br>
+                            <a href="https://twitter.com/davsclaus" style="font-size: 18px; color:#83b6d9 ">@davsclaus@twitter</a>
+                        </p>
+                        <p style="width: 95%; text-align: right; font-size: 24px; color: #d8a03f; ">
+                            Zineb Bendhiba<br>
+                            <a href="https://mastodon.social/@zbendhiba" style="font-size: 18px; color:#83b6d9 ">@zbendhiba@mastodon.social</a>
+                        </p>
+                        <p style="width: 95%; text-align: right; font-size: 24px; color: #d8a03f; ">
+                            Peter Palaga<br>
+                            <a href="https://mastodon.social/@ppalaga" style="font-size: 18px; color:#83b6d9 ">@ppalaga@mastodon.social</a>
+                        </p>
+                        <p style="width: 20%; text-align: left; font-size: 24px; color: #aaaaaa; ">
+                        <p style="width: 95%; text-align: right; font-size: 24px; color: #aaaaaa; ">
+                            <small style="font-size: 0.3em;">Image from <a href="https://www.1zoom.me/en/wallpaper/461244/z9357.7/" style="color:#83b6d9 " target="_blank">1zoom.me</a></small>
+                        </p>
+
+                    </section>
+                    <section id="agenda">
+                        <h2>Agenda</h2>
+                        <ul>
+                            <li>Apache Camel intro (Peter)</li>
+                            <li>Camel Jbang demo (Claus)</li>
+                            <li>Camel Quarkus (Peter)</li>
+                            <li>Camel Quarkus demo (Zineb)</li>
+                        </ul>
+                    </section>
+                </section>
+                <section id="what-is-apache-camel">
+                    <section id="camel-overview">
+                        <img alt="Systems integration" src="images/system1-system2.svg">
+                    </section>
+                    <section id="connectors" data-state="no-footer" data-background-image="images/connector-types.jpg">
+                        <div style="position: absolute; right: 0px; top: 650px">
+                            <small style="font-size: 0.3em;">Image by <a href="https://www.flickr.com/photos/ahockley/31721727807/in/photostream/" target="_blank">Aaron Hockley</a> CC BY-NC-ND 2.0</small>
+                        </div>
+                    </section>
+                    <section id="connectors-350">
+                        <h2>350+ connectors</h2>
+                        <table id="camel-components" class="plaintable">
+                            <tr>
+                                <td><p>Filetypes:</p>
+                                    <ul>
+                                        <li>Plaintext, XML, HTML, CSV, JSON, ZIP, ...</li>
+                                        <li>Apache Tika (MS Office, OpenDocument, ...)</li>
+                                    </ul>
+                                </td>
+                                <td><p>Protocols:</p>
+                                    <ul>
+                                        <li>TCP/UDP, DNS, FTP, HTTP, IRC, SSH, ...</li>
+                                        <li>REST, GRPC, git, ...</li>
+                                        <li>IoT: CoAP, MQTT, PubNub</li>
+                                    </ul>
+                                </td>
+                                <td><p>Public/private&nbsp;Clouds:&nbsp;&nbsp;&nbsp;</p>
+                                    <ul>
+                                        <li>AWS: S3, SQS, Kinesis, ...</li>
+                                        <li>Azure: Blob, Queue, ...</li>
+                                        <li>Google: BigQuery, PubSub</li>
+                                        <li>DigitalOcean, Kubernetes, OpenShift, etcd, Docker</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p>Data & messaging</p>
+                                    <ul>
+                                        <li>Hazelcast, Infinispan, Redis, ...</li>
+                                        <li>Cassandra, MongoDB</li>
+                                        <li>JDBC, SQL, JPA</li>
+                                        <li>Kafka, Debezium</li>
+                                        <li>JMS, AMQP, QPID, STOMP</li>
+                                    </ul>
+                                </td>
+                                <td><p>APIs:</p>
+                                    <ul>
+                                        <li>Social: Facebook, Twitter, LinkedIn</li>
+                                        <li>Box, Dropbox, Google Calendar/Drive/Mail/Docs</li>
+                                        <li>Salesforce, SAP, ServiceNow, FHIR</li>
+                                        <li>GitHub, Jira, Telegram</li>
+                                    </ul>
+                                </td>
+                                <td><p>Misc:</p>
+                                    <ul>
+                                        <li>Barcode</li>
+                                        <li>Base64, JsonPath, Freemarker, Groovy, Mustache, Ruby</li>
+                                        <li>JMX, OpenTelemetry, OpenTracing, OptaPlanner, Syslog</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="font-size: 1.5rem">Check <a href="https://camel.apache.org/components/latest/" target="_blank">the full list</a>
+                    </section>
+                    <section id="transform" data-state="no-footer" data-background-image="images/pasta-maker.jpg">
+                        <div style="position: absolute; right: 0px; top: 650px">
+                            <small style="font-size: 0.3em;">Image by <a href="https://playswellwithbutter.com/how-to-make-homemade-pasta/" target="_blank">Jess Larson</a></small>
+                        </div>
+                    </section>
+                    <section id="eips">
+                        <h4>Enterprise Integration Patterns (EIP)</h4>
+                        <img alt="EIPs" src="images/eips.svg">
+                        <br>
+                        <small><a href="https://www.enterpriseintegrationpatterns.com/">https://www.enterpriseintegrationpatterns.com/</a></small>
+                        <!-- 65 EIPs in the book, published 2003, ~3.5 years before Camel -->
+                    </section>
+                    <section id="clay-script" data-state="no-footer" data-background-image="images/clay-script.jpg">
+                        <div style="position: absolute; right: 0px; top: 650px">
+                            <small style="font-size: 0.3em;">Image by <a href="https://commons.wikimedia.org/wiki/File:Clay_Cylinder_with_Cuneiform_Script_of_King_Nabonidus.jpg" target="_blank">Gary Todd</a> CC0 1.0</small>
+                        </div>
+                    </section>
+                    <section id="dsls">
+                        <h3>Domain Specific Languages (DSL)</h3>
+                        <table>
+                            <tr>
+                                <td style="border-bottom: none">Java</td>
+                                <td style="border-bottom: none">XML</td>
+                            </tr>
+                            <tr>
+                                <td><pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs java">class MyCamelRouter extends RouteBuilder {
+  @Override
+  public void configure() throws Exception {
+    from("aws2-s3://my-bucket?prefix=hello.txt")
+      .log("Got an S3 file: ${body}")
+      .to("telegram:bots");
+  }
+}</code></pre></td>
+                                <td><pre style="width: 100%; margin: 0px; font-size: 0.4em"><code class="hljs xml">&lt;routes
+  xmlns="http://camel.apache.org/schema/spring">
+  &lt;route id="my-route">
+    &lt;from uri="aws2-s3://my-bucket?prefix=hello.txt"/>
+    &lt;log message="Got an S3 file: ${body}"/>
+    &lt;to uri="telegram:bots"/>
+  &lt;/route>
+&lt;/routes>
+</code></pre></td>
+                            </tr>
+                        </table>
+                        <p>Groovy, Scala, Kotlin, YAML, ...</p>
+                    </section>
+                    <section id="camel-race" data-state="no-footer" data-background-image="images/camel-race.jpg">
+                        <div style="position: absolute; right: 0px; top: 650px">
+                            <small style="font-size: 0.3em;">Image by <a href="https://www.flickr.com/photos/w4nd3rl0st/5944487713" target="_blank">Jason Mrachina</a> CC BY-NC-ND 2.0</small>
+                        </div>
+                    </section>
+                    <section id="supported-platforms">
+                        <p><small>Ways to run Camel</small></p>
+                        <p><small>&nbsp;</small></p>
+                        <table>
+                            <tr>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 0px 0px 15px; text-align: center" colspan="3">
+                                    <table>
+                                        <tr>
+                                            <td style="border-bottom: none; padding-bottom: 30px; text-align: center; padding-right: 90px; "><img src="css/theme/camel-assets/images/camel-circle.svg" style="vertical-align: middle; width: 1.4em; margin-bottom: 8px"> Standalone</td>
+                                            <td style="border-bottom: none; padding-bottom: 30px; text-align: center; padding-left: 60px; "><img src="images/jbang_logo.svg" style="vertical-align: middle; height: 1.4em; margin-bottom: 8px"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- Add jbang -->
+                            <tr>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 0px 0px 15px; width: 340px"><img alt="Quarkus" src="images/quarkus-logo.svg" style="width: 250px; margin-bottom: -8px"></td>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 20px 0px 0px; font-size: 28px; white-space: nowrap; text-align: center"><img alt="Apache Karaf" src="images/knative-logo.png" style="vertical-align: middle; width: 60px">&nbsp;Knative/Kubernetes</td>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 0px 0px 50px"><img alt="WildFly" src="images/apache-kafka-connect.svg" style="width: 250px"></td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px; width: 340px"><img alt="Spring Boot" src="images/icon-spring-boot.svg" style="vertical-align: middle; width: 60px">&nbsp;Spring&nbsp;Boot</td>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 20px 0px 0px; text-align: center"><img alt="Apache Karaf" src="images/karaf-logo.png" style="width: 350px;"></td>
+                                <td style="border-bottom: none; vertical-align: middle; padding: 0px 0px 0px 50px"><img alt="WildFly" src="images/wildfly_logo.svg" style="width: 350px"></td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+                <section id="jbang">
+                    <section id="apache-camel-on-jbang" data-state="no-footer" data-background-image="images/smilling-camel.jpg">
+                        <div style="position: absolute; float: left; margin-left: -0px; margin-top: 450px;">
+                            <p><img src="css/theme/camel-assets/images/camel.svg" style="height: 1.5em; margin-left: 20px; margin-bottom: 10px"> <img src="images/jbang_logo.svg" style="height: 1.5em; margin-left: 20px"></p>
+                            <!--<p style="font-size: 1.5em; font-weight: bold; margin-bottom: 5px">Apache Camel</p>
+                            <p style="font-size: 0.7em; margin-top: 0px"><a href="http://camel.apache.org/">http://camel.apache.org/</a></p>-->
+                            <small style="font-size: 0.3em;">Image by <a href="https://www.flickr.com/photos/lanzen/5984113332" target="_blank">Anders Lanzen</a> CC BY-NC-SA 2.0</small>
+                        </div>
+                    </section>
+                </section>
+                <section id="quarkus">
+                    <section id="camel-quarkus-cover" data-state="no-footer" data-background-image="images/cq-camel-animal.jpg">
+                        <div style="position: absolute; right: 0px; top: -300px">
+                            <small style="font-size: 0.3em;">Image from <a href="https://pxhere.com/en/photo/969761" target="_blank">pxhere.com</a> CC0 Public Domain</small>
+                            <p><img src="css/theme/camel-assets/images/camel.svg" style="height: 1.5em; margin-right: 20px"> <img src="images/quarkus-logo.svg" style="height: 1em; margin-right: 20px; margin-bottom: 0px"></p>
+                        </div>
+                    </section>
+                    <section id="camel-quarkus-extensions">
+                        <p style="margin-bottom: 0px;"><img src="images/camel-quarkus-extensions.svg"></p>
+                        <p style="float: right; font-size: 24px; margin-top: 0px; text-align: left;">
+                            <a href="https://code.quarkus.io/?extension-search=origin:platform%20camel" target="_blank">code.quarkus.io</a> (with native support)<br>
+                            <a href="https://camel.apache.org/camel-quarkus/latest/reference/index.html" target="_blank">Camel Quarkus Docs</a> (all)
+                        </p>
+                    </section>
+                    <section id="seamless-integration">
+                        <h2>Seamless integration</h2>
+                        <h3>with Quarkus</h3>
+                        <ul class="check" style="font-size: 30px;">
+                            <li>Live reload</li>
+                            <li>Dev services (via Testcontainers)
+                                <ul>
+                                    <li>DBs, Kafka, Mock Mailer, ...</li>
+                                </ul>
+                            </li>
+                            <li>Continuous testing</li>
+                        </ul>
+                    </section>
+                    <section id="demo" data-state="no-footer" data-background-image="images/demo.jpg">
+                        <div style="position: absolute; right: 0px; top: 650px">
+                            <small style="font-size: 0.3em;">Image adapted from <a href="https://commons.wikimedia.org/wiki/File:Demo_gegen_Artikel_13.jpg" target="_blank">Wikimedia Commons</a> CC BY 4.0</small>
+                        </div>
+                    </section>
+                    <section id="camel-quarkus-demo">
+                        <h4>Camel Quarkus Demo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+                            <p style="margin-top: 30px;"><img alt="Camel Quarkus demo" src="images/demo-ceq.png"></p>
+                            <p style="text-align: right; font-size: 28px;"><a href="https://github.com/zbendhiba/telegram-kafka/tree/221128-quarkus-insights">github.com/zbendhiba/telegram-kafka/tree/221128-quarkus-insights</a></p>
+
+                        <aside class="notes">
+                            Demo script
+                            <ul>
+                                <li>Visit <a href="http://code.quarkus.io">code.quarkus.io</a> select extensions</li>
+                                <li>Show how to download, do not download</li>
+                                <li>Switch to a ready IDE</li>
+                                <li>Show the pom.xml file: BOM, extensions, application.properties</li>
+                                <li>Export the secrets</li>
+                                <li>`mvn compile quarkus:dev`</li>
+                                <li>Route1 telegram -> log</li>
+                                <li>Expand Route1 telegram -> transformation('Kafka: ${body}') -> kafka</li>
+                                <li>Create Route2 kafka -> log</li>
+                                <li>Expand Route2 kafka -> transformation('DDB: ${body}') -> ddb</li>
+                                <li>Create Route3 platformhttp -> ddb</li>
+                            </ul>
+                            Native mode
+                            <ul>
+                                <li>Start compilation via `mvn package -Pnative`</li>
+                                <li>Do not wait for it to finish, just show the native executable compiled beforehead</li>
+                                <li>Show the size on disk</li>
+                                <li>Maybe a simple app - just telegram -> log so that we do not have to start all the containers?</li>
+                                <li>Start, show the startup time</li>
+                                <li>Send some requests, show RSS</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <!--<section>
+                        <h1>Camel Quarkus links</h1>
+                        <br>
+                        <ul>
+                            <li>Project starter <a href="https://code.quarkus.io/">code.quarkus.io</a></li>
+                            <li><a href="https://camel.apache.org/camel-quarkus/latest/reference/index.html">Supported Camel components</a></li>
+                            <li><a href="https://camel.apache.org/camel-quarkus/latest/user-guide.html">User guide</a></li>
+                            <li><a href="https://github.com/apache/camel-quarkus/tree/master/examples">Examples</a></li>
+                        </ul>
+                    </section>-->
+                </section>
+                <section id="end">
+                    <section id="wrap-up">
+                        <h2>Wrap up</h2>
+                        <ul class="check" style="font-size: 2.3rem" >
+                            <li style="margin-bottom: 20px">Apache 🐪 = an integration toolkit with 350+ connectors</li>
+                            <li style="margin-bottom: 20px">🚀🔬😍 on Quarkus</li>
+                        </ul>
+                    </section>
+                    <section id="camel-links">
+                        <img src="css/theme/camel-assets/images/camel.svg" style="height: 3em; margin-bottom: 1em">
+                        <ul>
+                            <li><a href="https://camel.apache.org">https://camel.apache.org</a></li>
+                            <li>Chat: <a href="https://camel.zulipchat.com/">https://camel.zulipchat.com</a></li>
+                            <li>Mailing list: <a href="mailto:dev@camel.apache.org">dev@camel.apache.org</a></li>
+                            <li>Follow <a href="https://twitter.com/ApacheCamel">@ApacheCamel</a></li>
+                        </ul>
+                        <br><br>
+                        Feedback and contributions are welcome!
+                    </section>
+                    <!-- <section>
+                        <h2>Apache Camel community</h2>
+                        <ul class="no-bullet">
+                            <li>500+ contributors</li>
+                            <li>3.6k stars on <a href="https://github.com/apache/camel">Github</a></li>
+                            <li>4.2k forks on <a href="https://github.com/apache/camel">Github</a></li>
+                            <li>1k subscribers on the <a href="http://mail-archives.apache.org/mod_mbox/camel-users/">Users mailing list</a></li>
+                            <li>10.3k questions on <a href="https://stackoverflow.com/questions/tagged/apache-camel?tab=Newest">StackOverFlow</a></li>
+                        </ul>
+                    </section> -->
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                width: 1280,
+                height: 720,
+                progress: true,
+                history: true,
+                controls: false,
+                margin: 0.01,
+                transition: 'none', // none/fade/slide/convex/concave/zoom
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+                ]
+            });
+            Reveal.configure({
+                pdfSeparateFragments: false,
+                keyboard: {
+                    // Make stock laser pointers work
+                    39: 'next', // Right Arrow
+                    37: 'prev',  // Left Arrow
+                    // ... and map the navigation methods to numpad numbers so that there is a proper way to navigate properly
+                    98: 'down', // numpad 2
+                    100: 'left', // numpad 4
+                    102: 'right', // numpad 6
+                    104: 'up' // numpad 8
+                }
+              });
+            Reveal.addEventListener('slidechanged', adjustFooterAndConfBannerVisibility);
+            Reveal.addEventListener('ready', adjustFooterAndConfBannerVisibility);
+        </script>
+    </body>
+</html>
