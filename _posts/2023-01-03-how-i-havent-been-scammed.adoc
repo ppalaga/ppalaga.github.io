@@ -1,0 +1,120 @@
+= How I haven't been scammed
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [private-life]
+:page-summary: Paranoid techie figuring out that somebody wants to steal his money
+:sectanchors:
+
+I happen to look for a new apartment these days.
+I went through the process in the past so I can say I know what is usual and what is not.
+
+The case I want to tell you about now was a bit special.
+
+I searched using the most common web property marketplace in the country where I live.
+I found an apartment that matched my criteria
+and I contacted the landlord through the site's contact form.
+Within hours, I have got this reply:
+
+[quote]
+____
+Please contact the landlord and ask about the Details: +
+Diana +
+\dianaphelan49@outlook.com +
+
+Thanks
+____
+
+I contacted Diana, asking about when I could view the apartment. This was her answer:
+
+[quote]
+____
+Hello, +
+I am the owner of the apartment at [...]. +
+It has 1 bedroom, 1 bathroom, 1 kitchen (44 m2). +
+The rent is [...] /month including additional cost (warm rent). +
+The security deposit is [...], and you get it back when you decide to leave the apartment (you will have to give me at least 30 days' notice). +
+A little bit about myself so we can get to know each other better. +
+I am Diana Phelan, I am 51 Years old and I work in the GEF industry (deep water research) in the quality management department of a company located in Madrid. +
+I would like to know something about you, for example, your occupation, financial situation, monthly income for people who will live in the apartment, how many people will have to live at home and for how long do you plan to stay?
+
+I hope you got a good first impression, and please if you have any more questions don't hesitate to ask.
+
+Kind regards from Spain,
+
+Diana
+____
+
+So far so good, I told her, what she wanted to know and again, I asked about inspecting the apartment.
+Her reply made me a bit suspect.
+
+[quote]
+____
+Hello Peter,
+
+Thanks for telling me more about you. +
+I have attached the draft rental agreement and copy of my passport. The apartment is available for long-term rental and is exactly as you can see in the pictures. As I said in my previous email, I live in Spain and will have to come and sign the rental agreement. +
+If you are interested, I can send you the keys to see the apartment and decide if you want to rent it. After you see the apartment, if you agree to rent it, I will come to conclude the contract. +
+I will send the keys using Valiant delivery \https://valiant-transport.com +
+You will pay the apartment security deposit using Valiant escrow payment because a few months ago I came there to meet a couple who was interested, but they never showed up, and I think you can imagine that it's not very comfortable to fly back and forth from Spain, especially when work commitments are made. +
+This is Valiant's escrow service: \https://valiant-transport.com/en/escrow +
+Once you see the apartment, if for any reason you do not want to rent it, then you will receive the security deposit back. This is stated in the lease at point 21, but I assure you that the property is exactly as it looks in the photos. +
+If everything sounds good to you, please provide me with the following details: +
+
+Your full name: +
+Your current address: +
+Your copy of passport: +
+Your phone number: +
+
+PS: You will pay the first month of rent in the day you move into the apartment.
+
+Best regards, +
+Diana
+____
+
+The first red flag was sending keys per post.
+
+Then when reading it for the second time
+and after reading about how the "Valiant escrow" service was supposed to work,
+I realized she actually wants me to pay the deposit before she does anything - even before she sends the keys.
+That was actually a big red flag.
+
+I wondered whether I find something about `valiant-transport.com` on Google:
+
+image::/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-on-google.png["valiant-transport.com unknown to Google"]
+
+Very strange that Google did not know it at all. The first result was about `valianttransport.com` without dash.
+
+Having looked at the domain name metadata via https://lookup.icann.org/en/lookup, I found the following:
+
+image::/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-dates.png["valiant-transport.com DNS registration dates"]
+
+The domain was registered just 4 days before the first contact with me!
+
+Moreover, the registrant's address `Kalkofnsvegur 2, Reykjavik, Capital Region, 101, IS` and the phone number `+354.4212434`
+
+image::/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-registrant.png["valiant-transport.com Registrant"]
+
+was very well known to Google as a source of phishing and scam:
+
+image::/images/2023/2023-01-03-how-i-have-not-got-scammed/354.4212434-on-google.png["+354.4212434 on google"]
+
+At this point I was sure I was being scammed.
+I reported the ad on the property marketplace and stopped responding to Diana.
+
+Another pointer was googling for a piece of text from `valiant-transport.com`.
+I took
+
+  "Complete one simple form and quotes come to you via email. Hassle-free, no phone calls required."
+
+The first result was https://www.shiply.com/ - a real shipping company.
+
+Just compare them side by side:
+
+image::/images/2023/2023-01-03-how-i-have-not-got-scammed/shiply.com-vs-valiant-transport.com.png["shiply.com vs valiant-transport.com"]
+
+These scammers created a fake shipping company site to get the money! Crazy, isn't it?
+
+I can imagine, this kind of scam could have worked for less tech-savvy folks.
+
+Anyway, I hope this blog post helps others to uncover any future attempts to use this fraud scheme.
