@@ -1,4 +1,178 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2022-11-28T19:11:30+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">Lego 51515 on Fedora</title><link href="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html" rel="alternate" type="text/html" title="Lego 51515 on Fedora" /><published>2021-12-28T00:00:00+00:00</published><updated>2021-12-28T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/12/28/lego-51515-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html">&lt;h1&gt;Lego 51515 on Fedora&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-03T21:26:16+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I happen to look for a new apartment these days.
+I went through the process in the past so I can say I know what is usual and what is not.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The case I want to tell you about was a bit special.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I searched using the most common web property marketplace in the country where I live.
+I found an apartment that matched my criteria
+and I contacted the landlord through the site&amp;#8217;s contact form.
+Within hours, I have got this reply:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Please contact the landlord and ask about the Details:
+Diana
+&lt;a href=&quot;mailto:dianaphelan49@outlook.com&quot;&gt;dianaphelan49@outlook.com&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thanks&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I contacted Diana, asking about when I could view the apartment. This was her answer:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Hello,
+I am the owner of the apartment at [&amp;#8230;&amp;#8203;].
+It has 1 bedroom, 1 bathroom, 1 kitchen (44 m2).
+The rent is [&amp;#8230;&amp;#8203;] /month including additional cost (warm rent).
+The security deposit is [&amp;#8230;&amp;#8203;], and you get it back when you decide to leave the apartment (you will have to give me at least 30 days' notice).
+A little bit about myself so we can get to know each other better.
+I am Diana Phelan, I am 51 Years old and I work in the GEF industry (deep water research) in the quality management department of a company located in Madrid.
+I would like to know something about you, for example, your occupation, financial situation, monthly income for people who will live in the apartment, how many people will have to live at home and for how long do you plan to stay?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I hope you got a good first impression, and please if you have any more questions don&amp;#8217;t hesitate to ask.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Kind regards from Spain,&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Diana&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So far so good, I told her, what she wanted and again, I asked about inspecting the apartment.
+Her reply made me a bit suspect.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Hello Peter,&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Thanks for telling me more about you.&lt;br&gt;
+I have attached the draft rental agreement and copy of my passport. The apartment is available for long-term rental and is exactly as you can see in the pictures. As I said in my previous email, I live in Spain and will have to come and sign the rental agreement.&lt;br&gt;
+If you are interested, I can send you the keys to see the apartment and decide if you want to rent it. After you see the apartment, if you agree to rent it, I will come to conclude the contract.&lt;br&gt;
+I will send the keys using Valiant delivery https://valiant-transport.com&lt;br&gt;
+You will pay the apartment security deposit using Valiant escrow payment because a few months ago I came there to meet a couple who was interested, but they never showed up, and I think you can imagine that it&amp;#8217;s not very comfortable to fly back and forth from Spain, especially when work commitments are made.&lt;br&gt;
+This is Valiant&amp;#8217;s escrow service: https://valiant-transport.com/en/escrow&lt;br&gt;
+Once you see the apartment, if for any reason you do not want to rent it, then you will receive the security deposit back. This is stated in the lease at point 21, but I assure you that the property is exactly as it looks in the photos.&lt;br&gt;
+If everything sounds good to you, please provide me with the following details:&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Your full name:&lt;br&gt;
+Your current address:&lt;br&gt;
+Your copy of passport:&lt;br&gt;
+Your phone number:&lt;br&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;PS: You will pay the first month of rent in the day you move into the apartment.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Best regards,&lt;br&gt;
+Diana&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first red flag was sending keys per post.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then when reading it for the second time
+and after reading about how the &quot;Valiant escrow&quot; service was supposed to work,
+I realized she actually wants me to pay the deposit before she does anything - even before she sends the keys.
+That was actually a big red flag.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I wondered whether I find something about &lt;code&gt;valiant-transport.com&lt;/code&gt; on Google:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-on-google.png&quot; alt=&quot;valiant-transport.com unknown to Google&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Very strange that Google did not know it at all. The first result was about &lt;code&gt;valianttransport.com&lt;/code&gt; without dash.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Then I have looked at the domain name metadata via &lt;a href=&quot;https://lookup.icann.org/en/lookup&quot; class=&quot;bare&quot;&gt;https://lookup.icann.org/en/lookup&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It said&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-dates.png&quot; alt=&quot;valiant-transport.com DNS registration dates&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The domain was registered just 4 days before the first contact with me!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Moreover, the registrant&amp;#8217;s address &lt;code&gt;Kalkofnsvegur 2, Reykjavik, Capital Region, 101, IS&lt;/code&gt; and the phone number &lt;code&gt;+354.4212434&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com-registrant.png&quot; alt=&quot;valiant-transport.com Registrant&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;was very well known to Google as a source of phishing and scam:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/354.4212434-on-google.png&quot; alt=&quot;+354.4212434 on google&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;At this point I was sure I was being scammed.
+I reported the ad on the property marketplace and stopped responding to Diana.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another pointer was googling for a piece of text from &lt;code&gt;valiant-transport.com&lt;/code&gt;.
+I took&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;literalblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;&quot;Complete one simple form and quotes come to you via email. Hassle-free, no phone calls required.&quot;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The first result was &lt;a href=&quot;https://www.shiply.com/&quot; class=&quot;bare&quot;&gt;https://www.shiply.com/&lt;/a&gt; - a real shipping company.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Just compare them:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The real one:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/shiply.com.png&quot; alt=&quot;shiply.com&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;and the fake:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com.png&quot; alt=&quot;valiant-transport.com&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Well, I can imagine, this kind of scam could have worked for less tech-savvy folks.
+Anyway, I hope this blog post helps others to uncover any future attempts to use this fraud scheme.&lt;/p&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="private-life" /><summary type="html">How I haven&amp;#8217;t got scammed I happen to look for a new apartment these days. I went through the process in the past so I can say I know what is usual and what is not.</summary></entry><entry><title type="html">Lego 51515 on Fedora</title><link href="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html" rel="alternate" type="text/html" title="Lego 51515 on Fedora" /><published>2021-12-28T00:00:00+00:00</published><updated>2021-12-28T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/12/28/lego-51515-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html">&lt;h1&gt;Lego 51515 on Fedora&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -1885,53 +2059,4 @@ the source tree with 1200+ modules mentioned above, the quick build time goes do
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;P.S.: You may want to try &lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt;, the Maven Daemon to reduce your build
 times even further.&lt;/p&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">When -DskipTests is not fast enough: skip Maven mojos properly -DskipTests is a well known way to skip the execution of unit tests during a Maven build and thus save time. This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI already.</summary></entry><entry><title type="html">History of Camel Quarkus from the very beginning to 1.0.0</title><link href="https://peter.palaga.org/2020/08/11/camel-quarkus-early-history.html" rel="alternate" type="text/html" title="History of Camel Quarkus from the very beginning to 1.0.0" /><published>2020-08-11T00:00:00+00:00</published><updated>2020-08-11T00:00:00+00:00</updated><id>https://peter.palaga.org/2020/08/11/camel-quarkus-early-history</id><content type="html" xml:base="https://peter.palaga.org/2020/08/11/camel-quarkus-early-history.html">&lt;h1&gt;History of Camel Quarkus from the very beginning to 1.0.0&lt;/h1&gt;
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided
-to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so
-I am pasting it here.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;when_and_how_camel_quarkus_was_born&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#when_and_how_camel_quarkus_was_born&quot;&gt;&lt;/a&gt;When and how &lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;Camel Quarkus&lt;/a&gt; was born?&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/lburgazzoli&quot;&gt;Luca&lt;/a&gt; and &lt;a href=&quot;https://github.com/gnodet&quot;&gt;Guillaume&lt;/a&gt; started porting Camel to
-&lt;a href=&quot;https://github.com/quarkusio/quarkus&quot;&gt;Quarkus&lt;/a&gt; very early while Quarkus was still in the stealth mode at Red Hat.
-The work started around November 2018 and was
-&lt;a href=&quot;https://github.com/quarkusio/quarkus/commit/549c74d74f4ae6af83854e51f14db429adef7483&quot;&gt;merged to Quarkus master&lt;/a&gt; on Feb.
-28, 2019 - shortly before Quarkus was
-&lt;a href=&quot;https://developers.redhat.com/blog/2019/03/07/quarkus-next-generation-kubernetes-native-java-framework/&quot;&gt;publicly announced&lt;/a&gt;
-on March 7, 2019. At that time, Quarkus
-&lt;a href=&quot;https://github.com/quarkusio/quarkus/tree/0.11.0/extensions/camel&quot;&gt;supported just a handful of Camel components&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;moving_to_asf&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#moving_to_asf&quot;&gt;&lt;/a&gt;Moving to ASF&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The next important milestone was donating the Camel specific bits from the main Quarkus source tree to Apache Software
-Foundation (ASF). This happened around July 2019 and the current
-&lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;GitHub home of the project&lt;/a&gt; is the result. Camel Quarkus thus became a
-subproject of Apache Camel, along with &lt;a href=&quot;https://github.com/apache/camel-k&quot;&gt;Camel K&lt;/a&gt;,
-&lt;a href=&quot;https://github.com/apache/camel-spring-boot&quot;&gt;Camel Spring Boot&lt;/a&gt;,
-&lt;a href=&quot;https://github.com/apache/camel-karaf&quot;&gt;Camel Karaf&lt;/a&gt; and &lt;a href=&quot;https://github.com/apache/camel-kafka-connector&quot;&gt;Camel Kafka
-Connector&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect2&quot;&gt;
-&lt;h3 id=&quot;the_life_under_asf&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#the_life_under_asf&quot;&gt;&lt;/a&gt;The life under ASF&lt;/h3&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Under the new home, the project attracted a fair amount of new contributors (currently
-&lt;a href=&quot;https://github.com/apache/camel-quarkus/graphs/contributors&quot;&gt;36 in total&lt;/a&gt;) which in turn brought a lot of
-contributions.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Within those ~13 month from migrating to the ASF repo to 1.0.0 we released 7 milestones and 3 candidate releases.
-That gives a rough average cadence of one release every ~5 weeks.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Stay tuned for Camel Quarkus 1.0.0!&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">History of Camel Quarkus from the very beginning to 1.0.0 I have originally written this for the upcoming Camel Quarkus 1.0.0 announcement, but then decided to remove it from there based on some review comments. I still think the history deserves to be written somewhere, so I am pasting it here.</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><summary type="html">When -DskipTests is not fast enough: skip Maven mojos properly -DskipTests is a well known way to skip the execution of unit tests during a Maven build and thus save time. This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI already.</summary></entry></feed>
