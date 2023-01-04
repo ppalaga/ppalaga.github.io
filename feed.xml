@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-03T21:26:16+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-04T10:41:36+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I happen to look for a new apartment these days.
 I went through the process in the past so I can say I know what is usual and what is not.&lt;/p&gt;
@@ -15,9 +15,9 @@ Within hours, I have got this reply:&lt;/p&gt;
 &lt;div class=&quot;quoteblock&quot;&gt;
 &lt;blockquote&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Please contact the landlord and ask about the Details:
-Diana
-&lt;a href=&quot;mailto:dianaphelan49@outlook.com&quot;&gt;dianaphelan49@outlook.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Please contact the landlord and ask about the Details:&lt;br&gt;
+Diana&lt;br&gt;
+dianaphelan49@outlook.com&lt;br&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Thanks&lt;/p&gt;
@@ -30,13 +30,13 @@ Diana
 &lt;div class=&quot;quoteblock&quot;&gt;
 &lt;blockquote&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Hello,
-I am the owner of the apartment at [&amp;#8230;&amp;#8203;].
-It has 1 bedroom, 1 bathroom, 1 kitchen (44 m2).
-The rent is [&amp;#8230;&amp;#8203;] /month including additional cost (warm rent).
-The security deposit is [&amp;#8230;&amp;#8203;], and you get it back when you decide to leave the apartment (you will have to give me at least 30 days' notice).
-A little bit about myself so we can get to know each other better.
-I am Diana Phelan, I am 51 Years old and I work in the GEF industry (deep water research) in the quality management department of a company located in Madrid.
+&lt;p&gt;Hello,&lt;br&gt;
+I am the owner of the apartment at [&amp;#8230;&amp;#8203;].&lt;br&gt;
+It has 1 bedroom, 1 bathroom, 1 kitchen (44 m2).&lt;br&gt;
+The rent is [&amp;#8230;&amp;#8203;] /month including additional cost (warm rent).&lt;br&gt;
+The security deposit is [&amp;#8230;&amp;#8203;], and you get it back when you decide to leave the apartment (you will have to give me at least 30 days' notice).&lt;br&gt;
+A little bit about myself so we can get to know each other better.&lt;br&gt;
+I am Diana Phelan, I am 51 Years old and I work in the GEF industry (deep water research) in the quality management department of a company located in Madrid.&lt;br&gt;
 I would like to know something about you, for example, your occupation, financial situation, monthly income for people who will live in the apartment, how many people will have to live at home and for how long do you plan to stay?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -105,10 +105,7 @@ That was actually a big red flag.&lt;/p&gt;
 &lt;p&gt;Very strange that Google did not know it at all. The first result was about &lt;code&gt;valianttransport.com&lt;/code&gt; without dash.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Then I have looked at the domain name metadata via &lt;a href=&quot;https://lookup.icann.org/en/lookup&quot; class=&quot;bare&quot;&gt;https://lookup.icann.org/en/lookup&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;It said&lt;/p&gt;
+&lt;p&gt;Having looked at the domain name metadata via &lt;a href=&quot;https://lookup.icann.org/en/lookup&quot; class=&quot;bare&quot;&gt;https://lookup.icann.org/en/lookup&lt;/a&gt;, I found the following:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
