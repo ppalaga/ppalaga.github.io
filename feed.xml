@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T20:18:20+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T20:21:25+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I have bought &lt;a href=&quot;https://www.prusa3d.com/category/original-prusa-mini/&quot;&gt;Prusa Mini+&lt;/a&gt; 3D printer a couple of weeks ago.
 I primarily wanted to use it for printing small things that are hard to produce in other ways.&lt;/p&gt;
@@ -8,7 +8,7 @@ I primarily wanted to use it for printing small things that are hard to produce 
 he needed for his complicated guns. (Do not ask me why he builds guns. I hate it.)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;IIRC, Vítek uses &lt;a href=&quot;https://www.tinkercad.com/&quot;&gt;Tinkercad&amp;#8217;s&lt;/a&gt; &quot;Brick mode&quot; for modeling his Lego bricks.&lt;/p&gt;
+&lt;p&gt;IIRC, Vítek used &lt;a href=&quot;https://www.tinkercad.com/&quot;&gt;Tinkercad&amp;#8217;s&lt;/a&gt; &quot;Brick mode&quot; for modeling his Lego bricks.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -16,10 +16,10 @@ he needed for his complicated guns. (Do not ask me why he builds guns. I hate it
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;He prints them using &lt;a href=&quot;https://prusament.com/materials/prusament-petg/&quot;&gt;PETG&lt;/a&gt; material
-which is perhaps not optimal, but we do not have any other material yet.
-Larger bricks turned out to be a bit smaller than LEGO originals so there is some tension when they are used together.
-Tikercad brick defaults would perhaps deserve some tuning.&lt;/p&gt;
+&lt;p&gt;He printed them using &lt;a href=&quot;https://prusament.com/materials/prusament-petg/&quot;&gt;PETG&lt;/a&gt; material.
+That&amp;#8217;s perhaps not optimal, but we do not have any other material yet.
+Larger bricks turned out to be a bit smaller than LEGO originals so there was some tension when they were used together.
+Tinkercad brick defaults would perhaps deserve some tuning.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;So much about Vítek&amp;#8217;s 3D modeling and printing. Now about my own experiments.&lt;/p&gt;
@@ -30,7 +30,7 @@ It is pretty powerful and fast but its center of gravity is a bit too high so it
 during sharp turns on rough surfaces.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We realized we needed a solution because we broke one side mirror due to a roll over ☹.&lt;/p&gt;
+&lt;p&gt;We realized we needed a solution once we broke one side mirror in a roll over ☹.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Viliam did not not want to sacrifice maneuverability by limiting the max steering angle.
