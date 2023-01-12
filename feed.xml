@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-04T10:41:36+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T16:47:14+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I happen to look for a new apartment these days.
 I went through the process in the past so I can say I know what is usual and what is not.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The case I want to tell you about was a bit special.&lt;/p&gt;
+&lt;p&gt;The case I want to tell you about now was a bit special.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I searched using the most common web property marketplace in the country where I live.
@@ -51,7 +51,7 @@ I would like to know something about you, for example, your occupation, financia
 &lt;/blockquote&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;So far so good, I told her, what she wanted and again, I asked about inspecting the apartment.
+&lt;p&gt;So far so good, I told her, what she wanted to know and again, I asked about inspecting the apartment.
 Her reply made me a bit suspect.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;quoteblock&quot;&gt;
@@ -148,27 +148,21 @@ I took&lt;/p&gt;
 &lt;p&gt;The first result was &lt;a href=&quot;https://www.shiply.com/&quot; class=&quot;bare&quot;&gt;https://www.shiply.com/&lt;/a&gt; - a real shipping company.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Just compare them:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The real one:&lt;/p&gt;
+&lt;p&gt;Just compare them side by side:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/shiply.com.png&quot; alt=&quot;shiply.com&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/shiply.com-vs-valiant-transport.com.png&quot; alt=&quot;shiply.com vs valiant-transport.com&quot;&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;and the fake:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;/images/2023/2023-01-03-how-i-have-not-got-scammed/valiant-transport.com.png&quot; alt=&quot;valiant-transport.com&quot;&gt;
-&lt;/div&gt;
+&lt;p&gt;These scammers created a fake shipping company site to get the money! Crazy, isn&amp;#8217;t it?&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Well, I can imagine, this kind of scam could have worked for less tech-savvy folks.
-Anyway, I hope this blog post helps others to uncover any future attempts to use this fraud scheme.&lt;/p&gt;
+&lt;p&gt;I can imagine, this kind of scam could have worked for less tech-savvy folks.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Anyway, I hope this blog post helps others to uncover any future attempts to use this fraud scheme.&lt;/p&gt;
 &lt;/div&gt;</content><author><name></name></author><category term="private-life" /><summary type="html">How I haven&amp;#8217;t got scammed I happen to look for a new apartment these days. I went through the process in the past so I can say I know what is usual and what is not.</summary></entry><entry><title type="html">Lego 51515 on Fedora</title><link href="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html" rel="alternate" type="text/html" title="Lego 51515 on Fedora" /><published>2021-12-28T00:00:00+00:00</published><updated>2021-12-28T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/12/28/lego-51515-on-fedora</id><content type="html" xml:base="https://peter.palaga.org/2021/12/28/lego-51515-on-fedora.html">&lt;h1&gt;Lego 51515 on Fedora&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
