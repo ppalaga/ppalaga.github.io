@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T18:33:31+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T20:18:20+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I have bought &lt;a href=&quot;https://www.prusa3d.com/category/original-prusa-mini/&quot;&gt;Prusa Mini+&lt;/a&gt; 3D printer a couple of weeks ago.
-I primarily wanted to use it for printing small things that are hard to produce in other way.&lt;/p&gt;
+I primarily wanted to use it for printing small things that are hard to produce in other ways.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I got rather surprised that my older son Vítek occupied it immediately for printing Lego bricks
@@ -18,7 +18,7 @@ he needed for his complicated guns. (Do not ask me why he builds guns. I hate it
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;He prints them using &lt;a href=&quot;https://prusament.com/materials/prusament-petg/&quot;&gt;PETG&lt;/a&gt; material
 which is perhaps not optimal, but we do not have any other material yet.
-Larger bricks turned out to be a bit smaller than LEGO originals so there is some tension when they are used in combination.
+Larger bricks turned out to be a bit smaller than LEGO originals so there is some tension when they are used together.
 Tikercad brick defaults would perhaps deserve some tuning.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -30,7 +30,7 @@ It is pretty powerful and fast but its center of gravity is a bit too high so it
 during sharp turns on rough surfaces.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We realized we needed a solution because we broke one side mirror due to that ☹.&lt;/p&gt;
+&lt;p&gt;We realized we needed a solution because we broke one side mirror due to a roll over ☹.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Viliam did not not want to sacrifice maneuverability by limiting the max steering angle.
@@ -38,7 +38,7 @@ during sharp turns on rough surfaces.&lt;/p&gt;
 Therefore we had to look for another solution.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;How about printing offsetted wheel rims thus making the car wider and more stable?&lt;/p&gt;
+&lt;p&gt;How about getting offset wheels thus making the car wider and more stable? - That&amp;#8217;s a perfect task for a 3D printer!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;This is how the original ones looked like:&lt;/p&gt;
@@ -54,7 +54,7 @@ Therefore we had to look for another solution.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;We added ~10 mm offset on each wheel:&lt;/p&gt;
+&lt;p&gt;And this is how it looks like now after we added ~10 mm offset on each wheel:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -67,7 +67,7 @@ Therefore we had to look for another solution.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I modelled using &lt;a href=&quot;https://www.freecadweb.org/&quot;&gt;FreeCAD&lt;/a&gt; (&lt;code&gt;dnf install -y freecad&lt;/code&gt; on Fedora).&lt;/p&gt;
+&lt;p&gt;I modeled the rim using &lt;a href=&quot;https://www.freecadweb.org/&quot;&gt;FreeCAD&lt;/a&gt; (&lt;code&gt;dnf install -y freecad&lt;/code&gt; on Fedora).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;imageblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
@@ -103,7 +103,7 @@ Therefore we had to look for another solution.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="leisure" /><category term="lego" /><category term="3D-printing" /><summary type="html">3D modelling and printing for fun and profit I have bought Prusa Mini+ 3D printer a couple of weeks ago. I primarily wanted to use it for printing small things that are hard to produce in other way.</summary></entry><entry><title type="html">How I haven’t been scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed.html" rel="alternate" type="text/html" title="How I haven’t been scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t been scammed&lt;/h1&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="leisure" /><category term="lego" /><category term="3D-printing" /><summary type="html">3D modelling and printing for fun and profit I have bought Prusa Mini+ 3D printer a couple of weeks ago. I primarily wanted to use it for printing small things that are hard to produce in other ways.</summary></entry><entry><title type="html">How I haven’t been scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed.html" rel="alternate" type="text/html" title="How I haven’t been scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-havent-been-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t been scammed&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I happen to look for a new apartment these days.
 I went through the process in the past so I can say I know what is usual and what is not.&lt;/p&gt;
