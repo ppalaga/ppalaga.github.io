@@ -1,0 +1,261 @@
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D modelling and printing for fun and profit - Peter Palaga</title>
+    <meta name="description" content="A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.">
+    <meta name="author" content="Your name goes here">
+    <meta name="copyright" content="Maybe consider a Creative Commons license">
+    <link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml"/>
+    <link rel="stylesheet" href="../../../css/foundation.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../../css/coderay.css">
+    <link rel="stylesheet" href="../../../css/asciidoctor.css">
+    <link rel="stylesheet" href="../../../css/adoc-foundation.css">
+    <link rel="stylesheet" href="../../../css/local.css">
+    <script src="../../../js/vendor/modernizr.js"></script>
+    <script src="../../../js/toc.js"></script>
+</head>
+<body id="local-body">
+
+<!-- Nav Bar -->
+<div id="local-header" class="contain-to-grid">
+<nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="name">
+        <a href="/"><img id="local-avatar" src="/images/2019/peter-palaga-200x213.png"></a>
+      </li>
+      <li class="name">
+        <h1><a href="/">Peter Palaga</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+    </ul>
+    <section class="top-bar-section">
+        <div class="right">
+            <ul>
+                <li><a href="/blog.html">Blog</a></li>
+                <li><a href="/talks.html">Talks</a></li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <ul class="local-social">
+                <li><a title="RSS" target="_blank" href="/feed.xml"><i class="fa fa-rss"></i></a></li>
+                <li><a title="Peter Palaga on GitHub" target="_blank" href="https://github.com/ppalaga/"><i class="fa fa-github"></i></a></li>
+                <li><a title="Peter Palaga on LinkedIn" target="_blank" href="https://www.linkedin.com/in/ppalaga"><i class="fa fa-linkedin"></i></a></li>
+                <li><a title="Peter Palaga on Twitter" target="_blank" href="https://twitter.com/ppalaga"><i class="fa fa-twitter"></i></a></li>
+            </ul>
+        </div>
+    </section>
+</nav>
+</div>
+<!-- End Nav -->
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+    <div id="local-content" class="large-12 columns" role="content">
+
+        <h3><span class="local-subtitle">Jan 12, 2023</span></h3>
+<h1>3D modelling and printing for fun and profit</h1>
+<div class="paragraph">
+<p>I have bought <a href="https://www.prusa3d.com/category/original-prusa-mini/">Prusa Mini+</a> 3D printer a couple of weeks ago.
+I primarily wanted to use it for printing small things that are hard to produce in other way.</p>
+</div>
+<div class="paragraph">
+<p>I got rather surprised that my older son Vítek occupied it immediately for printing Lego bricks
+he needed for his complicated guns. (Do not ask me why he builds guns. I hate it.)</p>
+</div>
+<div class="paragraph">
+<p>IIRC, Vítek uses <a href="https://www.tinkercad.com/">Tinkercad&#8217;s</a> "Brick mode" for modeling his Lego bricks.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/tinkercad-brick-mode.png" alt="Tinkercad&#8217;s brick mode">
+</div>
+</div>
+<div class="paragraph">
+<p>He prints them using <a href="https://prusament.com/materials/prusament-petg/">PETG</a> material
+which is perhaps not optimal, but we do not have any other material yet.
+Larger bricks turned out to be a bit smaller than LEGO originals so there is some tension when they are used in combination.
+Tikercad brick defaults would perhaps deserve some tuning.</p>
+</div>
+<div class="paragraph">
+<p>So much about Vítek&#8217;s 3D modeling and printing. Now about my own experiments.</p>
+</div>
+<div class="paragraph">
+<p>My younger son Viliam got a <a href="https://tamiyabase.com/chassis/56-cc-01">Tamiya CC-01</a> based RC car as birthday present a couple of weeks ago.
+It is pretty powerful and fast but its center of gravity is a bit too high so it tends to roll over
+during sharp turns on rough surfaces.</p>
+</div>
+<div class="paragraph">
+<p>We realized we needed a solution because we broke one side mirror due to that ☹.</p>
+</div>
+<div class="paragraph">
+<p>Viliam did not not want to sacrifice maneuverability by limiting the max steering angle.
+(That would be easy to set up on the transmitter.)
+Therefore we had to look for another solution.</p>
+</div>
+<div class="paragraph">
+<p>How about printing offsetted wheel rims thus making the car wider and more stable?</p>
+</div>
+<div class="paragraph">
+<p>This is how the original ones looked like:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-front.jpg" alt="Tamiya CC-02 Toyota Hilux Extra Cab - original wheels">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-side.jpg" alt="Tamiya CC-02 Toyota Hilux Extra Cab - original wheels">
+</div>
+</div>
+<div class="paragraph">
+<p>We added ~10 mm offset on each wheel:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-front.jpg" alt="Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-side.jpg" alt="Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels">
+</div>
+</div>
+<div class="paragraph">
+<p>I modelled using <a href="https://www.freecadweb.org/">FreeCAD</a> (<code>dnf install -y freecad</code> on Fedora).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/freecad.png" alt="FreeCAD">
+</div>
+</div>
+<div class="paragraph">
+<p>Here are the model files (licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons with Attribution 4.0</a>):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.FCStd">offset-wheel-rim-for-tamiya-cc-01.FCStd</a> - the FreeCAD model file</p>
+</li>
+<li>
+<p><a href="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.3mf">offset-wheel-rim-for-tamiya-cc-01.3mf</a> - a 3mf export with the infill and layer height settings I have used for printing</p>
+</li>
+<li>
+<p><a href="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.stl">offset-wheel-rim-for-tamiya-cc-01.stl</a> - an STL just in case your tooling likes it better</p>
+</li>
+<li>
+<p><a href="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.gcode">offset-wheel-rim-for-tamiya-cc-01.gcode</a> - for printing on a 3D printer without any tuning</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And here is the detailed view of the 3D print. It took roughly 3 hours 50 mins on Prusa Mini+ with 0.15 mm layer height and 30% gyroid infill using PETG filament.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-rim-wheel.jpg" alt="3D printed offset wheel for Tamiya CC-01">
+</div>
+</div>
+<div class="paragraph">
+<p>Enjoy!</p>
+</div>
+
+<a href="https://github.com/ppalaga/ppalaga.github.io/edit/master/_posts/2023-01-12-3d-printing-for-fun-and-profit.adoc" target="_blank">Edit this post</a>
+
+
+
+
+    
+        
+    
+        
+    
+        
+            
+                
+                    
+                
+            
+                
+                    
+
+                        
+<hr>
+<h3>Related posts</h3>
+<div class="local-post-list">
+                        
+
+                        
+    <div class="local-list-item">
+        <h4><span class="local-subtitle">Dec 28, 2021</span><br>
+        <a href="/2021/12/28/lego-51515-on-fedora.html">Lego 51515 on Fedora</a></h4>
+    </div>
+                    
+                
+            
+                
+                    
+
+                        
+
+                        
+    <div class="local-list-item">
+        <h4><span class="local-subtitle">Mar 6, 2021</span><br>
+        <a href="/2021/03/06/compile-and-install-stunt-rally-on-fedora.html">How to compile and install Stunt Rally on Fedora</a></h4>
+    </div>
+                    
+                
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+</div>
+
+<div class="paragraph">
+    <p><br><br></p>
+</div>
+
+
+
+
+    </div>
+</div>
+<footer class="local-footer">
+    <div class="row">
+        <div class="small-12 small-centered columns text-center">
+            Copyright © Peter Palaga 2023&nbsp;&nbsp;•&nbsp;&nbsp;Header background by <a href="https://www.facebook.com/steve.cord.56" target="_blank">Steve Cord</a>
+        </div>
+    </div>
+</footer>
+
+<script src="../../../js/vendor/jquery.js"></script>
+<script src="../../../js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+var doc = document.documentElement;
+doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</body>
+</html>

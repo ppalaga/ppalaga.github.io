@@ -1,4 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T16:47:14+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T18:30:33+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I have bought &lt;a href=&quot;https://www.prusa3d.com/category/original-prusa-mini/&quot;&gt;Prusa Mini+&lt;/a&gt; 3D printer a couple of weeks ago.
+I primarily wanted to use it for printing small things that are hard to produce in other way.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I got rather surprised that my older son Vítek occupied it immediately for printing Lego bricks
+he needed for his complicated guns. (Do not ask me why he builds guns. I hate it.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;IIRC, Vítek uses &lt;a href=&quot;https://www.tinkercad.com/&quot;&gt;Tinkercad&amp;#8217;s&lt;/a&gt; &quot;Brick mode&quot; for modeling his Lego bricks.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/tinkercad-brick-mode.png&quot; alt=&quot;Tinkercad&amp;#8217;s brick mode&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;He prints them using &lt;a href=&quot;https://prusament.com/materials/prusament-petg/&quot;&gt;PETG&lt;/a&gt; material
+which is perhaps not optimal, but we do not have any other material yet.
+Larger bricks turned out to be a bit smaller than LEGO originals so there is some tension when they are used in combination.
+Tikercad brick defaults would perhaps deserve some tuning.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So much about Vítek&amp;#8217;s 3D modeling and printing. Now about my own experiments.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My younger son Viliam got a &lt;a href=&quot;https://tamiyabase.com/chassis/56-cc-01&quot;&gt;Tamiya CC-01&lt;/a&gt; based RC car as birthday present a couple of weeks ago.
+It is pretty powerful and fast but its center of gravity is a bit too high so it tends to roll over
+during sharp turns on rough surfaces.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We realized we needed a solution because we broke one side mirror due to that ☹.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Viliam did not not want to sacrifice maneuverability by limiting the max steering angle.
+(That would be easy to set up on the transmitter.)
+Therefore we had to look for another solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;How about printing offsetted wheel rims thus making the car wider and more stable?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This is how the original ones looked like:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-front.jpg&quot; alt=&quot;Tamiya CC-02 Toyota Hilux Extra Cab - original wheels&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-side.jpg&quot; alt=&quot;Tamiya CC-02 Toyota Hilux Extra Cab - original wheels&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We added ~10 mm offset on each wheel:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-front.jpg&quot; alt=&quot;Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-side.jpg&quot; alt=&quot;Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I modelled using &lt;a href=&quot;https://www.freecadweb.org/&quot;&gt;FreeCAD&lt;/a&gt; (&lt;code&gt;dnf install -y freecad&lt;/code&gt; on Fedora).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/freecad.png&quot; alt=&quot;FreeCAD&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are the model files (licensed under &lt;a href=&quot;https://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons with Attribution 4.0&lt;/a&gt;):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.FCStd&quot;&gt;offset-wheel-rim-for-tamiya-cc-01.FCStd&lt;/a&gt; - the FreeCAD model file&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.3mf&quot;&gt;offset-wheel-rim-for-tamiya-cc-01.3mf&lt;/a&gt; - a 3mf export with the infill and layer height settings I have used for printing&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.stl&quot;&gt;offset-wheel-rim-for-tamiya-cc-01.stl&lt;/a&gt; - an STL just in case your tooling likes it better&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.gcode&quot;&gt;offset-wheel-rim-for-tamiya-cc-01.gcode&lt;/a&gt; - for printing on a 3D printer without any tuning&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;And here is the detailed view of the 3D print. It took roughly 3 hours 50 mins on Prusa Mini+ with 0.15 mm layer height and 30% gyroid infill using PETG filament.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-rim-wheel.jpg&quot; alt=&quot;3D printed offset wheel for Tamiya CC-01&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="leisure" /><category term="lego" /><category term="3D-printing" /><summary type="html">3D modelling and printing for fun and profit I have bought Prusa Mini+ 3D printer a couple of weeks ago. I primarily wanted to use it for printing small things that are hard to produce in other way.</summary></entry><entry><title type="html">How I haven’t got scammed</title><link href="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html" rel="alternate" type="text/html" title="How I haven’t got scammed" /><published>2023-01-03T00:00:00+00:00</published><updated>2023-01-03T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed</id><content type="html" xml:base="https://peter.palaga.org/2023/01/03/how-i-have-not-got-scammed.html">&lt;h1&gt;How I haven&amp;#8217;t got scammed&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I happen to look for a new apartment these days.
 I went through the process in the past so I can say I know what is usual and what is not.&lt;/p&gt;
@@ -529,7 +634,7 @@ hub.sound.beep(&lt;span class=&quot;integer&quot;&gt;800&lt;/span&gt;, &lt;span 
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="lego" /><category term="mindstorms" /><category term="51515" /><category term="python" /><summary type="html">Lego 51515 on Fedora My 13 years old son Vítek just got LEGO 51515 (a.k.a. Robot Inventor) for Christmas. He assessed the Scratch programming in the Android app as &quot;limiting&quot; after playing with it for a couple of hours and he uttered a wish to try Python. Unfortunately, Lego does not provide any tools for Linux, the the main OS used within our family. So we started to look for workarounds.</summary></entry><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="leisure" /><category term="lego" /><category term="mindstorms" /><category term="51515" /><category term="python" /><summary type="html">Lego 51515 on Fedora My 13 years old son Vítek just got LEGO 51515 (a.k.a. Robot Inventor) for Christmas. He assessed the Scratch programming in the Android app as &quot;limiting&quot; after playing with it for a couple of hours and he uttered a wish to try Python. Unfortunately, Lego does not provide any tools for Linux, the the main OS used within our family. So we started to look for workarounds.</summary></entry><entry><title type="html">My talks on JavaLand 2021</title><link href="https://peter.palaga.org/2021/03/13/javaland.html" rel="alternate" type="text/html" title="My talks on JavaLand 2021" /><published>2021-03-13T00:00:00+00:00</published><updated>2021-03-13T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/03/13/javaland</id><content type="html" xml:base="https://peter.palaga.org/2021/03/13/javaland.html">&lt;h1&gt;My talks on JavaLand 2021&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -812,7 +917,7 @@ firewall-cmd --add-port=4243/udp --permanent&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="games" /><summary type="html">How to compile and install Stunt Rally on Fedora Stunt Rally is an open source racing game, one of a few available for Linux. It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. As of writing this, there does not seem to exist an RPM package. There are SNAP and Flatpack packages which I have not tried. If you do not want those for any reason, you might find this compilation guide useful.</summary></entry><entry><title type="html">Grouping Quarkus extension tests for faster execution</title><link href="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html" rel="alternate" type="text/html" title="Grouping Quarkus extension tests for faster execution" /><published>2021-02-16T00:00:00+00:00</published><updated>2021-02-16T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests</id><content type="html" xml:base="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html">&lt;h1&gt;Grouping Quarkus extension tests for faster execution&lt;/h1&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="leisure" /><category term="games" /><summary type="html">How to compile and install Stunt Rally on Fedora Stunt Rally is an open source racing game, one of a few available for Linux. It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. As of writing this, there does not seem to exist an RPM package. There are SNAP and Flatpack packages which I have not tried. If you do not want those for any reason, you might find this compilation guide useful.</summary></entry><entry><title type="html">Grouping Quarkus extension tests for faster execution</title><link href="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html" rel="alternate" type="text/html" title="Grouping Quarkus extension tests for faster execution" /><published>2021-02-16T00:00:00+00:00</published><updated>2021-02-16T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests</id><content type="html" xml:base="https://peter.palaga.org/2021/02/16/grouping-quarkus-extension-tests.html">&lt;h1&gt;Grouping Quarkus extension tests for faster execution&lt;/h1&gt;
 &lt;div id=&quot;preamble&quot;&gt;
 &lt;div class=&quot;sectionbody&quot;&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
@@ -1884,170 +1989,4 @@ preference permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Shortcuts I am starting to write these tips as a base for the future mvnd documentation. Today about keystrokes supported in the mvnd client UI.</summary></entry><entry><title type="html">When -DskipTests is not fast enough: skip Maven mojos properly</title><link href="https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly.html" rel="alternate" type="text/html" title="When -DskipTests is not fast enough: skip Maven mojos properly" /><published>2020-10-29T00:00:00+00:00</published><updated>2020-10-29T00:00:00+00:00</updated><id>https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly</id><content type="html" xml:base="https://peter.palaga.org/2020/10/29/skipping-maven-mojos-properly.html">&lt;h1&gt;When &lt;code&gt;-DskipTests&lt;/code&gt; is not fast enough: skip Maven mojos properly&lt;/h1&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;&lt;code&gt;-DskipTests&lt;/code&gt; is a well known way to skip the execution of unit tests during a Maven build and thus save time.
-This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI
-already.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This kind of skipping is not specific to &lt;code&gt;maven-surefire-plugin&lt;/code&gt;. Many other plugins have similar options:
-Enforcer has &lt;code&gt;-Denforcer.skip&lt;/code&gt;, License Maven plugin has &lt;code&gt;-Dlicense.skip&lt;/code&gt;, etc. The more you want to
-build quickly, without running needless mojos, the more you search for these skip parameters.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Some candidates for skipping, like unit tests and integration tests, are pretty obvious. Other may get revealed by
-profiling your build either by using a stock Java profiler or by leveraging Maven specific tools like
-&lt;a href=&quot;https://github.com/khmarbaise/maven-buildtime-profiler&quot;&gt;maven-buildtime-profiler&lt;/a&gt; or
-&lt;a href=&quot;https://scans.gradle.com/#maven&quot;&gt;Gradle build scans for Maven&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;At some point you are skipping every mojo execution that is not essential to your build. You create a dedicated
-Maven profile listing all those skip flags, so that you do not need to remember and type them by hand.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;But what if that&amp;#8217;s still not fast enough? Say that you work on a
-&lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;source tree that has 1200+ modules&lt;/a&gt; and&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvn clean install -DskipTests -Denforcer.skip -Dformatter.skip -Dimpsort.skip -Dquarkus.build.skip -Dgroovy.skip
-...
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  03:53 min&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;is not something you are happy about. How can this be made even faster?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Well, common sense (or further profiling with a Java profiler) may unveil that the named &lt;code&gt;skip*&lt;/code&gt; properties
-do not prevent the skipped mojos' classes from being loaded, initialized, instantiated, configured and their
-&lt;code&gt;execute()&lt;/code&gt; method from being invoked (that&amp;#8217;s where the &lt;code&gt;skip*&lt;/code&gt; parameters are actually being evaluated). That
-might be quite a lot of superfluous CPU cycles and luckily, Maven offers a way how to avoid them.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The trick is to remove the skippable mojos from the Maven execution plan altogether. How can that be done? - the key
-is in playing with the &lt;code&gt;&amp;lt;phase&amp;gt;&lt;/code&gt; to which the given mojo is bound. There are two ways how to reach that some mojo
-is bound to no phase:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;olist arabic&quot;&gt;
-&lt;ol class=&quot;arabic&quot;&gt;
-&lt;li&gt;
-&lt;p&gt;By setting &lt;code&gt;&amp;lt;phase&amp;gt;none&amp;lt;/phase&amp;gt;&lt;/code&gt; or shortly &lt;code&gt;&amp;lt;phase/&amp;gt;&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;By moving the given plugin definition from the the default profile-less &lt;code&gt;&amp;lt;build&amp;gt;&lt;/code&gt; section to a profile.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;The option 1. needs to be used for mojos that Maven binds to some phase by default. E.g. the &lt;code&gt;test&lt;/code&gt; mojo of
-&lt;code&gt;surefire-maven-plugin&lt;/code&gt; is bound to the &lt;code&gt;test&lt;/code&gt; phase by default. The option 2. may be used for all other mojos.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Once we manage it to remove a mojo from the execution plan, its classes will neither be loaded, initialized,
-instantiated, configured nor their &lt;code&gt;execute()&lt;/code&gt; methods will be called.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Let&amp;#8217;s have a look at an example. Say, that we want all the tests and source tree validation to happen in the default
-&quot;profile-less&quot; build (&lt;code&gt;mvn verify&lt;/code&gt;) but we want them all to be skipped when building with the &lt;code&gt;-Dquickly&lt;/code&gt;
-property.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;To implement that, we need a profile. Surprisingly the profile is not going to exclude stuff when &lt;code&gt;-Dquickly&lt;/code&gt; is
-present, it will rather include the stuff in the default &quot;profile-less&quot; build. To make &lt;code&gt;-Dquickly&lt;/code&gt; to work the way
-we want, the profile will be enabled by default and disabled when &lt;code&gt;-Dquickly&lt;/code&gt; is present. This can be done using
-Maven&amp;#8217;s &quot;negated&quot; property profile activation: &lt;code&gt;&amp;lt;property&amp;gt;&amp;lt;name&amp;gt;!quickly&amp;lt;/name&amp;gt;&amp;lt;/property&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This is what it looks like for &lt;code&gt;surefire-maven-plugin&lt;/code&gt; and &lt;code&gt;maven-enforcer-plugin&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-surefire-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;default-test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;phase&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- disable here but enable in the full profile --&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
-
-        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- We do not need to disable enforcer here, because --&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Maven does not bind it to any phase by default --&amp;gt;&lt;/span&gt;
-
-    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;tag&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;tag&quot;&gt;&amp;lt;profiles&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;tag&quot;&gt;&amp;lt;profile&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Tests and sanity checks are disabled when building with '-Dquickly' --&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;full&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;activation&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;!quickly&lt;span class=&quot;tag&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/activation&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-surefire-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
-                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;default-test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- assigned to a phase only if the full profile is active --&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;phase&amp;gt;&lt;/span&gt;test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/phase&amp;gt;&lt;/span&gt;
-                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Enforcer is included in the execution plan only if --&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- the full profile is active --&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.maven.plugins&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-enforcer-plugin&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
-                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;my-enforcer-rules&lt;span class=&quot;tag&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;goals&amp;gt;&lt;/span&gt;
-                                &lt;span class=&quot;tag&quot;&gt;&amp;lt;goal&amp;gt;&lt;/span&gt;enforce&lt;span class=&quot;tag&quot;&gt;&amp;lt;/goal&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/goals&amp;gt;&lt;/span&gt;
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
-                                ...
-                            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
-                        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
-                    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;tag&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/profile&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;tag&quot;&gt;&amp;lt;/profiles&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;After &lt;a href=&quot;https://github.com/apache/camel-quarkus/pull/1962/files&quot;&gt;applying this trick&lt;/a&gt; to all non-essential mojos in
-the source tree with 1200+ modules mentioned above, the quick build time goes down from 03:53 to 2:44:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;mvn clean install -Dquickly
-...
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  02:44 min&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Who would expect such a big speedup?&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;P.S.: You may want to try &lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt;, the Maven Daemon to reduce your build
-times even further.&lt;/p&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">When -DskipTests is not fast enough: skip Maven mojos properly -DskipTests is a well known way to skip the execution of unit tests during a Maven build and thus save time. This is handy e.g. after pulling the changes from a team git repository which are supposed to have been tested by a CI already.</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Shortcuts I am starting to write these tips as a base for the future mvnd documentation. Today about keystrokes supported in the mvnd client UI.</summary></entry></feed>
