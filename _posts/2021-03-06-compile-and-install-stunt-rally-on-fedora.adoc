@@ -2,7 +2,7 @@
 :showtitle:
 :page-layout: tagged-post
 :page-root: ../../../
-:page-tags: [games]
+:page-tags: [leisure,games]
 :page-summary: Stunt Rally is an open source racing game, one of a few available for Linux. \
 It caught the attention of my son because it supports network mutiplayer mode as well as split screen multiplayer mode. \
 As of writing this, there does not seem to exist an RPM package. \

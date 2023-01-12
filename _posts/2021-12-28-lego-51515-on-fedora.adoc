@@ -2,7 +2,7 @@
 :showtitle:
 :page-layout: tagged-post
 :page-root: ../../../
-:page-tags: [lego,mindstorms,51515,python]
+:page-tags: [leisure,lego,mindstorms,51515,python]
 :page-summary: How to program LEGO 51515 alias Robot Inventor in Python on Fedora
 :sectanchors:
 

@@ -1,0 +1,65 @@
+= 3D modelling and printing for fun and profit
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [leisure,lego,3D-printing]
+:page-summary:
+:sectanchors: 3D modelling and printing for fun and profit
+
+I have bought https://www.prusa3d.com/category/original-prusa-mini/[Prusa Mini+] 3D printer a couple of weeks ago.
+I primarily wanted to use it for printing small things that are hard to produce in other ways.
+
+I got rather surprised that my older son Vítek occupied it immediately for printing Lego bricks
+he needed for his complicated guns. (Do not ask me why he builds guns. I hate it.)
+
+IIRC, Vítek used https://www.tinkercad.com/[Tinkercad's] "Brick mode" for modeling his Lego bricks.
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/tinkercad-brick-mode.png["Tinkercad's brick mode"]
+
+He printed them using https://prusament.com/materials/prusament-petg/[PETG] material.
+That's perhaps not optimal, but we do not have any other material yet.
+Larger bricks turned out to be a bit smaller than LEGO originals so there was some tension when they were used together.
+Tinkercad brick defaults would perhaps deserve some tuning.
+
+So much about Vítek's 3D modeling and printing. Now about my own experiments.
+
+My younger son Viliam got a https://tamiyabase.com/chassis/56-cc-01[Tamiya CC-01] based RC car as birthday present a couple of weeks ago.
+It is pretty powerful and fast but its center of gravity is a bit too high so it tends to roll over
+during sharp turns on rough surfaces.
+
+We realized we needed a solution once we broke one side mirror in a roll over ☹.
+
+Viliam did not not want to sacrifice maneuverability by limiting the max steering angle.
+(That would be easy to set up on the transmitter.)
+Therefore we had to look for another solution.
+
+How about getting offset wheels thus making the car wider and more stable? - That's a perfect task for a 3D printer!
+
+This is how the original ones looked like:
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-front.jpg["Tamiya CC-02 Toyota Hilux Extra Cab - original wheels"]
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-original-wheels-side.jpg["Tamiya CC-02 Toyota Hilux Extra Cab - original wheels"]
+
+And this is how it looks like now after we added ~10 mm offset on each wheel:
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-front.jpg["Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels"]
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-wheels-side.jpg["Tamiya CC-02 Toyota Hilux Extra Cab - 3D printed offset wheels"]
+
+I modeled the rim using https://www.freecadweb.org/[FreeCAD] (`dnf install -y freecad` on Fedora).
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/freecad.png["FreeCAD"]
+
+Here are the model files (licensed under https://creativecommons.org/licenses/by/4.0/[Creative Commons with Attribution 4.0]):
+
+* link:/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.FCStd[offset-wheel-rim-for-tamiya-cc-01.FCStd] - the FreeCAD model file
+* link:/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.3mf[offset-wheel-rim-for-tamiya-cc-01.3mf] - a 3mf export with the infill and layer height settings I have used for printing
+* link:/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.stl[offset-wheel-rim-for-tamiya-cc-01.stl] - an STL just in case your tooling likes it better
+* link:/images/2023/2023-01-12-3d-printing-for-fun-and-profit/offset-wheel-rim-for-tamiya-cc-01.gcode[offset-wheel-rim-for-tamiya-cc-01.gcode] - for printing on a 3D printer without any tuning
+
+And here is the detailed view of the 3D print. It took roughly 3 hours 50 mins on Prusa Mini+ with 0.15 mm layer height and 30% gyroid infill using PETG filament.
+
+image::/images/2023/2023-01-12-3d-printing-for-fun-and-profit/cc-01-3d-printed-rim-wheel.jpg["3D printed offset wheel for Tamiya CC-01"]
+
+Enjoy!
