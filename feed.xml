@@ -1,4 +1,682 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-01-12T20:21:25+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://peter.palaga.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://peter.palaga.org/" rel="alternate" type="text/html" /><updated>2023-05-25T11:47:40+00:00</updated><id>https://peter.palaga.org/feed.xml</id><title type="html">Peter Palaga</title><subtitle>A software engineer at Red Hat Integration, working mostly on Apache Camel Quarkus, coauthor of mvnd, srcdeps and ec4j.</subtitle><entry><title type="html">mvnd - the Maven Daemon</title><link href="https://peter.palaga.org/2023/05/21/mvnd-maven-daemon.html" rel="alternate" type="text/html" title="mvnd - the Maven Daemon" /><published>2023-05-21T00:00:00+00:00</published><updated>2023-05-21T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/05/21/mvnd-maven-daemon</id><content type="html" xml:base="https://peter.palaga.org/2023/05/21/mvnd-maven-daemon.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; - the Maven Daemon&lt;/h1&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven is a well known build tool for Java and related languages targeting Java Virtual Machine (JVM).
+Its declarative approach to defining builds belongs to its main strengths.
+Even basic knowledge of Maven principles allows understanding basically any third party project.
+It is well established, rather stable and has a rich ecosystem of plugins.
+It is also very important for defining a &lt;em&gt;de facto&lt;/em&gt; standard for publishing and consuming libraries in the JVM world.
+Maven Central and its artifact metadata formats are used and respected throughout the JVM space.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven has some well known downsides:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pom.xml&lt;/code&gt; files are often criticized as too verbose.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maven performance is not on par with Gradle, especialy in incremental and iterative scenarios.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maven parallel builds are hard to use, because the console output is a mishmash of randomly mixed lines
+from different module builds.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s have a look how Maven Daemon addresses the latter two points.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;jvm_performance_basics&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#jvm_performance_basics&quot;&gt;&lt;/a&gt;JVM performance basics&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Most of us, Java developer know that Java is fast, but it needs some warm up time to unveil its full potential.
+This is caused, on one hand, by the fact that booting a JVM application costs some time
+and on the other hand by the way how Just in Time (JIT) compilation works in JVM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;maven_boot_costs&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#maven_boot_costs&quot;&gt;&lt;/a&gt;Maven boot costs&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s have a look at the boot costs first.
+In case of Maven, we can quantify them through a simple experiment.
+In Maven source code, we find the location where Maven starts its own build duration measurement.
+That&amp;#8217;s the baseline for the well known &lt;code&gt;BUILD SUCCESS/Total time:&lt;/code&gt; message at the end of every Maven build.
+We can say that this is the point in time where Maven starts doing something useful.
+Everything that happens before can be considered a boot up cost.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So we place &lt;code&gt;System.out.println(&quot;End of Maven init: &quot; + System.currentTimeMillis())&lt;/code&gt; statement around there and
+invoke something as simple as &lt;code&gt;mvn install&lt;/code&gt; prepending it with a shell time output in milliseconds, like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ echo $(($(date +%s%N)/1000000)) &amp;amp;&amp;amp; mvn install&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It outputs two numbers.
+On my Lenovo P1 Gen 3 laptop those are 1634117024986 and 1634117025765.
+Subtracting them gives the result of 779 milliseconds.
+That&amp;#8217;s the time needed to boot the JVM and load all classes necessary for Maven to start doing something useful.
+Three quarters of a second.
+That&amp;#8217;s quite a lot, isn&amp;#8217;t it?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;just_in_time_jit_compilation_costs&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#just_in_time_jit_compilation_costs&quot;&gt;&lt;/a&gt;Just in Time (JIT) compilation costs&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Java source files are compiled to bytecode at build time.
+However that&amp;#8217;s not the kind of code runnable on any physical processor.
+The bytecode is yet to be translated to instructions comprehensible to some given processor.
+This initially happens &quot;on the fly&quot;, as the JVM is executing the methods of the application.
+Every method is first executed in this basic &lt;em&gt;interpreter&lt;/em&gt; mode.
+Only if some method is executed often enough (becomes &lt;em&gt;warm&lt;/em&gt;), the JVM decides to compile it using the &lt;em&gt;quick&lt;/em&gt; compiler.
+Once the given method gets &lt;em&gt;hot&lt;/em&gt;, i.e. it is executed very often, the JVM compiles it using the &lt;em&gt;optimizing&lt;/em&gt; compiler.
+Apparently, the JIT compilation requires some computing resources itself.
+Hence to make the application faster, it slows it down first by spending CPU time on the compilation and optimizations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;What is the impact of this on Java build tools?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is quite substantial, because builds are rather short living processes.
+The boot costs of 0.78 seconds may well translate to a substantial portion of the overall build duration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As for the effect of JIT compilation, the code of a short living build is either running in the slow interpreter mode
+or if JIT compilation kicks in at all, its overhead can hardly pay back before the process exits.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Having a background process (daemon) that survives the individual builds is a very straightforward solution to both of these problems.
+This background process then hosts the actual build and the command line utility is just a thin client for it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;While Gradle has it since long it is rather new in Maven.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s try it out.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;installation&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#installation&quot;&gt;&lt;/a&gt;Installation&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven Daemon needs to be installed separately from Maven
+and it is good to know that the installations of Maven Daemon and Maven do not interact in any way.
+You can have both or just one of them on your machine.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven Daemon can be installed in several ways.
+Using some of the following package managers is perhaps easier than downloading a ZIP file from
+&lt;a href=&quot;https://downloads.apache.org/maven/mvnd&quot;&gt;https://downloads.apache.org/maven/mvnd&lt;/a&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://sdkman.io/sdks#mvnd&quot;&gt;SDKMAN!&lt;/a&gt; &lt;code&gt;sdk install mvnd&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://brew.sh/&quot;&gt;Homebrew&lt;/a&gt; &lt;code&gt;brew install mvndaemon/homebrew-mvnd/mvnd&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.macports.org/&quot;&gt;MacPorts&lt;/a&gt; &lt;code&gt;port install mvnd&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://community.chocolatey.org/packages/mvndaemon&quot;&gt;Chocolatey&lt;/a&gt; &lt;code&gt;choco install mvndaemon&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://scoop.sh/&quot;&gt;Scoop&lt;/a&gt; &lt;code&gt;scoop install mvndaemon&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/joschi/asdf-mvnd#install&quot;&gt;asdf&lt;/a&gt; &lt;code&gt;asdf plugin-add mvnd &amp;amp;&amp;amp; asdf install mvnd latest&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;parts_of_maven_daemon&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#parts_of_maven_daemon&quot;&gt;&lt;/a&gt;Parts of Maven Daemon&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As sketched above, you need two things to leverage the concept of daemon: the command line client and the background process.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;mvnd_the_client&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#mvnd_the_client&quot;&gt;&lt;/a&gt;&lt;code&gt;mvnd&lt;/code&gt; - the client&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In case of Maven, the client is a brand new program called &lt;code&gt;mvnd&lt;/code&gt; (or &lt;code&gt;mvnd.exe&lt;/code&gt; on Windows) that has little in common
+with the traditional &lt;code&gt;mvn&lt;/code&gt; script.
+Although it is written in Java, it is compiled to native executable using &lt;a href=&quot;https://www.graalvm.org/&quot;&gt;GraalVM&lt;/a&gt;.
+To be precise, this is the case only for platforms &lt;a href=&quot;https://www.graalvm.org/latest/docs/introduction/#features-support&quot;&gt;supported by GraalVM&lt;/a&gt;.
+There is a shell script (&lt;code&gt;mvnd.sh&lt;/code&gt;) wrapping &lt;code&gt;mvnd-client.jar&lt;/code&gt; for the platforms unsupported by GraalVM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Why did we bother to port the client to GraalVM?
+Except that it was fun, it has also brought some performance benefits.
+GraalVM native executables are known for extremely fast boot up times and low memory footprint.
+That&amp;#8217;s exactly what we needed.
+Besides, by having a single client executable, we eliminated another slowing down process in the execution chain:
+the shell script.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;So we have the &lt;code&gt;mvnd&lt;/code&gt; command line client that starts quickly.
+What does it actually do?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;First, it looks whether some Daemon process is running and whether it is free for accepting build requests.
+It does so by reading the Daemon registry stored in &lt;code&gt;~/.m2/mvnd/registry/&amp;lt;version&amp;gt;/registry.bin&lt;/code&gt;.
+If there is no free Daemon, a new one is launched by the client.
+Then the client connects to the Daemon through a network socket
+and passes the command line parameters along with the environment of the current shell to the Daemon.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Daemon accepts the request and starts executing it.
+As the build proceeds, it sends notifications about the progress back to the client.
+The client visualizes the state of the build in its text-based user interface.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-05-21-mvnd-maven-daemon/ui.png&quot; alt=&quot;mvnd user interface&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;daemon&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#daemon&quot;&gt;&lt;/a&gt;Daemon&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Daemon process is a traditional JVM.
+It embeds a specific Maven version.
+The Maven version cannot be changed in any other way than by switching to another &lt;code&gt;mvnd&lt;/code&gt; version.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Daemon reads &lt;code&gt;pom.xml&lt;/code&gt; files, loads plugins, downloads dependencies and all the other things that Maven usually does.
+The main difference against stock Maven is that the Daemon does not exit upon build termination.
+It stays alive listening on its socket and waiting for new requests from clients.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another difference against standard Maven is that Maven Daemon keeps a cache of classloaders
+holding references to Maven plugin classes.
+Hence if you keep building the same project with the same plugins during the day,
+chances are high that you&amp;#8217;ll run the optimized code produced by the second level JIT compiler.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Of course, the Daemon terminates at some point.
+The exact point in time depends on whether the given Daemon is the only one running.
+In such a case, it exist after 3 hours of being idle.
+This value is configurable - see the Configuration section below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If there are other Daemons running that were idle for longer time than the current Daemon,
+then the current Daemon exists much faster - the default is 10 seconds and it is also configurable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The state of the running Daemons can be inspected using &lt;code&gt;mvnd --status&lt;/code&gt; command.
+Here is an example output:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvnd --status
+  ID  PID                Address  Status  RSS             Last activity  Java home
+5a12  3434  inet:/127.0.0.1:46675  Idle   721m  2023-05-21T20:12:16.905  ~/java/17.0.5-tem
+56fd  3181  inet:/127.0.0.1:34947  Busy   7g    2023-05-21T20:11:57.953  ~/java/17.0.5-tem&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Note that the RSS column shows the amount of memory occupied by the given Daemon process.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All running Daemons can be stopped by invoking&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvnd --stop&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;parallel_by_default&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#parallel_by_default&quot;&gt;&lt;/a&gt;Parallel by default&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Unlike standard Maven, &lt;code&gt;mvnd&lt;/code&gt; builds multimodule projects in parallel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The default number of build threads is given by the expression &lt;code&gt;Runtime.getRuntime().availableProcessors() - 1&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another condition is that the dependency relationships between the modules in the current source tree must actually allow a parallel build.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For example, if there are three modules &lt;code&gt;A&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt; and &lt;code&gt;C&lt;/code&gt; to be built
+and the dependencies look like the following&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;    A
+   / \
+  B   C    (Lower depends on upper)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;then the module &lt;code&gt;A&lt;/code&gt; is built first.
+After that, the modules &lt;code&gt;B&lt;/code&gt; and &lt;code&gt;C&lt;/code&gt; can be built in parallel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This kind of parallel execution brings substantial speedups in &quot;wide&quot; module graphs
+where there are many siblings having a few common dependencies.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect3&quot;&gt;
+&lt;h4 id=&quot;smart_builder&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#smart_builder&quot;&gt;&lt;/a&gt;Smart builder&lt;/h4&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven has pluggable builders since version 3.2.1.
+Those are strategies for scheduling and building modules.
+Standard Maven offers two implementations:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;singlethreaded&lt;/code&gt; (default)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;multithreaded&lt;/code&gt; - used with &lt;code&gt;-T/--threads&lt;/code&gt; command line option&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Maven Daemon uses a third builder called &lt;a href=&quot;https://github.com/takari/takari-smart-builder&quot;&gt;Takari Smart builder&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Its authors characterize it as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;quoteblock&quot;&gt;
+&lt;blockquote&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The primary difference between the standard multi-threaded scheduler in Maven and the Smart builder is illustrated below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-05-21-mvnd-maven-daemon/smart-builder-scheduler.png&quot; alt=&quot;Multi-threaded builder vs. Smart builder&quot;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;Figure 1. Multi-threaded builder vs. Smart builder&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The standard multi-threaded scheduler is using a rather naive and simple approach of using dependency-depth information in the project.
+It builds everything at a given dependency-depth before continuing to the next level.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The Takari Smart Builder is using a more advanced approach of dependency-path information.
+Projects are aggressively built along a dependency-path in topological order as upstream dependencies have been satisfied.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;attribution&quot;&gt;
+&amp;#8212; From Takari Extensions for Apache Maven book http://takari.io/book/30-team-maven.html#takari-smart-builder
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;benchmarks&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#benchmarks&quot;&gt;&lt;/a&gt;Benchmarks&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/apache/camel-quarkus&quot;&gt;Camel Quarkus&lt;/a&gt; is a project where &lt;code&gt;mvnd&lt;/code&gt; speed gains are visible especially well:
+it has 1336 Maven modules and its module graph is rather flat and wide.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The test machine&amp;#8217;s CPU was AMD Ryzen 9 5950X with 16 cores and 32 virtual threads.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are the build durations:&lt;/p&gt;
+&lt;/div&gt;
+&lt;table class=&quot;tableblock frame-all grid-all stretch&quot;&gt;
+&lt;colgroup&gt;
+&lt;col style=&quot;width: 16.6666%;&quot;&gt;
+&lt;col style=&quot;width: 50%;&quot;&gt;
+&lt;col style=&quot;width: 16.6666%;&quot;&gt;
+&lt;col style=&quot;width: 16.6668%;&quot;&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Run no.&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Command&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Duration min:sec&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Speedup&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvn clean install -Dquickly¹&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2:42&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;(baseline)&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -Dquickly&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0:56&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2.9x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -Dquickly&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0:48&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;3.4x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -Dquickly&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0:46&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;3.5x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;¹) &lt;code&gt;-Dquickly&lt;/code&gt; disables plugins non-essential for a build that previously passed all checks on the CI,
+such as tests, source formatting, enforcer, etc.
+You may want to check this &lt;a href=&quot;https://www.youtube.com/watch?v=Gwmmz_T6THA&quot;&gt;video&lt;/a&gt;
+or &lt;a href=&quot;https://peter.palaga.org/presentations/221010-maven-my-life-is-short&quot;&gt;slides&lt;/a&gt;
+for more details about what &lt;code&gt;-Dquickly&lt;/code&gt; does exactly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The effect of the parallel build can be seen very well when comparing the baseline &lt;code&gt;mvn&lt;/code&gt; run
+with the first (on a cold JVM) &lt;code&gt;mvnd&lt;/code&gt; run.
+The &lt;code&gt;mvnd&lt;/code&gt; build is 2.9 times faster thanks to the parallel build execution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The effects of not restarting the warmed-up JVM can be observed when comparing the subsequent runs of &lt;code&gt;mvnd&lt;/code&gt;:
+the second &lt;code&gt;mvnd&lt;/code&gt; run is 8 seconds faster than the first one and the third is even 2 more seconds faster.
+This gradual acceleration is caused by the fact that with every iteration, less time is spent by JIT compilation
+and the already compiled code runs faster.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;single_module_builds&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#single_module_builds&quot;&gt;&lt;/a&gt;Single module builds&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have demonstrated the &lt;code&gt;mvnd&lt;/code&gt; speed gains for large multimodule builds.
+But some folks do not build large multimodule projects at all.
+There are also small and single module projects.
+Or one can build a single module within a hierarchy.
+Would there be any speed benefits there?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s have a look at an example.
+&lt;a href=&quot;https://github.com/quarkusio/gizmo&quot;&gt;Gizmo&lt;/a&gt; is a single module project having 50 main Java classes and 40 test classes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;table class=&quot;tableblock frame-all grid-all stretch&quot;&gt;
+&lt;colgroup&gt;
+&lt;col style=&quot;width: 16.6666%;&quot;&gt;
+&lt;col style=&quot;width: 50%;&quot;&gt;
+&lt;col style=&quot;width: 16.6666%;&quot;&gt;
+&lt;col style=&quot;width: 16.6668%;&quot;&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Run no.&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Command&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Duration sec&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Speedup&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvn clean install -DskipTests&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2.86&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;(baseline)&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -DskipTests&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;3.24&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0.88x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;2&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -DskipTests&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0.61&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;4.66x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;mvnd clean install -DskipTests&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;0.52&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;5.53x&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;There is no gain from parallel execution here because we build just a single module.
+All we can see are the gains from reusing the warmed-up Daemon JVM.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We see that the first &lt;code&gt;mvnd&lt;/code&gt; run is slower than the &lt;code&gt;mvn&lt;/code&gt; baseline.
+This can be explained through the overhead caused by starting the Daemon and connecting to it through a network socket.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;But already the second &lt;code&gt;mvnd&lt;/code&gt; build is 4.66 faster than the &lt;code&gt;mvn&lt;/code&gt; baseline.
+0.61 seconds vs. 2.86 seconds is a difference clearly perceivable by a human.
+The third one is even faster.
+0.52 seconds is pretty snappy for this kind of build.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;configuration&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#configuration&quot;&gt;&lt;/a&gt;Configuration&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The behavior of Maven Daemon can be customized in many ways.
+The options can be passed either via command line or can be stored permanently in one of the following locations
+(in descending order of precedence):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;${maven.multiModuleProjectDirectory}/.mvn/mvnd.properties&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;${user.home}/.m2/mvnd.properties&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;${mvnd.home}/conf/mvnd.properties&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All configuration options and command line parameters can be listed via&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;shell&quot;&gt;$ mvnd --help&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It makes little sense to list them all here.
+Let us pick a few interesting ones.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All stock Maven options, such as &lt;code&gt;-am/--also-make&lt;/code&gt;, &lt;code&gt;-B/--batch-mode&lt;/code&gt;, &lt;code&gt;-D/--define&lt;/code&gt;, &lt;code&gt;-P,--activate-profiles&lt;/code&gt;, &lt;code&gt;-v/-version&lt;/code&gt;, etc.
+are supported also by &lt;code&gt;mvnd&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;--completion bash&lt;/code&gt; - the completion for Bash shell. You may want to add &lt;code&gt;source &amp;lt;(mvnd --completion bash)&lt;/code&gt; to your &lt;code&gt;~/bashrc&lt;/code&gt; or &lt;code&gt;~/.bash_profile&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-Dmvnd.serial/-1/--serial&lt;/code&gt; - use one thread, no log buffering and the default project builder to behave like a standard Maven.
+Default: &lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;discriminating_start_parameters&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#discriminating_start_parameters&quot;&gt;&lt;/a&gt;Discriminating start parameters&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When describing the way how client looks for an idle Daemon, we omitted an important detail:
+the discriminating start parameters.
+Those define the essential characteristics of the Daemon, such as the Java installation path, maximum heap size, etc.
+which make it exclusive for some given build tasks.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For example, if I set &lt;code&gt;JAVA_HOME&lt;/code&gt; to my Java 11 installation directory for the current shell,
+I do not want &lt;code&gt;mvnd&lt;/code&gt; to pick a Daemon running on any other Java,
+even if such Daemon is idle.
+I rather want &lt;code&gt;mvnd&lt;/code&gt; to always pick a Daemon running on this exact Java even for the price of starting a new Daemon.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here are some discriminating start parameters along with a short description what they do:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-Djava.home=&amp;lt;path&amp;gt;&lt;/code&gt; - Java home for starting the daemon.
+Env. variable: &lt;code&gt;JAVA_HOME&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-Dmvnd.idleTimeout=&amp;lt;duration&amp;gt;&lt;/code&gt; - a time period after which an unused Daemon will terminate by itself.
+Default: 3 hours&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-Dmvnd.duplicateDaemonGracePeriod=&amp;lt;duration&amp;gt;&lt;/code&gt; - period after which idle duplicate Daemons will be shut down.
+Duplicate Daemons are daemons with the same set of discriminating start parameters.
+Default: 10 seconds&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;-Dmvnd.maxHeapSize=&amp;lt;memory_size&amp;gt;&lt;/code&gt; - the &lt;code&gt;-Xmx&lt;/code&gt; value to pass to the Daemon. This option takes precedence over options specified in &lt;code&gt;-Dmvnd.jvmArgs&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;ui_shortcuts&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#ui_shortcuts&quot;&gt;&lt;/a&gt;UI shortcuts&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;The text based user interface (UI) of &lt;code&gt;mvnd&lt;/code&gt; supports a few shortcuts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;+&lt;/code&gt; reveals more rolling log lines for the individual builder threads
+while &lt;code&gt;-&lt;/code&gt; reduces the number of rolling lines.
+A UI state with zero rolling lines (default) is shown on the image above.
+Below, you can see a UI state with three rolling lines per builder thread:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-05-21-mvnd-maven-daemon/3-rolling-lines-per-module.png&quot; alt=&quot;3 rolling lines per builder thread&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;CTRL+B&lt;/code&gt; toggles between threaded (default, see above) and rolling views.
+The rolling view can be seen below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;imageblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;img src=&quot;/images/2023/2023-05-21-mvnd-maven-daemon/rolling-view.png&quot; alt=&quot;Rolling view&quot;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Note that every line is prefixed with the name of the module from which it originates.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;common_issues&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#common_issues&quot;&gt;&lt;/a&gt;Common issues&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;When you start using &lt;code&gt;mvnd&lt;/code&gt; in a project that was never built in parallel, you may hit some of these well known issues.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;hidden_dependencies&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#hidden_dependencies&quot;&gt;&lt;/a&gt;Hidden dependencies&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s assume that the modules in your project depend on each other as shown in the graph below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code&gt;    A
+   / \
+  B   C    (Lower depends on upper)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As long as you use the serial builder, the modules are always built in the same order
+and each module is fully built before any subsequent module built is started.
+Hence the order is always &lt;code&gt;A&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt;, &lt;code&gt;C&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is very easy to start relying on this constant and strictly serial ordering.
+For example the build of module &lt;code&gt;C&lt;/code&gt; could be reading a file in &lt;code&gt;B&amp;#8217;s `target&lt;/code&gt; folder.
+Or &lt;code&gt;C&amp;#8217;s tests could dynamically read an artifact produced by `B&lt;/code&gt; from the local Maven repository.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;All these assumptions won&amp;#8217;t hold anymore once you switch to a parallel builder.
+&lt;code&gt;B&lt;/code&gt; can be built in parallel with &lt;code&gt;C&lt;/code&gt;.
+As a consequence of that strange exceptions may occur.
+The build of &lt;code&gt;C&lt;/code&gt; may throw a &lt;code&gt;FileNotFoundException&lt;/code&gt; if the desired file is not yet there in &lt;code&gt;B&amp;#8217;s `target&lt;/code&gt; directory.
+Or you may see a &lt;code&gt;ClassNotFoundException&lt;/code&gt; if the build of &lt;code&gt;C&lt;/code&gt; opens an unfinished jar produced by &lt;code&gt;B&lt;/code&gt; at the same time.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;A simple an straightforward remedy would be to force serial build by using &lt;code&gt;-1/--serial&lt;/code&gt; parameter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Another option is to make the dependency explicit.
+If you do not want to propagate the dependency to runtime, you can use the &lt;code&gt;test&lt;/code&gt; scope
+and exclude all transitives as follows:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;&amp;lt;!-- Add this in C --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;org.my-group&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;B&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${project.version}&lt;span class=&quot;tag&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span class=&quot;tag&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class=&quot;tag&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;exclusions&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;exclusion&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;groupid&amp;gt;&lt;/span&gt;*&lt;span class=&quot;tag&quot;&gt;&amp;lt;/groupid&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;tag&quot;&gt;&amp;lt;artifactid&amp;gt;&lt;/span&gt;*&lt;span class=&quot;tag&quot;&gt;&amp;lt;/artifactid&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;&amp;lt;/exclusion&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/exclusions&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This won&amp;#8217;t add any real dependency to C but it will guarantee that B is fully built before C.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;broken_plugins&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#broken_plugins&quot;&gt;&lt;/a&gt;Broken plugins&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Plugins may do all kinds of bad things that need to be avoided in parallelized environments.
+Maintaining mutable global state (via static field or system property) is a typical example
+that will inevitably lead to issues once the shared resource is accessed concurrently.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In such situations, the &lt;code&gt;-1/--serial&lt;/code&gt; command line parameter may help again.
+Reporting the issue to the plugin maintainers might however bring better results in the long term.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;wrap_up&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#wrap_up&quot;&gt;&lt;/a&gt;Wrap up&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We have introduced Maven Daemon - a relatively new implementation of an older idea known from other build tools.
+Its main purpose is speeding up the builds by keeping the builder JVM warm across multiple subsequent builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;links&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#links&quot;&gt;&lt;/a&gt;Links&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Source code, documentation, issues: &lt;a href=&quot;https://github.com/apache/maven-mvnd&quot; class=&quot;bare&quot;&gt;https://github.com/apache/maven-mvnd&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Downloads: &lt;a href=&quot;https://downloads.apache.org/maven/mvnd&quot; class=&quot;bare&quot;&gt;https://downloads.apache.org/maven/mvnd&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content><author><name></name></author><category term="maven" /><category term="mvnd" /><summary type="html">mvnd - the Maven Daemon Maven is a well known build tool for Java and related languages targeting Java Virtual Machine (JVM). Its declarative approach to defining builds belongs to its main strengths. Even basic knowledge of Maven principles allows understanding basically any third party project. It is well established, rather stable and has a rich ecosystem of plugins. It is also very important for defining a de facto standard for publishing and consuming libraries in the JVM world. Maven Central and its artifact metadata formats are used and respected throughout the JVM space.</summary></entry><entry><title type="html">3D modelling and printing for fun and profit</title><link href="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html" rel="alternate" type="text/html" title="3D modelling and printing for fun and profit" /><published>2023-01-12T00:00:00+00:00</published><updated>2023-01-12T00:00:00+00:00</updated><id>https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit</id><content type="html" xml:base="https://peter.palaga.org/2023/01/12/3d-printing-for-fun-and-profit.html">&lt;h1&gt;3D modelling and printing for fun and profit&lt;/h1&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
 &lt;p&gt;I have bought &lt;a href=&quot;https://www.prusa3d.com/category/original-prusa-mini/&quot;&gt;Prusa Mini+&lt;/a&gt; 3D printer a couple of weeks ago.
 I primarily wanted to use it for printing small things that are hard to produce in other ways.&lt;/p&gt;
@@ -1902,91 +2580,4 @@ single-threaded builder by passing &lt;code&gt;-1&lt;/code&gt; or &lt;code&gt;--
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Parallel and non-parallel builds Another tip that will serve as a base for the future mvnd documentation. Today about parallel and non-parallel builds.</summary></entry><entry><title type="html">mvnd tip: Shortcuts</title><link href="https://peter.palaga.org/2021/01/08/mvnd-shortcuts.html" rel="alternate" type="text/html" title="mvnd tip: Shortcuts" /><published>2021-01-08T00:00:00+00:00</published><updated>2021-01-08T00:00:00+00:00</updated><id>https://peter.palaga.org/2021/01/08/mvnd-shortcuts</id><content type="html" xml:base="https://peter.palaga.org/2021/01/08/mvnd-shortcuts.html">&lt;h1&gt;&lt;code&gt;mvnd&lt;/code&gt; tip: Shortcuts&lt;/h1&gt;
-&lt;div id=&quot;preamble&quot;&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I am starting to write these tips as a base for the future &lt;code&gt;&lt;a href=&quot;https://github.com/mvndaemon/mvnd&quot;&gt;mvnd&lt;/a&gt;&lt;/code&gt;
-documentation. Today about keystrokes supported in the &lt;code&gt;mvnd&lt;/code&gt; client UI.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;to_revealhide_rolling_log_lines_for_the_individual_builder_threads&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#to_revealhide_rolling_log_lines_for_the_individual_builder_threads&quot;&gt;&lt;/a&gt;&lt;code&gt;+&lt;/code&gt;/&lt;code&gt;-&lt;/code&gt; to reveal/hide rolling log lines for the individual builder threads&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If you are building a multimodule source tree, whose internal dependencies allow for building some modules in parallel,
-&lt;code&gt;mvnd&lt;/code&gt; will by default choose the threaded view (as opposed to the rolling view known from the stock Maven). This
-view will normally show a single status line for each builder thread containing the &lt;code&gt;artifactId&lt;/code&gt; of the module being
-build along with the currently executed Maven mojo.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If you want to see the rolling log messages for each thread, hit &lt;code&gt;+&lt;/code&gt; one or more times. Press &lt;code&gt;-&lt;/code&gt; to hide them again.
-I am hitting three times &lt;code&gt;+&lt;/code&gt; and three times &lt;code&gt;-&lt;/code&gt; in this video:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;/images/2021/01-08-mvnd-shortcuts/mvnd-plus-minus.gif&quot; alt=&quot;Pressing three times plus and three times minus in a build with 5 threads&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;admonitionblock tip&quot;&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;td class=&quot;icon&quot;&gt;
-&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
-&lt;/td&gt;
-&lt;td class=&quot;content&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can pass your preferred rolling window size using &lt;code&gt;-Dmvnd.rollingWindowSize=3&lt;/code&gt; on the command line or you
-can store it permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.rollingWindowSize = 3&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;sect1&quot;&gt;
-&lt;h2 id=&quot;ctrlb_to_toggle_between_threaded_and_rolling_views&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;#ctrlb_to_toggle_between_threaded_and_rolling_views&quot;&gt;&lt;/a&gt;&lt;code&gt;CTRL+B&lt;/code&gt; to toggle between threaded and rolling views&lt;/h2&gt;
-&lt;div class=&quot;sectionbody&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;If you do not like the default threaded view for some reason, you can switch to the rolling view and back by hitting
-&lt;code&gt;CTRL+B&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;img src=&quot;/images/2021/01-08-mvnd-shortcuts/mvnd-ctrl-b.gif&quot; alt=&quot;Toggling between threaded and rolling views via CTRL+B&quot;&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;admonitionblock tip&quot;&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;td class=&quot;icon&quot;&gt;
-&lt;i class=&quot;fa icon-tip&quot; title=&quot;Tip&quot;&gt;&lt;/i&gt;
-&lt;/td&gt;
-&lt;td class=&quot;content&quot;&gt;
-&lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;You can pass &lt;code&gt;-Dmvnd.noBuffering&lt;/code&gt; on the command line to start with the rolling view or you can store your
-preference permanently in &lt;code&gt;~/.m2/mvnd.properties&lt;/code&gt;:&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&quot;listingblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;CodeRay highlight&quot;&gt;&lt;code data-lang=&quot;properties&quot;&gt;mvnd.noBuffering = true&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;div class=&quot;imageblock&quot;&gt;
-&lt;div class=&quot;content&quot;&gt;
-&lt;a class=&quot;image&quot; href=&quot;https://twitter.com/mvndaemon&quot;&gt;&lt;img src=&quot;https://img.shields.io/twitter/url/https/twitter.com/mvndaemon.svg?style=social&amp;label=Follow%20%40mvndaemon&quot; alt=&quot;mvndaemon&quot;&gt;&lt;/a&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Shortcuts I am starting to write these tips as a base for the future mvnd documentation. Today about keystrokes supported in the mvnd client UI.</summary></entry></feed>
+&lt;/div&gt;</content><author><name></name></author><category term="mvnd" /><summary type="html">mvnd tip: Parallel and non-parallel builds Another tip that will serve as a base for the future mvnd documentation. Today about parallel and non-parallel builds.</summary></entry></feed>
