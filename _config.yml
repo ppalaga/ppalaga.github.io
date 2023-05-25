@@ -28,7 +28,7 @@ collections:
 # GitHub
 username: ppalaga
 repo: ppalaga.github.io
-branch: main
+branch: master
 
 # Jekyll source / destination
 source:               .
