@@ -5,17 +5,17 @@
 :page-tags: [maven,mvnd]
 :sectanchors:
 
-Maven is a well known build tool for Java and related languages targeting Java Virtual Machine (JVM).
-Its declarative approach to defining builds belongs to its main strengths.
+Maven is a build tool for Java and other languages targeting Java Virtual Machine (JVM).
+The declarative approach to defining builds belongs to its main strengths.
 Even basic knowledge of Maven principles allows understanding basically any third party project.
 It is well established, rather stable and has a rich ecosystem of plugins.
-It is also very important for defining a _de facto_ standard for publishing and consuming libraries in the JVM world.
-Maven Central and its artifact metadata formats are used and respected throughout the JVM space.
+It is also very important for defining a _de facto_ standard for publishing and consuming libraries.
+Maven Central and its artifact metadata formats are used and respected throughout the JVM world.
 
-Maven has some well known downsides:
+Maven has some well known downsides though:
 
 * `pom.xml` files are often criticized as too verbose.
-* Maven performance is not on par with Gradle, especialy in incremental and iterative scenarios.
+* Maven performance is not on par with Gradle, especially in incremental and iterative scenarios.
 * Maven parallel builds are hard to use, because the console output is a mishmash of randomly mixed lines
   from different module builds.
 
@@ -23,30 +23,36 @@ Let's have a look how Maven Daemon addresses the latter two points.
 
 == JVM performance basics
 
-Most of us, Java developer know that Java is fast, but it needs some warm up time to unveil its full potential.
-This is caused, on one hand, by the fact that booting a JVM application costs some time
+Most of us, Java developers, know that Java is fast, but it needs some warm up time to unveil its full potential.
+On one hand, this is caused by the fact that booting a JVM application costs some time
 and on the other hand by the way how Just in Time (JIT) compilation works in JVM.
 
 === Maven boot costs
 
 Let's have a look at the boot costs first.
-In case of Maven, we can quantify them through a simple experiment.
+For Maven, they can be quantified through a simple experiment.
 In Maven source code, we find the location where Maven starts its own build duration measurement.
 That's the baseline for the well known `BUILD SUCCESS/Total time:` message at the end of every Maven build.
 We can say that this is the point in time where Maven starts doing something useful.
 Everything that happens before can be considered a boot up cost.
 
-So we place `System.out.println("End of Maven init: " + System.currentTimeMillis())` statement around there and
-invoke something as simple as `mvn install` prepending it with a shell time output in milliseconds, like this:
+So we place the following statement around there
+
+[source,java]
+----
+System.out.println("End of Maven init: " + System.currentTimeMillis());
+----
+
+and invoke something as simple as `mvn clean` prepending it with a shell time output in milliseconds, like this:
 
 [source,shell]
 ----
-$ echo $(($(date +%s%N)/1000000)) && mvn install
+$ echo $(($(date +%s%N)/1000000)) && mvn clean
 ----
 
 It outputs two numbers.
-On my Lenovo P1 Gen 3 laptop those are 1634117024986 and 1634117025765.
-Subtracting them gives the result of 779 milliseconds.
+On my Lenovo P1 Gen 3 laptop those were 1634117024986 and 1634117025765.
+Subtracting them gave the result of 779 milliseconds.
 That's the time needed to boot the JVM and load all classes necessary for Maven to start doing something useful.
 Three quarters of a second.
 That's quite a lot, isn't it?
@@ -80,8 +86,8 @@ Let's try it out.
 
 == Installation
 
-Maven Daemon needs to be installed separately from Maven
-and it is good to know that the installations of Maven Daemon and Maven do not interact in any way.
+Maven Daemon needs to be installed separately from Maven.
+The installations of Maven Daemon and Maven do not interact in any way.
 You can have both or just one of them on your machine.
 
 Maven Daemon can be installed in several ways.
@@ -369,7 +375,7 @@ Note that every line is prefixed with the name of the module from which it origi
 
 == Common issues
 
-When you start using `mvnd` in a project that was never built in parallel, you may hit some of these well known issues.
+When you start using `mvnd` in a project that was never built in parallel, you may hit some of these common issues.
 
 === Hidden dependencies
 
@@ -387,16 +393,16 @@ and each module is fully built before any subsequent module built is started.
 Hence the order is always `A`, `B`, `C`.
 
 It is very easy to start relying on this constant and strictly serial ordering.
-For example the build of module `C` could be reading a file in `B`'s `target` folder.
-Or `C`'s tests could dynamically read an artifact produced by `B` from the local Maven repository.
+For example the build of module `C` could be reading a file in ``B``'s `target` folder.
+Or ``C``'s tests could dynamically read an artifact produced by `B` from the local Maven repository.
 
 All these assumptions won't hold anymore once you switch to a parallel builder.
 `B` can be built in parallel with `C`.
 As a consequence of that strange exceptions may occur.
 The build of `C` may throw a `FileNotFoundException` if the desired file is not yet there in `B`'s `target` directory.
-Or you may see a `ClassNotFoundException` if the build of `C` opens an unfinished jar produced by `B` at the same time.
+Or you may see a `ClassNotFoundException` if the build of `C` opens an unfinished jar that is just being produced by `B`.
 
-A simple an straightforward remedy would be to force serial build by using `-1/--serial` parameter.
+A simple and straightforward remedy would be to force serial build by using `-1/--serial` parameter.
 
 Another option is to make the dependency explicit.
 If you do not want to propagate the dependency to runtime, you can use the `test` scope
