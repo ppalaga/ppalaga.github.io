@@ -1,0 +1,104 @@
+= Remote Maven Build Cache with Nginx
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [maven]
+:sectanchors:
+
+The https://maven.apache.org/extensions/maven-build-cache-extension/remote-cache.html[instructions]
+for setting up a remote Maven Build Cache are useful but they are missing an important detail:
+how to configure a server for the remote cache role.
+
+Here are steps that worked for me:
+
+1. Enable remote cache in `.mvn/maven-build-cache-config.xml` of your Maven project:
++
+.maven-build-cache-config.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" ?>
+<cache ...>
+    <configuration>
+        ...
+        <remote enabled="true" id="remote-cache">
+            <url>http://localhost:8088</url>
+        </remote>
+        ...
+    </configuration>
+    ...
+</cache>
+----
++
+2. Add a `server` with `<id>remote-cache</id>` to your `~/.m2/settings.xml`:
++
+.settings.xml
+[source,xml]
+----
+<settings  ...>
+  ...
+  <servers>
+    <server>
+      <id>remote-cache</id>
+      <username>...</username>
+      <password>...</password>
+    </server>
+    ....
+----
++
+3. Prepare the configuration for Nginx:
++
+.nginx.conf
+[source]
+----
+events {
+  worker_connections 1024;
+}
+http {
+  server {
+    index index.html;
+    root /var/www;
+
+    location / {
+      limit_except GET {
+        auth_basic "Nginx Maven Build Cache";
+        auth_basic_user_file /etc/nginx/conf.d/nginx.htpasswd;
+      }
+      autoindex on;
+      dav_methods PUT DELETE MKCOL COPY MOVE;
+      create_full_put_path on;
+      dav_access group:rw  all:r;
+    }
+  }
+}
+----
++
+4. Prepare the `nginx.htpasswd` file:
++
+[source,shell]
+----
+# Use the same username and password as you have set in settings.xml above
+$ REMOTE_CACHE_USER=...
+$ REMOTE_CACHE_PASSWORD=...
+$ docker run --rm --entrypoint htpasswd httpd:2 -Bbn $REMOTE_CACHE_USER $REMOTE_CACHE_PASSWORD > nginx.htpasswd
+----
++
+5. TODO: figure out the right owner and permissions for the content folder.
++
+[source,shell]
+----
+$ mkdir -p www/v1
+$ chmod -R 777 www
+----
+
+6. Run Nginx with the above config:
++
+[source,shell]
+----
+$ docker run -p 8088:80 \
+    -v ./nginx.htpasswd:/etc/nginx/conf.d/nginx.htpasswd:ro \
+    -v ./nginx.conf:/etc/nginx/nginx.conf:ro \
+    -v ./www:/var/www \
+    nginx
+----
+
+Improvements welcome!
