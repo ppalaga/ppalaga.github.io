@@ -325,7 +325,7 @@ Let us pick a few interesting ones.
 All stock Maven options, such as `-am/--also-make`, `-B/--batch-mode`, `-D/--define`, `-P,--activate-profiles`, `-v/-version`, etc.
 are supported also by `mvnd`.
 
-`--completion bash` - the completion for Bash shell. You may want to add `source <(mvnd --completion bash)` to your `~/bashrc` or `~/.bash_profile`.
+`--completion bash` - the completion for Bash shell. You may want to add `source <(mvnd --completion bash)` to your `~/.bashrc` or `~/.bash_profile`.
 
 `-Dmvnd.serial/-1/--serial` - use one thread, no log buffering and the default project builder to behave like a standard Maven.
 Default: `false`
