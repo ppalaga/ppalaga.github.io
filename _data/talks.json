@@ -1,5 +1,11 @@
 [
     {
+        "title": "Episode #132: Quarkiverse Extension Spotlight: Quarkus CXF extension",
+        "eventName": "Quarkus Insights",
+        "videoUri": "https://www.youtube.com/watch?v=dUV-kUrZ5m0",
+        "date": "2023-06-21"
+    },
+    {
         "title": "Maven, my life is short!",
         "eventName": "JUG St. Gallen",
         "date": "2023-01-19"
