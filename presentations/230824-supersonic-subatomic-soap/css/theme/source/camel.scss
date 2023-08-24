@@ -1,0 +1,251 @@
+/**
+ * Beige theme for reveal.js.
+ *
+ * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+
+// Include theme-specific fonts
+@import url(./fonts/judson/judson.css);
+@import url(./fonts/league-gothic/league-gothic.css);
+@import url(https://fonts.googleapis.com/css?family=Roboto:200,300,400,700,400italic,700italic);
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i,700,700i');
+@import url(https://fonts.googleapis.com/css?family=Lato:200,300,400,700,400italic,700italic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,700,400italic,700italic);
+
+
+// Override theme settings (see ../template/settings.scss)
+$mainColor: #4e3f39;
+$mainFont: 'Roboto', Sans-Serif;
+
+/* Background */
+
+$backgroundColor: #fff;
+$linkColor: #303284;
+$linkColorHover: lighten( $linkColor, 20% );
+$yellow: #F0CA4D;
+
+$selectionBackgroundColor: rgba(79, 64, 28, 0.99);
+
+$headingColor: #303284;
+$headingTextShadow: none;
+$headingFont: Arial, Helvetica, Sans-Serif;
+$heading1Size: 1.7em;
+$heading2Size: 1.5em;
+$heading3Size: 1.2em;
+$heading4Size: 1.0em;
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
+
+.reveal {
+  font-weight: 300;
+}
+.reveal small {
+    vertical-align: inherit;
+}
+
+.reveal code {
+  color: #7b4723;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.reveal pre code  {
+  background: #3f3f3f;
+  color: #dcdcdc;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.reveal li {
+  list-style-type: none;
+  position: relative;    /* It is required for setting position to absolute in the next rule. */
+}
+
+.reveal li::before {
+  color: #66544c;
+  content: '\2022';
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal li li::before {
+  color: #66544c;
+  content: '\25AA';
+  font-size: 0.9em;
+  left: -0.6em;
+  position: absolute;
+  top: 0.12em;
+}
+
+.reveal .no-bullet li::before {
+  content: none;
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal .bullet li::before {
+  color: #66544c;
+  content: '\2022';
+  font-size: 1.1em;
+  left: -0.6em;
+  position: absolute;
+}
+
+.reveal .bullet li li::before {
+  color: #66544c;
+  content: '\25AA';
+  font-size: 0.9em;
+  left: -0.6em;
+  position: absolute;
+  top: 0.12em;
+}
+
+.reveal ul.check li::before {
+  color: #006400;
+  content: '\2713';
+  font-size: 1.0em;
+  left: -1.1em;
+  position: absolute;
+}
+
+.reveal li ul.check li::before {
+  color: #006400;
+  content: '\2713';
+  font-size: 1.1em;
+  left: -0.9em;
+  position: absolute;
+  top: 0em;
+}
+
+.reveal section img {
+    margin: 0px;
+    background: none;
+    border: none;
+    box-shadow: none
+}
+
+
+html #footer {
+  background-color: #e1e1e1;
+  bottom: 3px;
+  display: block;
+  font-size: 0.85em;
+  height: 50px;
+  line-height: 1.6em;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 1000;
+}
+
+#footer img.left {
+  float: left;
+  height: 40px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+#footer div.left {
+  float: left;
+  height: 40px;
+  margin-right: 6px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+#footer img.right {
+  float: right;
+  height: 40px;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+  margin-left: 6px;
+  z-index: 1000;
+}
+
+/* You can hide the footer trough <section data-state="no-footer"> */
+html.no-footer #footer {
+  display: none;
+}
+
+div .conf-banner {
+  background-color: #6c5d53;
+  float: left;
+  height: 100%;
+  width: 120px;
+}
+
+div .conf-banner img {
+  z-index: 1000;
+}
+
+
+table.plaintable {
+  width: 100%;
+}
+table.plaintable td {
+  border-bottom: none;
+  padding: 0px 0px 0px 0px;
+  vertical-align: top;
+}
+
+#camel-components p {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 15px 0px 10px 0px;
+}
+#camel-components li {
+  font-size: 24px;
+}
+
+@media print {
+  body {
+     background: #fff;
+  }
+}
+
+.reveal .slides section code.hljs mark.fragment,
+.reveal .slides section code.hljs mark.fragment .hljs-meta {
+  background-color: inherit;
+  opacity: 100;
+  visibility: inherit;
+  color: inherit;
+}
+
+.reveal .slides section code.hljs mark.fragment.visible,
+.reveal .slides section code.hljs mark.fragment.visible .hljs-meta {
+  background-color: $yellow;
+  opacity: 100;
+  visibility: inherit;
+  color: #000;
+}
+
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out,
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out .hljs-meta  {
+  background-color: inherit;
+  opacity: 100;
+  visibility: inherit;
+  color: inherit;
+}
+
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out.current-fragment,
+.reveal .slides section code.hljs mark.fragment.fade-in-then-out.current-fragment .hljs-meta {
+  background-color: $yellow;
+  opacity: 100;
+  visibility: inherit;
+  color: #000;
+}

@@ -1,5 +1,11 @@
 [
     {
+        "title": "Supersonic Subatomic SOAP",
+        "eventName": "RH Swiss tech gathering",
+        "slidesUri": "/presentations/230824-supersonic-subatomic-soap/index.html",
+        "date": "2023-08-24"
+    },
+    {
         "title": "Episode #132: Quarkiverse Extension Spotlight: Quarkus CXF extension",
         "eventName": "Quarkus Insights",
         "videoUri": "https://www.youtube.com/watch?v=dUV-kUrZ5m0",

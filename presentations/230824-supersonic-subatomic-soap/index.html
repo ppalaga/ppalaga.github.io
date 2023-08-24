@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Supersonic Subatomic SOAP</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+        <link rel="stylesheet" href="dist/reveal.css">
+        <link rel="stylesheet" href="dist/theme/camel.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/zenburn.css">
+    </head>
+    <body>
+        <div class="reveal">
+            <!-- <div class="conf-banner">
+                <img src="images/" alt="" style="position: absolute;bottom: 0;">
+            </div> -->
+            <div id="footer" class="footer">
+                <img src="images/apache-cxf-logo.svg" class="left"><a href="https://twitter.com/ppalaga">@ppalaga</a><img src="images/quarkus-logo-with-text.svg" class="right" style="height: 25px; margin-top: 12px;">
+            </div>
+            <div class="slides">
+                <section id="intro">
+                    <!--<section id="sponsors" data-background-image="images/BaselOne21.png" data-state="no-footer">
+                    </section>-->
+                    <section id="cover" data-background-image="images/supersonic-subatomic-soap.png" data-state="no-footer">
+                        <p>&nbsp;</p>
+                        <h3 style="color: #fff; font-weight: bold; text-align: left; font-size: 50px;">Supersonic subatomic</h3>
+                        <h1 style="color: #fff; font-weight: bold; text-align: left; font-size: 80px;">SOAP</h1>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p  style="color: #fff; font-weight: bold; text-align: right; font-size: 30px;">Peter Palaga</p>
+                        <p  style="color: #fff; font-weight: bold; text-align: right; font-size: 30px;"><small><a href="https://twitter.com/ppalaga">@ppalaga</a></small></p>
+                    </section>
+                    <section id="quarkus-era">
+                        <img src="images/quarkus-era.svg" style="height: 12em">
+                        <p style="font-size: 0.4em;"><sup>*)</sup> Oversimplyfied</p>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                I am a Java developer and for me, the history of the whole universe has just two parts:
+
+                                * Before Quarkus
+                                * After Quarkus
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="quarkus-augmentation">
+                        <img src="images/quarkus-workflow.svg" style="height: 12em">
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                Quarkus is amazing and I am truly happy that I can work with it.
+
+                                If you ask why, Quarkus has brought the unique concept of augmentation:
+
+                                I.e. tasks that Java applications normally execute at startup, are rather performed at build time.
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="quarkus-augmentation-example">
+                        <h2>Augmentation example</h2>
+<pre style="font-size: 0.8em"><code class="hljs java">@GET
+@Path("/orders")
+List&lt;Order&gt; getOrders() {
+    ...
+}</code></pre>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                Java frameworks often use annotations to define some behavior.
+                                Here @GET and @Path are supposed to define a REST endpoint
+                                The platform is supposed to wire this method to the embedded web server
+
+                                Traditionally, Java Frameworks used to do these annotation scans and wiring on deployment time
+                                Quarkus moves most of these tasks to buidl time
+                                ... which saves not only time but also memory.
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="quarkus-extensions">
+                        <h2>Quarkus extensions</h2>
+                        <img src="images/code.quarkus.io.png" style="height: 12em">
+                        <a href="https://code.quarkus.io/">code.quarkus.io</a>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                Quarkus does this for many Java frameworks.
+                                The complete list is available on code.quarkus.io
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="most-upvoted-quarkus-issue">
+                        <h3>Most upvoted<sup>1</sup> Quarkus issue</h3>
+                        <img src="images/cxf-issue.png" style="height: 12em">
+                        <p style="font-size: 0.4em;"><a href="https://github.com/quarkusio/quarkus/issues/4005">github.com/quarkusio/quarkus/issues/4005</a></p>
+                        <p style="font-size: 0.4em;"><sup>1)</sup> till it was implemented around 2020</p>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                ... and it was pretty surprising
+                                Who knows what CXF is doing?
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="request-response-family">
+                        <h3>Request-response family</h3>
+                        <img src="images/request-response-family.png">
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                Just as sketch what are SOAP's sibling technologies
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="soap-vs-rest">
+                        <table style="font-size: 0.8em;">
+                            <tr>
+                                <th style="border-bottom-width: 2px; width: 50%">SOAP</th>
+                                <th style="border-bottom-width: 2px; width: 50%">REST</th>
+                            </tr>
+                            <tr>
+                                <td>HTTP, SMTP, JMS, …</td>
+                                <td>HTTP only</td>
+                            </tr>
+                            <tr>
+                                <td>Single URL per service</td>
+                                <td>Resources identified by URLs</td>
+                            </tr>
+                            <tr>
+                                <td>POST only<span style="font-size: 0.7em;"><br>operation encoded in the message</span></td>
+                                <td>HTTP methods have special meaning</td>
+                            </tr>
+                            <tr>
+                                <td>XML only</td>
+                                <td>Typically JSON<span style="font-size: 0.7em;"><br>XML, YAML and others possible</span></td>
+                            </tr>
+                            <tr>
+                                <td>WSDL: strict contract</td>
+                                <td>OpenAPI</td>
+                            </tr>
+                        </table>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="soap-today">
+                        <h2>SOAP today</h2>
+                        <p>Still crucial in</p>
+                        <p>finance, travel, healthcare, government services, etc.</p>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                Amadeus, Sabre - two main reservations systems for flights and hotels
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="soap-on-quarkus">
+                        <h2>SOAP on Quarkus</h2>
+                        <p>The community had to self-organize:</p>
+                        <ul>
+                            <li>One guy created a PoC</li>
+                            <li>Another improved it</li>
+                            <li>Another gave feedback from using it in production (!)</li>
+                        </ul>
+                        <p>^ Not enough to support it as a RH product</p>
+                        <p><a href="https://github.com/quarkiverse/quarkus-cxf/tree/main/integration-tests">Test coverage</a>, <a href="https://docs.quarkiverse.io/quarkus-cxf/dev/index.html">documentation</a>, productization</p>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                ... which I started doing around August 2022
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="build-time-class-generaion">
+                        <h2>Build time class generation & wiring</h2>
+<pre><code class="hljs java">@WebService(serviceName = "HelloService")
+public class HelloServiceImpl implements HelloService {
+
+    @WebMethod
+    public String hello(String greeting, String person) {
+        return greeting + " " + person + "!";
+    }
+
+}
+</code></pre>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                                CXF needs to generate some JAXB classes to be able to deserialize
+                                the two method arguments.
+                                The class generation is done at build time,
+                                the classes are stored in the application
+                                Hence at runtime we save not only time, but also memory needed
+                                for the process & for the code performing the generation
+                                As a result, there is no bytecode generation lib present in the application
+                                -> smaller container image, less security issues
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="configuration">
+                        <h2>Configuration</h2>
+<pre style="font-size: 0.4em; width: 110%;"><code class="hljs java">quarkus.cxf.client.myCalculator.wsdl = http://localhost:8082/calculator-ws/CalculatorService?wsdl
+quarkus.cxf.client.myCalculator.client-endpoint-url = http://localhost:8082/calculator-ws/CalculatorService
+quarkus.cxf.client.myCalculator.service-interface = com.acme.calculator.CalculatorService</code></pre>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="client-beans">
+                        <h2>Client beans</h2>
+<pre><code class="hljs java">@ApplicationScoped
+public class MyBean {
+    @CXFClient("myCalculator")
+    CalculatorService calculator;
+    ...
+    int result = calculator.add(2, 3);
+}</code></pre>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                            </textarea>
+                        </aside>
+                    </section>
+                    <section id="rh-support">
+                        <h2>RH Support</h2>
+                        <ul>
+                            <li>Via RH Integration since Camel Extensions for Quarkus 2.13.3</li>
+                            <li>Underway: <a href="https://issues.redhat.com/browse/CEQ-7169">Non-Camel-related use cases</a></p>
+                        </ul>
+                        <aside class="notes" data-markdown>
+                            <textarea data-template>
+                            </textarea>
+                        </aside>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                progress: true,
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+            });
+        </script>
+    </body>
+</html>

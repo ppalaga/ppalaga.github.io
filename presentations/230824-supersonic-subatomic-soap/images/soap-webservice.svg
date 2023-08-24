@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+  <!-- SOAP Envelope -->
+  <rect x="50" y="50" width="300" height="200" fill="#e8e8e8" stroke="#333" stroke-width="2" />
+
+  <!-- SOAP Header -->
+  <rect x="70" y="70" width="260" height="40" fill="#ffffff" stroke="#333" stroke-width="2" />
+  <text x="200" y="92" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">Header</text>
+
+  <!-- SOAP Body -->
+  <rect x="70" y="120" width="260" height="100" fill="#ffffff" stroke="#333" stroke-width="2" />
+  <text x="200" y="170" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">Body</text>
+
+  <!-- SOAP Action -->
+  <circle cx="200" cy="235" r="15" fill="#ffffff" stroke="#333" stroke-width="2" />
+  <text x="200" y="240" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">Action</text>
+
+  <!-- Arrows -->
+  <line x1="200" y1="110" x2="200" y2="85" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <line x1="200" y1="220" x2="200" y2="250" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+</svg>
