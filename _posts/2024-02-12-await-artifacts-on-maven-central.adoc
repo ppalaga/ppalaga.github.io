@@ -1,0 +1,108 @@
+= Await all artifacts from a release on Maven Central
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [maven]
+:sectanchors:
+
+I often release Maven projects with many artifacts, such as https://github.com/apache/camel-quarkus[Camel Quarkus] and https://github.com/quarkiverse/quarkus-cxf[Quarkus CXF].
+The release process consists of several steps, including
+
+* Upload of the artifacts, to a staging repository at `oss.sonatype.org`
+* Closing the staging repository
+* Releasing the staging repository
+
+If all runs smoothly, will all the freshly released artifacts be available on Maven Central immediately?
+
+Unfortunately, no. The delay may count from a few tens of minutes to a few hours.
+
+Moreover the synchronization between `oss.sonatype.org` and Maven Central is not atomic.
+There are points in time, when part of your artifacts is available on Central already but the rest is not there yet.
+
+What can you do, when you are in a hurry, because you e.g. need to release a dependent project or you just want to announce the new release?
+
+I haven not found any tool for that, so I have written one.
+
+== How it works
+
+My https://github.com/l2x6/cq-maven-plugin/blob/main/maven-plugin/src/main/java/org/l2x6/cq/maven/AwaitReleaseMojo.java#L46[Maven plugin] basically compares the set of artifacts in your local repository with Maven Central.
+So to be able to use it, you need to build from the release tag locally first.
+
+This is not an issue of you have released from the same machine, e.g. using `mvn release:prepare release:perform`.
+In that case the tag is built locally within the release process.
+
+If you released from a different machine, such as CI, then you have to checkout the tag and build it locally.
+For Quarkus CXF, it would be something like
+
+[source,shell]
+----
+$ git fetch upstream
+ * [new tag]                 3.8.0  -> 3.8.0
+$ git reset --hard 3.8.0
+$ mvn clean install -DskipTests
+----
+
+After that, you should see some 3.8.0 artifacts in your local Maven repository:
+
+[source,shell]
+----
+$ find ~/.m2/repository/io/quarkiverse/cxf -type d -name 3.8.0
+.../io/quarkiverse/cxf/quarkus-cxf-woodstox-parent/3.8.0
+.../io/quarkiverse/cxf/quarkus-cxf-test-util/3.8.0
+.../io/quarkiverse/cxf/quarkus-cxf-rt-ws-rm/3.8.0
+...
+----
+
+Now you have everything in place to run the `await-release` Maven mojo:
+
+[source,shell]
+----
+$ mvn org.l2x6.cq:cq-maven-plugin:1.1.0:await-release -Dcq.version=3.8.0
+----
+
+[TIP]
+====
+If you want to await the latest release, and let git figure out which one it is, you can do the following:
+
+[source,shell]
+----
+$ cd quarkus-cxf
+$ mvn org.l2x6.cq:cq-maven-plugin:1.1.0:await-release -Dcq.version=$(git describe --tags `git rev-list --tags --max-count=1`)
+----
+====
+
+It will first report 404s for non-available artifacts
+
+[source,shell]
+----
+[INFO] Awaiting 58 artifacts in https://repo1.maven.org/maven2
+[INFO] 1/58 Got 404 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-woodstox-parent/3.8.0/quarkus-cxf-woodstox-parent-3.8.0.pom
+[INFO] 2/58 Got 404 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-test-util/3.8.0/quarkus-cxf-test-util-3.8.0.pom
+[INFO] 3/58 Got 404 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-rt-ws-rm/3.8.0/quarkus-cxf-rt-ws-rm-3.8.0.pom
+...
+----
+
+It waits a minute (configurable) after iterating over all artifacts and then tries them all anew.
+
+After some time, you should start seeing some 200s for artifacts that freshly arrived to Maven Central:
+
+[source,shell]
+----
+[INFO] Awaiting 58 artifacts in https://repo1.maven.org/maven2
+[INFO] 1/58 Got 200 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-woodstox-parent/3.8.0/quarkus-cxf-woodstox-parent-3.8.0.pom
+[INFO] 2/58 Got 200 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-test-util/3.8.0/quarkus-cxf-test-util-3.8.0.pom
+[INFO] 3/58 Got 200 for https://repo1.maven.org/maven2/io/quarkiverse/cxf/quarkus-cxf-rt-ws-rm/3.8.0/quarkus-cxf-rt-ws-rm-3.8.0.pom
+...
+----
+
+Once all artifacts are available on Maven Central, the script exits.
+
+[source,shell]
+----
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15:43 min
+----
+
+Happy releasing!
