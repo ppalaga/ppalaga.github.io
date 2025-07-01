@@ -1,0 +1,19 @@
+= Red Hat Middleware is moving to IBM
+:showtitle:
+:page-layout: tagged-post
+:page-root: ../../../
+:page-tags: [business]
+:sectanchors:
+
+Me and my team are continuing to work on amazing
+https://docs.quarkiverse.io/quarkus-cxf/dev/index.html[Quarkus CXF] and
+https://camel.apache.org/camel-quarkus/latest/index.html[Camel Quarkus].
+Today, we started doing it under the IBM umbrella.
+I feel even more committed to stability and quality.
+Nothing changes w.r.t. our overall upstream first strategy.
+Regardless of the re-org, we will keep working on Red Hat Build of Quarkus, Red Hat Build of Quarkus Apache Camel
+and other products further offered by Red Hat.
+
+You may want to read this older post of Max: https://quarkus.io/blog/quarkus-redhat-strategy/[Quarkus & Red Hat's evolving middleware strategy]
+
+Fun fact: I may still call myself _Red Hat Principal Software Engineer_.
